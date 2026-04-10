@@ -1,0 +1,23 @@
+{
+  "name": "sam",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "bot-test": "tsx watch apps/bot/src/main.ts",
+    "bot-build": "tsc -p apps/bot",
+    "bot-start": "node apps/bot/dist/main.js"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

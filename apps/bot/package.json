@@ -1,0 +1,13 @@
+{
+  "name": "@sam/bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@itsukichan/baileys": "^7.3.2"
+  }
+}
