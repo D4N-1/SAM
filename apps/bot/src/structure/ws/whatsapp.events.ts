@@ -5,7 +5,7 @@ export function registerWhatsappAccount(socket: any) {
     
     socket.ev.on("connection.update", async (data: any) => {
 
-        console.log(data)
+        console.log(data.connection)
 
         if (data.connection == "connecting" || data.qr) {
 
@@ -19,9 +19,8 @@ export function registerWhatsappAccount(socket: any) {
 
             const reason = data?.lastDisconnect?.error?.output?.statusCode;
 
-            console.log(reason)
-
             if (reason == 401) {
+                console.log(reason)
                 await deleteAuth()
                 process.exit(0)
             }

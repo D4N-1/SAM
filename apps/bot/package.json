@@ -11,6 +11,7 @@
   "dependencies": {
     "@itsukichan/baileys": "^7.3.2",
     "@types/qrcode": "^1.5.6",
+    "pino": "^10.3.1",
     "qrcode": "^1.5.4"
   }
 }

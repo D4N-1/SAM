@@ -1,5 +1,3 @@
-
-
 export interface contextCommand {
     socket: any,
     chatId: string;
