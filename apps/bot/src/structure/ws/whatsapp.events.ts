@@ -1,4 +1,5 @@
 import * as qrcode from "qrcode"
+import { deleteAuth } from "./whatsapp.auth.js"
 
 export function registerWhatsappAccount(socket: any) {
     
@@ -6,8 +7,33 @@ export function registerWhatsappAccount(socket: any) {
 
         console.log(data)
 
-        if (!data.qr) return
+        if (data.connection == "connecting" || data.qr) {
 
-        console.log( await qrcode.toString(data.qr, { type: "terminal", small: true }) )
+            if (!data.qr) return
+
+            console.log( await qrcode.toString(data.qr, { type: "terminal", small: true }) )
+
+        }
+
+        if (data.connection == "close") {
+
+            const reason = data?.lastDisconnect?.error?.output?.statusCode;
+
+            console.log(reason)
+
+            if (reason == 401) {
+                await deleteAuth()
+                process.exit(0)
+            }
+
+            process.exit(1)
+        }
     })
+
+}
+
+export function registerCredsEvents(socket: any, saveCreds: any) {
+
+    socket.ev.on("creds.update", saveCreds);
+
 }

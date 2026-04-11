@@ -5,7 +5,8 @@
   "scripts": {
     "bot-test": "tsx watch apps/bot/src/main.ts",
     "bot-build": "tsc -p apps/bot",
-    "bot-start": "node apps/bot/dist/main.js"
+    "bot-start": "node apps/bot/dist/main.js",
+    "bot-run": "tsc -p apps/bot && node apps/bot/dist/main.js"
   },
   "workspaces": [
     "apps/*"
