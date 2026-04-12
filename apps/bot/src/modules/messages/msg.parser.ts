@@ -4,10 +4,7 @@ export function parseMessage(sam: WASocket, msg: any): any {
 
     const message: any = msg[0]?.messages[0]?.message;
 
-    console.log(message)
-
     let sender = message?.key?.participant
-    
     let senderAlt = message?.key?.participantAlt
 
     const group = sender == undefined && senderAlt == undefined ? false : true

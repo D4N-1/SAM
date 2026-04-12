@@ -7,6 +7,8 @@ import { msgSTATUS_TITLE, msgStatusConnection } from "../../shared/messages/msg.
 import { parseMessage } from "../../modules/messages/msg.parser.js"
 import type { ParsedMessage } from "../../modules/messages/msg.types.js"
 import { parse } from "node:path"
+import { parseCommand } from "../../modules/commands/command.parser.js"
+import { routeCommand } from "../../modules/commands/command.router.js"
 
 export function registerConnectionEvent(sam: WASocket) {
     
@@ -53,6 +55,11 @@ export function registerMessagesEvent(sam: WASocket) {
         let message: ParsedMessage = parseMessage(sam, data)
 
         console.log(message)
+
+        let res = parseCommand(message.content);
+        if (!res) return
+
+        routeCommand( res, sam, message )
 
     })
 }

@@ -1,15 +1,14 @@
-import { commands } from "./service/index.js"
-import type { contextCommand } from "./command.contex.js"
+import { commands } from "./handlers/index.js"
 import type { ParsedCommand } from "./command.types.js";
+import type { WASocket } from "@itsukichan/baileys";
+import type { ParsedMessage } from "../messages/msg.types.js";
 
 
-export async function routeCommand(
-    parsed: ParsedCommand,
-    context: contextCommand) {
+export async function routeCommand( parsed: ParsedCommand, sam: WASocket, message: ParsedMessage) {
 
     const command = commands[parsed.command];
 
-    if (!command) return null;
+    if (!command) return;
 
-    await command.execute(context, parsed.args)
+    await command.execute(parsed, sam, message)
 }

@@ -2,7 +2,7 @@
 
 export function parseCommand(text: string) {
 
-    if (!text.startsWith("!")) return null
+    if (!text?.startsWith("!")) return null
 
     const [ command, ...args ] = text.slice(1).trim().split(/\s+/)
 
