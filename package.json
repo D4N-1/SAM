@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "bot-test": "tsx watch apps/bot/src/main.ts",
-    "bot-run": "tsc -p apps/bot && node apps/bot/dist/main.js"
+    "@sam/bot-test": "tsx watch apps/bot/src/main.ts",
+    "@sam/bot-run": "tsc -p apps/bot && node apps/bot/dist/main.js",
+    
+    "@sam/api-test": "tsx watch apps/api/src/main.ts",
+    "@sam/api-run": "tsc -p apps/api && node apps/api/dist/main.js"
   },
   "workspaces": [
     "apps/*"

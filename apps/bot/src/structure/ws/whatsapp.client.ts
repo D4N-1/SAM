@@ -11,8 +11,9 @@ export async function startWhatsappBot() {
         version: [2, 3000, 1037076227],
         auth: state,
         browser: [ "SAM", "SAM", "10.0.22631" ],
-        logger: P({ level: "silent" })
+        logger: P({ level: "silent" }),
         // silent / fatal / error / warn / info / debug / trace
+        syncFullHistory: false
 
     });
 

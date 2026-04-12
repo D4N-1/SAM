@@ -52,6 +52,8 @@ export function registerMessagesEvent(sam: WASocket) {
 
     sam.ev.on("chats.update", async (data: BaileysEventMap['chats.update']) => {
 
+        console.log(data)
+        
         let message: ParsedMessage = parseMessage(sam, data)
 
         console.log(message)
