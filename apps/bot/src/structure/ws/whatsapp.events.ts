@@ -6,7 +6,6 @@ import { enumStatusConnection } from "../../shared/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgStatusConnection } from "../../shared/messages/msg.status.js"
 import { parseMessage } from "../../modules/messages/msg.parser.js"
 import type { ParsedMessage } from "../../modules/messages/msg.types.js"
-import { parse } from "node:path"
 import { parseCommand } from "../../modules/commands/command.parser.js"
 import { routeCommand } from "../../modules/commands/command.router.js"
 
