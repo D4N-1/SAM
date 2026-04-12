@@ -1,4 +1,4 @@
-import { commands } from "./commands/index.js"
+import { commands } from "./service/index.js"
 import type { contextCommand } from "./command.contex.js"
 import type { ParsedCommand } from "./command.types.js";
 

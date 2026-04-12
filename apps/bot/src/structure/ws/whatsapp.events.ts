@@ -1,38 +1,58 @@
 import * as qrcode from "qrcode"
+import type { WASocket, BaileysEventMap } from "@itsukichan/baileys"
 import { deleteAuth } from "./whatsapp.auth.js"
+import { startWhatsappBot } from "./whatsapp.client.js"
+import { enumStatusConnection } from "../../shared/enums/enum.status.js"
+import { msgSTATUS_TITLE, msgStatusConnection } from "../../shared/messages/msg.status.js"
+import { parseMessage } from "../../modules/messages/msg.parser.js"
+import type { ParsedMessage } from "../../modules/messages/msg.types.js"
+import { parse } from "node:path"
 
-export function registerWhatsappAccount(socket: any) {
+export function registerConnectionEvent(sam: WASocket) {
     
-    socket.ev.on("connection.update", async (data: any) => {
+    sam.ev.on("connection.update", async (data: BaileysEventMap['connection.update']) => {
 
-        console.log(data.connection)
+        let { connection, qr, lastDisconnect } = data as { connection?: enumStatusConnection, qr?: string, lastDisconnect: any }
 
-        if (data.connection == "connecting" || data.qr) {
+        if (qr) return console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
 
-            if (!data.qr) return
-
-            console.log( await qrcode.toString(data.qr, { type: "terminal", small: true }) )
-
+        if (connection) {
+            console.log(msgSTATUS_TITLE)
+            console.log(msgStatusConnection[connection])
+            console.log('\n')
         }
 
-        if (data.connection == "close") {
+        if (connection === enumStatusConnection.CLOSE) {
 
-            const reason = data?.lastDisconnect?.error?.output?.statusCode;
+            const reason = lastDisconnect?.error?.output?.statusCode;
 
             if (reason == 401) {
-                console.log(reason)
                 await deleteAuth()
                 process.exit(0)
             }
 
-            process.exit(1)
+            startWhatsappBot()
+        }
+
+        if (connection === enumStatusConnection.OPEN) {
         }
     })
 
 }
 
-export function registerCredsEvents(socket: any, saveCreds: any) {
+export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 
-    socket.ev.on("creds.update", saveCreds);
+    sam.ev.on("creds.update", saveCreds);
 
+}
+
+export function registerMessagesEvent(sam: WASocket) {
+
+    sam.ev.on("chats.update", async (data: BaileysEventMap['chats.update']) => {
+
+        let message: ParsedMessage = parseMessage(sam, data)
+
+        console.log(message)
+
+    })
 }

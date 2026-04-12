@@ -1,7 +1,7 @@
 import P from "pino"
 import { makeWASocket } from "@itsukichan/baileys";
 import { createAuthState } from "./whatsapp.auth.js";
-import { registerCredsEvents, registerWhatsappAccount } from "./whatsapp.events.js";
+import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp.events.js";
 
 export async function startWhatsappBot() {
 
@@ -17,7 +17,8 @@ export async function startWhatsappBot() {
     });
 
     registerCredsEvents(sam, saveCreds);
-    registerWhatsappAccount(sam);
+    registerConnectionEvent(sam);
+    registerMessagesEvent(sam);
 
     return sam;
 }
