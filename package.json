@@ -5,8 +5,7 @@
   "scripts": {
     "@sam/bot-test": "tsx watch apps/bot/src/main.ts",
     "@sam/bot-run": "tsc -p apps/bot && node apps/bot/dist/main.js",
-    
-    "@sam/api-test": "tsx watch apps/api/src/main.ts",
+    "@sam/api-test": "cd apps/api && nest start --watch",
     "@sam/api-run": "tsc -p apps/api && node apps/api/dist/main.js"
   },
   "workspaces": [
@@ -21,5 +20,13 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@nestjs/typeorm": "^11.0.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
+    "mariadb": "^3.5.2",
+    "mysql2": "^3.22.0",
+    "typeorm": "^0.3.28"
   }
 }
