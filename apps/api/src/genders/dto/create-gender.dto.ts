@@ -1,11 +1,11 @@
-import { IsInt, IsString } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator"
 
 export class CreateGenderDto {
 
-    @IsInt()
-    index: number;
-
 
     @IsString()
-    gender: string;
+    @IsNotEmpty({ message: 'El nombre del genero es obligatorio' })
+    @MinLength(3, { message: 'El nombre del genero es demasiado corto'})
+    @MaxLength(20, { message: 'El nombre del genero es demasiado largo'})
+    name: string;
 }
