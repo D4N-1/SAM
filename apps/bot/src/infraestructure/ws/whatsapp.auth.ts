@@ -2,7 +2,7 @@ import { useMultiFileAuthState } from "@itsukichan/baileys";
 import path from "node:path";
 import fsAsync from "node:fs/promises";
 import fs from "node:fs";
-import { BOT_PATH } from "../../common/utils/bot_path.util.js";
+import { BOT_PATH } from "../../common/utils/bot-path.util.js";
 
 const AUTH_PATH: string = path.resolve( BOT_PATH, "src", "auth" )
 
