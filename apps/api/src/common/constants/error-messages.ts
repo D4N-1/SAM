@@ -4,5 +4,11 @@ export const ANIME_ERRORS = {
             error: 404,
             message: `No se encontró el anime por su ${type} con la busqueda ${search}`
         }
+    },
+    CONFLICT: (type: string, search: string|number) => {
+        return {
+            error: 409,
+            message: `No se puedo crear, hay un conflicto con ${type} de valor ${search}`
+        }
     }
 }

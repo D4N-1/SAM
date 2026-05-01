@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AnimesEntity } from "src/animes/entities/anime.entity";
 
 @Entity({ name: 'genders' })
@@ -12,4 +12,7 @@ export class GendersEntity {
 
     @ManyToMany(() => AnimesEntity, (anime) => anime.genders)
     animes: AnimesEntity[]
+
+    @DeleteDateColumn({ name: 'deleted_at', select: false })
+    deleted_at: Date;
 }

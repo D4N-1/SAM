@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { GendersModule } from './genders/genders.module';
 import { DbModule } from './database/database.module';
 import { AnimeModule } from './animes/animes.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { AnimeModule } from './animes/animes.module';
       isGlobal: true,
       envFilePath: '.env'
     }),
-    DbModule, GendersModule, AnimeModule],
+    DbModule, GendersModule, AnimeModule, AuthModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

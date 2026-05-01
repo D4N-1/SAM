@@ -18,8 +18,10 @@ export class AnimeService {
     }
 
     findOneIndex(id:number): Promise<AnimesEntity[]|null> {
+
+        console.log(`EL ID A BUSCAR ES ${id}`)
         return this.AnimeRepository.find({
-            where: { index: id },
+            where: { id },
             relations: {
                 genders: true
             }
@@ -38,8 +40,10 @@ export class AnimeService {
         return this.AnimeRepository.findOneBy({ native: Like(`%${native}%`)})
     }
 
-    async create(anime: CreateAnimeDto): Promise<AnimesEntity> {
+    async create(anime: CreateAnimeDto): Promise<AnimesEntity|null> {
         const { gendersIds, ...animeData } = anime
+
+        console.log(animeData)
 
         const newAnime = this.AnimeRepository.create(animeData)
 

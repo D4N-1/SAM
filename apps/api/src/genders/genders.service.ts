@@ -30,9 +30,6 @@ export class GendersService {
     return this.GendersRepository.findBy({ name: Like(`%${name}%`) })
   }
 
-  ////////////////////////////////////////
-
-
   async update(id: number, updateGenderDto: UpdateGenderDto) {
     const gender = await this.findOneIndex(id)
 
@@ -50,7 +47,7 @@ export class GendersService {
   async remove(id: number) {
     const deleted = await this.findOneIndex(id)
 
-    await this.GendersRepository.delete({ index: id })
+    await this.GendersRepository.softDelete({ index: id })
 
     return {
       success: true,

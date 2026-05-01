@@ -1,4 +1,4 @@
-import { Column, Entity, Generated, Index, JoinColumn, ManyToMany, PrimaryColumn, JoinTable } from "typeorm";
+import { Column, Entity, Generated, Index, JoinColumn, ManyToMany, PrimaryColumn, JoinTable, DeleteDateColumn } from "typeorm";
 import { AnimeFormat } from "src/common/enums/anime-format.enum";
 import { AnimeSeason } from "src/common/enums/anime-season.enum";
 import { GendersEntity } from "src/genders/entities/gender.entity";
@@ -71,4 +71,7 @@ export class AnimesEntity {
         nullable: true
     })
     year: number;
+
+    @DeleteDateColumn({ name: 'deleted_at', select: false })
+    deleted_at: Date;
 }

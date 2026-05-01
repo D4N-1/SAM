@@ -3,5 +3,4 @@
 package-lock.json
 **/logs/
 **/temp/
-**/auth/
 /generated/prisma
