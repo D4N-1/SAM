@@ -1,5 +1,5 @@
 import type { WASocket } from "@itsukichan/baileys";
-import type { ParsedMessage } from "../messages/msg.types.js";
+import type { ParsedMessage } from "../modules/messages/msg.types.js";
 
 export interface Command {
     name: string,

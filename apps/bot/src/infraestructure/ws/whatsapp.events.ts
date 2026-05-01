@@ -6,8 +6,8 @@ import { enumStatusConnection } from "../../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgStatusConnection } from "../../common/messages/msg.status.js"
 import { parseMessage } from "../../modules/messages/msg.parser.js"
 import type { ParsedMessage } from "../../modules/messages/msg.types.js"
-import { parseCommand } from "../../modules/commands/command.parser.js"
-import { routeCommand } from "../../modules/commands/command.router.js"
+import { parseCommand } from "../../commands/command.parser.js"
+import { routeCommand } from "../../commands/command.router.js"
 
 export function registerConnectionEvent(sam: WASocket) {
     
