@@ -11,5 +11,11 @@ export async function routeCommand( parsed: ParsedCommand, sam: WASocket, messag
 
     if (!command) return console.log(COMMAND_NOT_FOUND);
 
-    await command.execute(parsed, sam, message)
+    const ctx = {
+        socket: sam,
+        parsed,
+        message
+    }
+
+    await command.execute(ctx)
 }

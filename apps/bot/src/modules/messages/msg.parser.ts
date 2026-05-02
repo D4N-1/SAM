@@ -2,6 +2,8 @@ import type { WASocket } from "@itsukichan/baileys"
 
 export function parseMessage(sam: WASocket, msg: any): any {
 
+    if (!msg[0] || !msg[0]?.messages?.length) return false;
+
     const message: any = msg[0]?.messages[0]?.message;
 
     let sender = message?.key?.participant
@@ -12,15 +14,21 @@ export function parseMessage(sam: WASocket, msg: any): any {
     sender = group ? sender : message?.key?.remoteJid
     senderAlt = group ? senderAlt : message?.key?.remoteJidAlt
 
+    const isFromMe = message?.key?.fromMe
+    const pushName = isFromMe ? sam?.user?.name : message?.pushName
+    const botNumber = sam?.user?.id.split(':')[0] + '@s.whatsapp.net';
+
+    if (isFromMe) sender = botNumber;
+
     return {
         chatId: msg[0]?.id ||
             message?.key?.remoteJid,
         sender,
         senderAlt,
-        pushName: message?.pushName,
+        pushName,
         content: message?.message?.conversation ||
             message?.message?.extendedTextMessage?.text,
-        botNumber: sam?.user?.id.split(':')[0] + '@s.whatsapp.net',
+        botNumber,
         group,
         fromMe: message?.key?.fromMe,
         key: message?.key,

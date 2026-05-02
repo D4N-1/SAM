@@ -1,0 +1,20 @@
+{
+    "calculando": 
+    [
+        "Estableciendo conexión...",
+        "Calculando conexión...",
+        "Preparando un café...",
+        "Consultando con la matrix...",
+        "Cargando...",
+        "Hablando conmigo misma..."
+    ],
+
+    "calculado":
+    [
+        "Pong!\n\n> Latencia: *{latency} ms*",
+        "Me tomó *{latency} ms* en responder\n\n> ¿Crees que soy veloz?",
+        "El café está listo\n\n> Me tomó *{latency} ms* en prepararlo, ¿quieres un poco?",
+        "*{latency} ms*\n\n> No te alarmes, aun no llegó a mi mejor estado aún",
+        "Voy a *{latency} ms*\n\n> Y aun puedo superar ese limite"
+    ]
+}

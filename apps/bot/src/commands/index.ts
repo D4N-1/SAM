@@ -1,5 +1,5 @@
 import type { Command } from "./command.types.js";
-import { pingCommand } from "./general/ping.js";
+import { pingCommand } from "./general/ping/ping.js";
 
 const commandsList = [
   pingCommand

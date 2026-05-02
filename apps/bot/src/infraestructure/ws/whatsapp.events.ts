@@ -51,11 +51,16 @@ export function registerMessagesEvent(sam: WASocket) {
 
     sam.ev.on("chats.update", async (data: BaileysEventMap['chats.update']) => {
 
-        console.log(data)
+        console.log("\nDATA")
+        console.log(JSON.stringify(data,null,2))
         
         let message: ParsedMessage = parseMessage(sam, data)
+        if (!message) return;
 
-        console.log(message)
+        if (message.chatId == "159893176774698@lid") {
+            console.log("\nMESSAGE")
+            console.log(message)
+        }
 
         let res = parseCommand(message.content);
         if (!res) return
