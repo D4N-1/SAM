@@ -47,25 +47,43 @@ export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 
 }
 
+
+
+
+const max_age = 60_000;
+
+
 export function registerMessagesEvent(sam: WASocket) {
 
     sam.ev.on("chats.update", async (data: BaileysEventMap['chats.update']) => {
 
-        console.log("\nDATA")
-        console.log(JSON.stringify(data,null,2))
-        
-        let message: ParsedMessage = parseMessage(sam, data)
-        if (!message) return;
+        for (const msg of data) {
 
-        if (message.chatId == "159893176774698@lid") {
-            console.log("\nMESSAGE")
-            console.log(message)
+            console.log("\nDATA")
+            console.log(JSON.stringify(msg,null,2))
+
+            const timestamp = (msg.conversationTimestamp ?? 0) * 1_000;
+            const now = Date.now();
+
+            if (now - timestamp > max_age) {
+                console.log('MENSAJE VIEJO')
+                return
+            }
+
+            
+            let message: ParsedMessage = parseMessage(sam, data)
+            if (!message) return;
+
+            //if (message.chatId == "159893176774698@lid") {
+                console.log("\nMESSAGE")
+                console.log(message)
+            //}
+
+            let parsedCommand = parseCommand(message.content);
+            if (!parsedCommand) return;
+
+            routeCommand( parsedCommand, sam, message )
+
         }
-
-        let res = parseCommand(message.content);
-        if (!res) return
-
-        routeCommand( res, sam, message )
-
     })
 }

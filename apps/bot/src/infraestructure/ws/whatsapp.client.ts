@@ -13,9 +13,12 @@ export async function startWhatsappBot() {
         browser: [ "SAM", "SAM", "10.0.22631" ],
         logger: P({ level: "silent" }),
         // silent / fatal / error / warn / info / debug / trace
-        syncFullHistory: false
-
+        syncFullHistory: false,
+        shouldIgnoreJid: (jid) => {
+            return jid.includes("broadcast")
+        }
     });
+
 
     registerCredsEvents(sam, saveCreds);
     registerConnectionEvent(sam);
