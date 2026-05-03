@@ -2,8 +2,8 @@ import * as qrcode from "qrcode"
 import type { WASocket, BaileysEventMap } from "@itsukichan/baileys"
 import { deleteAuth } from "./whatsapp.auth.js"
 import { startWhatsappBot } from "./whatsapp.client.js"
-import { enumStatusConnection } from "../../common/enums/enum.status.js"
-import { msgSTATUS_TITLE, msgStatusConnection } from "../../common/utils/log-status.util.js"
+import { enumStatusConnection } from "../../shared/enums/enum.status.js"
+import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../../shared/messages/log-status.message.js"
 import { parseMessage } from "../../modules/messages/msg.parser.js"
 import type { ParsedMessage } from "../../modules/messages/msg.types.js"
 import { parseCommand } from "../../commands/command.parser.js"
@@ -19,7 +19,7 @@ export function registerConnectionEvent(sam: WASocket) {
 
         if (connection) {
             console.log(msgSTATUS_TITLE)
-            console.log(msgStatusConnection[connection])
+            console.log(msgSTATUS_CONNECTION[connection])
             console.log('\n')
         }
 

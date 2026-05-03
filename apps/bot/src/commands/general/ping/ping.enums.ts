@@ -1,4 +1,4 @@
-export enum enumPingMessages {
+export enum enumPingStates {
     CALCULANDO = 'calculando',
     CALCULADO = 'calculado'
 }

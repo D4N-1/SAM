@@ -4,7 +4,9 @@ import type { ParsedMessage } from "../modules/messages/msg.types.js";
 interface ctx {
     socket: any,
     parsed: any,
-    message: any
+    message: any,
+    sendMessage(text: string): Promise<any>,
+    editMessage(text: string, key: any): Promise<any>
 }
 
 export interface Command {

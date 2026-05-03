@@ -1,0 +1,1 @@
+export const COMMAND_NOT_FOUND = '[ ADVISE ] Comando NO encontrado'
