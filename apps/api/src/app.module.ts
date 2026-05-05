@@ -8,6 +8,7 @@ import { CommunitiesModule } from './modules/communities/communities.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfileEntity } from './modules/profiles/entities/profile.entity';
 import { ProfilesModule } from './modules/profiles/profiles.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,7 +17,9 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
       envFilePath: '.env'
     }),
 
-    DbModule, UsersModule, CommunitiesModule, ProfilesModule],
+    DbModule, UsersModule,
+    CommunitiesModule, ProfilesModule,
+    AuthModule ],
   controllers: [AppController],
   providers: [AppService],
 })

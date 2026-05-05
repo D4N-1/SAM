@@ -1,3 +1,4 @@
+import { AuthEntity } from "src/modules/auth/entities/auth.entity";
 import { ProfileEntity } from "src/modules/profiles/entities/profile.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -13,5 +14,11 @@ export class UserEntity {
     name: string;
     
     @OneToMany( () => ProfileEntity, profile => profile.user)
-    profiles: ProfileEntity[]
+    profiles: ProfileEntity[];
+
+    //@OneToMany( () => AuthEntity, auth => auth.user)
+    //auths: AuthEntity;
+
+    @Column()
+    password: string;
 }
