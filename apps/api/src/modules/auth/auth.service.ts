@@ -17,9 +17,11 @@ export class AuthService {
     private JwtService: JwtService
   ) {}
 
+  
+
   async login(id: string, password: string) {
     const user = await this.UserRepository.findOneBy({ id })
-
+    console.log('SECRET USADO PARA FIRMAR:', process.env.JWT_SECRET ?? 'SPIKE')
     if (!user) throw new UnauthorizedException('No existe ese usuario')
 
     const isValid = await bcrypt.compare(password, user.password);

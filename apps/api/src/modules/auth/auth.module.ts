@@ -7,13 +7,15 @@ import { UserEntity } from '../users/entities/user.entity';
 import { JwtStrategy } from './strategies/auth.strategy';
 
 
-export const SECRET = "SPIKE"
+
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: SECRET,
-      signOptions: { expiresIn: '8h' }
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET,
+        signOptions: { expiresIn: '8h' }
+      })
     }),
     TypeOrmModule.forFeature([UserEntity])
   ],
