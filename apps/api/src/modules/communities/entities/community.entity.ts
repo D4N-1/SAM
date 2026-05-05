@@ -1,8 +1,8 @@
 import { ProfileEntity } from "src/modules/profiles/entities/profile.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('users')
-export class UserEntity {
+@Entity('communities')
+export class CommunityEntity {
     @PrimaryGeneratedColumn()
     index: number;
 
@@ -11,7 +11,7 @@ export class UserEntity {
 
     @Column()
     name: string;
-    
-    @OneToMany( () => ProfileEntity, profile => profile.user)
+
+    @OneToMany( () => ProfileEntity, profile => profile.community)
     profiles: ProfileEntity[]
 }

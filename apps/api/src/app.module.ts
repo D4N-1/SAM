@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config'
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { GendersModule } from './modules/genders/genders.module';
 import { DbModule } from './database/database.module';
-import { AnimeModule } from './modules/animes/animes.module';
-import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { CommunitiesModule } from './modules/communities/communities.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProfileEntity } from './modules/profiles/entities/profile.entity';
+import { ProfilesModule } from './modules/profiles/profiles.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { UsersModule } from './modules/users/users.module';
       isGlobal: true,
       envFilePath: '.env'
     }),
-    DbModule, GendersModule, AnimeModule, AuthModule, UsersModule],
+
+    DbModule, UsersModule, CommunitiesModule, ProfilesModule],
   controllers: [AppController],
   providers: [AppService],
 })

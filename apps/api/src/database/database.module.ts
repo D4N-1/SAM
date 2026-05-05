@@ -9,7 +9,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
             inject: [ConfigService],
             useFactory: (ConfigService: ConfigService) => ({
 
-                type: ConfigService.get<string>('DB_TYPE', 'mysql') as any,
+                type: ConfigService.get<string>('DB_TYPE', 'mariadb') as any,
                 host: ConfigService.get<string>('DB_HOST'),
                 port: ConfigService.get<string>('DB_PORT'),
                 username: ConfigService.get<string>('DB_USER'),
@@ -17,7 +17,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                 database: ConfigService.get<string>('DB_DATABASE'),
                 autoLoadEntities: true,
                 synchronize: true,
-                logging: true
+                logging: false,
             })
         })
     ],
