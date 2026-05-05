@@ -2,14 +2,15 @@ import { commands } from "./index.js"
 import type { ParsedCommand } from "./command.types.js";
 import type { WASocket } from "@itsukichan/baileys";
 import type { ParsedMessage } from "../modules/messages/msg.types.js";
-import { COMMAND_NOT_FOUND } from "../shared/messages/log.message.js";
+import { msgERROR_LOG_MESSAGES } from "../shared/messages/error.message.js";
+import { handleError } from "../shared/errors/handler.error.js";
 
 
 export async function routeCommand( parsed: ParsedCommand, sam: WASocket, message: ParsedMessage) {
 
     const command = commands[parsed.command];
 
-    if (!command) return console.log(COMMAND_NOT_FOUND);
+    if (!command) return console.log(msgERROR_LOG_MESSAGES.NOT_FOUND);
 
     const ctx = {
         socket: sam,
@@ -22,8 +23,12 @@ export async function routeCommand( parsed: ParsedCommand, sam: WASocket, messag
         editMessage: (text: string, key: any) => {
             return sam.sendMessage(message.chatId, { edit: key, text: text })
         }
-
     }
 
-    await command.execute(ctx)
+    try {
+        await command.execute(ctx)
+
+    } catch (error) {
+        await handleError(error, ctx)
+    }
 }

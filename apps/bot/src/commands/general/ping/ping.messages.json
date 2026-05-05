@@ -6,8 +6,17 @@
         "Preparando un café...",
         "Consultando con la matrix...",
         "Cargando...",
-        "Hablando conmigo misma..."
-    ],
+        "Hablando conmigo misma...",
+        "Pausando mi partida online...",
+        "Resolviendo un Captcha...",
+        "Tomando un numero random...",
+        "Probando si sale cara al lanzar una moneda...",
+        "Buscando tu dirección ip para conocerte mejor...",
+        "Contando manzanas...",
+        "Pausando mi playlist...",
+        "Calculando el tiempo de latencia entre tu y yo...",
+        "Tranquilo viajero, estoy calculando la velocidad del viento por ti..."
+        ],
 
     "calculado":
     [
@@ -15,6 +24,12 @@
         "Me tomó *{latency} ms* en responder\n\n> ¿Crees que soy veloz?",
         "El café está listo\n\n> Me tomó *{latency} ms* en prepararlo, ¿quieres un poco?",
         "*{latency} ms*\n\n> No te alarmes, aun no llegó a mi mejor estado aún",
-        "Voy a *{latency} ms*\n\n> Y aun puedo superar ese limite"
+        "Voy a *{latency} ms*\n\n> Y aun puedo superar ese limite",
+        "Me costó *{latency} ms* en resolver el Captcha\n\n> Logre probar que no soy un bot",
+        "Ahora sé donde vives\n\n> Estas a *{latency} ms* de distancia de mi",
+        "Me salió cara en la moneda\n\n> Hoy es mi dia con *{latency} ms* de suerte",
+        "Supongo que con estos *{latency} ms* puedo serte útil\n\n> ¿Que tal si probamos algún comando interesante?",
+        "Parece que hoy sera un dia interesante\n\n> El viento sopla a una velocidad de *{latency} ms*"
+
     ]
 }
