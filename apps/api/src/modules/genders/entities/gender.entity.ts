@@ -1,5 +1,5 @@
 import { Column, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { AnimesEntity } from "src/animes/entities/anime.entity";
+import { AnimesEntity } from "src/modules/animes/entities/anime.entity";
 
 @Entity({ name: 'genders' })
 export class GendersEntity {

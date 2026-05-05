@@ -1,7 +1,7 @@
 import { Column, Entity, Generated, Index, JoinColumn, ManyToMany, PrimaryColumn, JoinTable, DeleteDateColumn } from "typeorm";
 import { AnimeFormat } from "src/common/enums/anime-format.enum";
 import { AnimeSeason } from "src/common/enums/anime-season.enum";
-import { GendersEntity } from "src/genders/entities/gender.entity";
+import { GendersEntity } from "src/modules/genders/entities/gender.entity";
 
 @Entity('animes')
 export class AnimesEntity {

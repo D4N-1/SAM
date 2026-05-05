@@ -3,7 +3,7 @@ import { AnimesEntity } from "./entities/anime.entity"
 import { Like, Repository } from "typeorm"
 import { InjectRepository } from "@nestjs/typeorm"
 import { CreateAnimeDto } from "./dto/create-anime.dto"
-import { GendersEntity } from "src/genders/entities/gender.entity"
+import { GendersEntity } from "src/modules/genders/entities/gender.entity"
 
 @Injectable()
 export class AnimeService {
