@@ -20,15 +20,7 @@ export class AuthService {
   async login(id: string, password: string) {
     const user = await this.UserRepository.findOneBy({ id })
 
-    if (!user) {
-      const hashed = await bcrypt.hash(password, 10);
-
-      return await this.UserRepository.save({
-        id: id,
-        name: 'Dani',
-        password: hashed,
-      });
-    }
+    if (!user) throw new UnauthorizedException('No existe ese usuario')
 
     const isValid = await bcrypt.compare(password, user.password);
 
