@@ -1,4 +1,4 @@
-import type { WASocket } from "@itsukichan/baileys";
+import type { WAPresence, WASocket } from "@itsukichan/baileys";
 import type { ParsedMessage } from "../modules/messages/msg.types.js";
 
 interface ctx {
@@ -6,7 +6,9 @@ interface ctx {
     parsed: any,
     message: any,
     sendMessage(text: string): Promise<any>,
-    editMessage(text: string, key: any): Promise<any>
+    editMessage(text: string, key: any): Promise<any>,
+    readMessage(key: any): Promise<any>,
+    sendPresenceUpdate(type: WAPresence, chatId: string): Promise<any>
 }
 
 export interface Command {

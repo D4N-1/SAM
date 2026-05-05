@@ -1,6 +1,6 @@
 import { commands } from "./index.js"
 import type { ParsedCommand } from "./command.types.js";
-import type { WASocket } from "@itsukichan/baileys";
+import type { WAPresence, WASocket } from "@itsukichan/baileys";
 import type { ParsedMessage } from "../modules/messages/msg.types.js";
 import { msgERROR_LOG_MESSAGES } from "../shared/messages/error.message.js";
 import { handleError } from "../shared/errors/handler.error.js";
@@ -22,6 +22,12 @@ export async function routeCommand( parsed: ParsedCommand, sam: WASocket, messag
         },
         editMessage: (text: string, key: any) => {
             return sam.sendMessage(message.chatId, { edit: key, text: text })
+        },
+        readMessage: (key: string) => {
+            return sam.readMessages([key])
+        },
+        sendPresenceUpdate: (type: WAPresence, chatId: string) => {
+            return sam.sendPresenceUpdate(type, chatId)
         }
     }
 
