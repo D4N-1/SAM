@@ -1,0 +1,727 @@
+[
+    {
+        "content": "No todo lo que brilla es valioso...",
+        "author": "Consejos",
+        "from": "Minecraft",
+        "tags": [ "Minecraft", "Reflexion" ]
+
+    },
+    {
+        "content": "El corazón es como la bedrock solo se destruye con engaños",
+        "author": "Youtuber - ElRichMC",
+        "from": "Minecraft",
+        "tags": [ "Minecraft", "Reflexion" ]
+
+    },
+    {
+        "content": "Hasta una sola antorcha puede iluminar la oscuridad más profunda",
+        "author": "Consejos",
+        "from": "Minecraft",
+        "tags": [ "Minecraft", "Reflexion" ]
+    },
+    {
+        "content": "Si no puedes conectarte a ese servidor, es porque esa no es tu version",
+        "author": "Consejos",
+        "from": "Minecraft",
+        "tags": [ "Minecraft", "Reflexion" ]
+
+    },
+    {
+        "content": "Tarde o temprano encontrarása la mina indicada",
+        "author": "Consejos",
+        "from":"Minecraft",
+        "tags": [ "Minecraft", "Reflexion" ]
+
+    },
+    {
+      "content": "El destino es una flecha disparada por un arquero llamado voluntad.",
+      "author": "Corvo Attano",
+      "from": "Dishonored",
+      "tags": ["Dishonored", "Reflexion", "Destino"]
+    },
+    {
+      "content": "No hay esperanza sin sufrimiento.",
+      "author": "Mensaje del universo",
+      "from": "Dark Souls",
+      "tags": ["Dark Souls", "Reflexion", "Dificultad"]
+    },
+    {
+      "content": "La guerra no se gana con victorias, sino con decisiones.",
+      "author": "Comandante Shepard",
+      "from": "Mass Effect",
+      "tags": ["Mass Effect", "Reflexion", "Guerra", "Decisiones"]
+    },
+    {
+      "content": "La gente tarda poco en juzgar, pero mucho en corregirse.",
+      "author": "Ezio Auditore",
+      "from": "Assassin's Creed II",
+      "tags": ["Assassin's Creed", "Reflexion", "Humanidad"]
+    },
+    {
+      "content": "No dependas de nadie en este mundo... porque hasta tu propia sombra te abandona en la oscuridad.",
+      "author": "Vergil",
+      "from": "Devil May Cry 3",
+      "tags": ["Devil May Cry", "Reflexion", "Soledad", "Oscuridad"]
+    },
+    {
+      "content": "Es increíble lo que una persona puede llegar a olvidar... pero es más sorprendente lo que puede llegar a esconder.",
+      "author": "Tifa Lockhart",
+      "from": "Final Fantasy VII",
+      "tags": ["Final Fantasy", "Reflexion", "Memoria", "Secretos"]
+    },
+    {
+      "content": "Únicamente dejando entrar a extraños, podemos encontrar nuevas formas de ser nosotros mismos.",
+      "author": "Neku Sakuraba",
+      "from": "The World Ends With You",
+      "tags": ["TWEWY", "Reflexion", "Identidad", "Cambio"]
+    },
+    {
+      "content": "Cuando mueres empiezas desde cero pero con una experiencia más...",
+      "author": "Subaru Natsuki",
+      "from": "Re:Zero",
+      "tags": ["Re:Zero", "Reflexion", "Reinicio", "Superacion"]
+    },
+    {
+      "content": "La vida es como un juego, si no te gusta la partida, cambia las reglas.",
+      "author": "Kirito",
+      "from": "Sword Art Online",
+      "tags": ["Sword Art Online", "Reflexion", "Vida", "Superacion"]
+    },
+    {
+      "content": "La vida es un juego, y yo soy el mejor jugador.",
+      "author": "Dante",
+      "from": "Devil May Cry",
+      "tags": ["Devil May Cry", "Confianza", "Ego", "Accion"]
+    },
+    {
+      "content": "Únicamente dejando entrar a extraños, podemos encontrar nuevas formas de ser nosotros mismos.",
+      "author": "Neku Sakuraba",
+      "from": "The World Ends With You",
+      "tags": ["TWEWY", "Reflexion", "Identidad", "Cambio"]
+    },
+    {
+      "content": "El corazón puede ser débil, pero algunas veces es todo lo que necesitamos.",
+      "author": "Sora",
+      "from": "Kingdom Hearts",
+      "tags": ["Kingdom Hearts", "Reflexion", "Corazon", "Esperanza"]
+    },
+    {
+      "content": "El hombre adecuado en el sitio equivocado puede cambiar el rumbo del mundo.",
+      "author": "G-Man",
+      "from": "Half-Life 2",
+      "tags": ["Half-Life", "Reflexion", "Destino", "Cambio"]
+    },
+    {
+      "content": "No elegimos cómo empezamos en esta vida. La verdadera grandeza es qué hacemos con lo que nos toca.",
+      "author": "Sully",
+      "from": "Uncharted 3",
+      "tags": ["Uncharted", "Reflexion", "Destino", "Superacion"]
+    },
+    {
+      "content": "Debemos luchar por los que viven y por los que aún no han nacido.",
+      "author": "Terra Branford",
+      "from": "Final Fantasy VI",
+      "tags": ["Final Fantasy", "Reflexion", "Sacrificio", "Proteccion"]
+    },
+    {
+      "content": "Un hombre elige, un esclavo obedece.",
+      "author": "Andrew Ryan",
+      "from": "BioShock",
+      "tags": ["Bioshock", "Reflexion", "Libertad", "Eleccion"]
+    },
+    {
+      "content": "Si de verdad existe el mal en este mundo, este reside en el mismo corazón del hombre.",
+      "author": "Edward D. Morrison",
+      "from": "Tales of Phantasia",
+      "tags": ["Tales of Phantasia", "Reflexion", "Naturaleza Humana", "Oscuridad"]
+    },
+    {
+      "content": "Si la historia debe cambiar, que cambie. Si el mundo es destruido, que así sea. Si mi destino es morir, simplemente me reiré de él.",
+      "author": "Magus",
+      "from": "Chrono Trigger",
+      "tags": ["Chrono Trigger", "Reflexion", "Destino", "Rebeldia"]
+    },
+    {
+      "content": "Mientras tengas siempre un espíritu explorador, encontrarás la salida. Esa es mi esperanza.",
+      "author": "Quote",
+      "from": "Cave Story",
+      "tags": ["Cave Story", "Reflexion", "Exploracion", "Esperanza"]
+    },
+    {
+      "content": "He luchado mucho tiempo por sobrevivir, pero no importa qué, siempre tienes que encontrar algo por lo que luchar.",
+      "author": "Joel",
+      "from": "The Last of Us",
+      "tags": ["The Last of Us", "Reflexion", "Supervivencia", "Motivacion"]
+    },
+    {
+      "content": "Nadie es innecesario.",
+      "author": "Yitán Tribal",
+      "from": "Final Fantasy IX",
+      "tags": ["Final Fantasy", "Reflexion", "Valor", "Identidad"]
+    },
+    {
+      "content": "El curso del tiempo es muy cruel... Para cada persona es distinto, pero nadie puede cambiarlo jamás... Una cosa que no cambia con el tiempo es el recuerdo de tus días de juventud.",
+      "author": "Sheik",
+      "from": "The Legend of Zelda: Ocarina of Time",
+      "tags": ["Zelda", "Reflexion", "Tiempo", "Memoria"]
+    },
+    {
+      "content": "No puedes deshacer lo que ya has hecho, pero sí puedes enfrentarlo.",
+      "author": "Frank Coleridge",
+      "from": "Silent Hill: Downpour",
+      "tags": ["Silent Hill", "Reflexion", "Culpa", "Redencion"]
+    },
+    {
+      "content": "No quiero que nadie hable de mí en pasado.",
+      "author": "Squall Leonhart",
+      "from": "Final Fantasy VIII",
+      "tags": ["Final Fantasy", "Reflexion", "Identidad", "Presente"]
+    },
+    {
+      "content": "¿Algún consejo, mocoso? ¡Cuando la vida se pone difícil, te levantas, peleas, y le enseñas quién está al cargo!",
+      "author": "Undyne",
+      "from": "Undertale",
+      "tags": ["Undertale", "Motivacion", "Fuerza", "Lucha"]
+    },
+    {
+      "content": "Lo correcto... ¿Qué es? Si haces lo correcto... ¿haces feliz a todo el mundo?",
+      "author": "Niño lunar",
+      "from": "The Legend of Zelda: Majora’s Mask",
+      "tags": ["Zelda", "Reflexion", "Moral", "Eleccion"]
+    },
+    {
+      "content": "¿Qué es el hombre? Una pequeña y miserable pila de secretos.",
+      "author": "Drácula",
+      "from": "Castlevania: Symphony of the Night",
+      "tags": ["Castlevania", "Reflexion", "Naturaleza Humana", "Oscuridad"]
+    },
+    {
+      "content": "No importa cuán oscura sea la noche, el día siempre vuelve a aparecer y nuestro viaje comienza una vez más.",
+      "author": "Lulu",
+      "from": "Final Fantasy X",
+      "tags": ["Final Fantasy", "Reflexion", "Esperanza", "Ciclo"]
+    },
+    {
+      "content": "Al final, solo lamentamos lo que no hemos hecho.",
+      "author": "Taric",
+      "from": "League of Legends",
+      "tags": ["League of Legends", "Reflexion", "Arrepentimiento", "Accion"]
+    },
+  {
+    "content": "¿Qué es mejor: nacer siendo bueno o derrotar tu naturaleza malvada con gran esfuerzo?",
+    "author": "Paarthurnax",
+    "from": "The Elder Scrolls V: Skyrim",
+    "tags": ["Skyrim", "Reflexion", "Moral", "Naturaleza Humana"]
+  },
+  {
+    "content": "La guerra es donde los jóvenes y estúpidos son engañados por los viejos para matarse entre ellos.",
+    "author": "Niko Bellic",
+    "from": "Grand Theft Auto IV",
+    "tags": ["GTA IV", "Reflexion", "Guerra", "Sociedad"]
+  },
+  {
+    "content": "Demasiadas personas tienen opiniones sobre cosas de las que no saben nada. Y cuanto más ignorantes son, más opiniones tienen.",
+    "author": "Thomas Hildern",
+    "from": "Fallout: New Vegas",
+    "tags": ["Fallout", "Reflexion", "Ignorancia", "Sociedad"]
+  },
+  {
+    "content": "La vida es como un juego de cartas. La mano que te toca está determinada por la suerte, pero la forma en que juegas depende de ti.",
+    "author": "Teodoro",
+    "from": "Fire Emblem: Three Houses",
+    "tags": ["Fire Emblem", "Reflexion", "Destino", "Decisiones"]
+  },
+  {
+    "content": "Mientras más oscura la noche, más brillan las estrellas.",
+    "author": "Kirito",
+    "from": "Sword Art Online",
+    "tags": ["SAO", "Reflexion", "Esperanza", "Superacion"]
+  },
+  {
+    "content": "El destino es una flecha disparada por un arquero llamado voluntad.",
+    "author": "Corvo Attano",
+    "from": "Dishonored",
+    "tags": ["Dishonored", "Reflexion", "Destino", "Voluntad"]
+  },
+  {
+    "content": "No hay esperanza sin sufrimiento.",
+    "author": "Frase del universo de Dark Souls",
+    "from": "Dark Souls",
+    "tags": ["Dark Souls", "Reflexion", "Dificultad", "Esperanza"]
+  },
+  {
+    "content": "El árbol más grande empezó como un pequeño brote.",
+    "author": "Mojang",
+    "from": "Minecraft",
+    "tags": ["Minecraft", "Reflexion", "Crecimiento", "Progreso"]
+  },
+  {
+    "content": "El Creeper que no puedes ver, es el que más daño puede hacer.",
+    "author": "Mojang",
+    "from": "Minecraft",
+    "tags": ["Minecraft", "Reflexion", "Peligro", "Atencion"]
+  },
+  {
+    "content": "eee eee e eeee eeee",
+    "author": "Sans",
+    "from": "Undertale",
+    "tags": ["Undertale", "Humor", "Misterio", "Sans"]
+  },
+  {
+    "content": "No dependas de nadie en este mundo... porque hasta tu propia sombra te abandona en la oscuridad.",
+    "author": "Vergil",
+    "from": "Devil May Cry 3",
+    "tags": ["Devil May Cry", "Reflexion", "Soledad", "Oscuridad"]
+  },
+  {
+    "content": "La imprudencia es algo del ser humano y no significa que sea malo.",
+    "author": "Asgore Dreemurr",
+    "from": "Undertale",
+    "tags": ["Undertale", "Reflexion", "Humanidad", "Moral"]
+  },
+  {
+    "content": "No importa el tamaño del pájaro, sino cómo se lo avientas a la puerca.",
+    "author": "aahh jia",
+    "from": "Angry Birds",
+    "tags": ["Angry Birds", "Humor", "Caos", "Random"]
+  },
+  {
+    "content": "A pesar de todo, sigues siendo tú.",
+    "author": "Frisk",
+    "from": "Undertale",
+    "tags": ["Undertale", "Reflexion", "Identidad", "Aceptacion"]
+  },
+  {
+    "content": "Tantas razones para rendirte..., y aun sigues aquí. Debes continuar...",
+    "author": "Asriel Dreemurr",
+    "from": "Undertale",
+    "tags": ["Undertale", "Motivacion", "Superacion", "Persistencia"]
+  },
+  {
+    "content": "Recuerda que la paciencia es la clave para encontrar diamantes.",
+    "author": "Mojang",
+    "from": "Minecraft",
+    "tags": ["Minecraft", "Reflexion", "Paciencia", "Progreso"]
+  },
+  {
+    "content": "Vi la muerte en mis sueños muchas veces, pero no he muerto. Fui mejor que mis sueños, mejor que mis pesadillas. Pero para descubrirlo... tuve que enfrentarlos a todos y tuve que pasar por lo peor para probarme a mí mismo que fui el mejor. Esta es mi realidad.",
+    "author": "William Bishop",
+    "from": "Ace Combat: Assault Horizon",
+    "tags": ["Ace Combat", "Reflexion", "Superacion", "Identidad", "Lucha"]
+  },
+  {
+    "content": "Párate sobre las cenizas de un trillón de almas fallecidas, y pregúntales a los fantasmas si el honor importa. El silencio será tu respuesta.",
+    "author": "Javik",
+    "from": "Mass Effect 3",
+    "tags": ["Mass Effect", "Reflexion", "Honor", "Guerra", "Civilizacion"]
+  },
+  {
+    "content": "Hay cosas que olvidamos... Y hay cosas que nunca podemos olvidar. Es gracioso... No sé cuál es más triste.",
+    "author": "Heather Mason",
+    "from": "Silent Hill 3",
+    "tags": ["Silent Hill", "Reflexion", "Memoria", "Trauma", "Tristeza"]
+  },
+  {
+    "content": "Los hombres buenos tienen intenciones buenas. Solo que no siempre terminamos haciendo el bien.",
+    "author": "Isaac Clarke",
+    "from": "Dead Space",
+    "tags": ["Dead Space", "Reflexion", "Moral", "Humanidad", "Supervivencia"]
+  },
+  {
+    "content": "Que alguien se haya ido no significa que te haya dejado.",
+    "author": "James McCloud",
+    "from": "Star Fox 64",
+    "tags": ["Star Fox", "Reflexion", "Perdida", "Esperanza", "Familia"]
+  },
+  {
+    "content": "No se trata de cambiar el mundo. Se trata de hacer nuestro mejor esfuerzo antes de partir de éste mundo… tal y como es. Se trata de respetar la voluntad de los demás, y creer en la tuya.",
+    "author": "The Boss",
+    "from": "Metal Gear Solid 3",
+    "tags": ["Metal Gear", "Reflexion", "Voluntad", "Legado", "Moral"]
+  },
+  {
+    "content": "Un famoso explorador dijo, que la grandeza está en lo que hacemos, no en quienes somos.",
+    "author": "Lara Croft",
+    "from": "Tomb Raider",
+    "tags": ["Tomb Raider", "Reflexion", "Grandeza", "Accion", "Destino"]
+  },
+  {
+    "content": "Uno solo puede esperar dejar un legado duradero. Pero muy frecuentemente, los legados que dejamos… no son los que esperamos.",
+    "author": "Reina Myrrah",
+    "from": "Gears of War 2",
+    "tags": ["Gears of War", "Reflexion", "Legado", "Consecuencias", "Historia"]
+  },
+  {
+    "content": "Leyendas, el primero la cuenta, el segundo la escucha y el tercero la divulga.",
+    "author": "Solid Snake",
+    "from": "Metal Gear Solid 2",
+    "tags": ["Metal Gear", "Reflexion", "Leyendas", "Historia", "Ciclo"]
+  },
+  {
+    "content": "Hay una línea muy difusa entre valentía y estupidez.",
+    "author": "Juggernaut",
+    "from": "Dota 2",
+    "tags": ["Dota 2", "Reflexion", "Valor", "Riesgo", "Sabiduria"]
+  },
+  {
+    "content": "La esperanza es lo que nos hace fuertes. Es la razón del por qué estamos aquí. Es por lo que peleamos cuando todo lo demás está perdido.",
+    "author": "Pandora",
+    "from": "God of War 3",
+    "tags": ["God of War", "Reflexion", "Esperanza", "Fuerza", "Lucha"]
+  },
+  {
+    "content": "La vida se trata de determinación. El resultado es secundario.",
+    "author": "Waka",
+    "from": "Okami",
+    "tags": ["Okami", "Reflexion", "Determinacion", "Destino", "Accion"]
+  },
+  {
+    "content": "El pasado es como un rompecabezas, como un espejo roto. A medida que lo vas recomponiendo te cortas y tu imagen no deja de cambiar... y tú cambias también.",
+    "author": "Max Payne",
+    "from": "Max Payne 2",
+    "tags": ["Max Payne", "Reflexion", "Pasado", "Identidad", "Memoria"]
+  },
+  {
+    "content": "Incluso en tiempos oscuros, no podemos renunciar a las cosas que nos hacen humanos.",
+    "author": "Khan",
+    "from": "Metro 2033",
+    "tags": ["Metro", "Reflexion", "Humanidad", "Oscuridad", "Esperanza"]
+  },
+  {
+    "content": "El final no es más importante que cualquiera de los momentos que nos llevaron hasta él.",
+    "author": "Dr. Rosalene",
+    "from": "To the Moon",
+    "tags": ["To the Moon", "Reflexion", "Tiempo", "Vida", "Significado"]
+  },
+  {
+    "content": "El mal es el mal. Menor, mayor, de medio pelo... no hace ninguna diferencia. El grado es arbitrario. La definición es borrosa. Si tengo que elegir entre un mal y otro, prefiero no elegir en absoluto.",
+    "author": "Geralt de Rivia",
+    "from": "The Witcher",
+    "tags": ["The Witcher", "Reflexion", "Moral", "Eleccion", "Destino"]
+  },
+  {
+    "content": "El conocimiento es inútil si no se utiliza.",
+    "author": "Steward Gixx",
+    "from": "Guild Wars 2",
+    "tags": ["Guild Wars 2", "Reflexion", "Conocimiento", "Accion", "Sabiduria"]
+  },
+  {
+    "content": "Hasta los peores cabronazos saben que hay que tratar con respeto a las mujeres.",
+    "author": "Mr. Torgue",
+    "from": "Borderlands 2",
+    "tags": ["Borderlands", "Humor", "Respeto", "Caos", "Personalidad"]
+  },
+  {
+    "content": "Es más importante dominar las cartas que sostienes que quejarse de las que ya se encargaron tus oponentes.",
+    "author": "Aza",
+    "from": "Pokémon Blanco y Negro",
+    "tags": ["Pokemon", "Reflexion", "Estrategia", "Control", "Decisiones"]
+  },
+  {
+    "content": "No desees que fuera más fácil, desea que fueras mejor.",
+    "author": "Zoilo",
+    "from": "Animal Crossing",
+    "tags": ["Animal Crossing", "Motivacion", "Superacion", "Esfuerzo", "Crecimiento"]
+  },
+  {
+    "content": "Cuando un hombre se enfrenta a la muerte, lo imposible no es más que un pequeño obstáculo.",
+    "author": "El Príncipe",
+    "from": "Prince of Persia",
+    "tags": ["Prince of Persia", "Reflexion", "Muerte", "Valor", "Accion"]
+  },
+  {
+    "content": "Algunos árboles florecen, otros mueren. Algunos ganados crecen fuertes, otros son tomados por lobos. Algunos hombres nacen siendo lo suficientemente ricos y tontos para disfrutar sus vidas. Nada es justo.",
+    "author": "John Marston",
+    "from": "Red Dead Redemption",
+    "tags": ["Red Dead Redemption", "Reflexion", "Injusticia", "Destino", "Realidad"]
+  },
+  {
+    "content": "Toda mentira contiene la verdad, y toda verdad contiene una mentira.",
+    "author": "Shu",
+    "from": "Suikoden 2",
+    "tags": ["Suikoden", "Reflexion", "Verdad", "Mentira", "Filosofia"]
+  },
+  {
+    "content": "¡Es peligroso ir por allí solo! Toma esto.",
+    "author": "Sabio",
+    "from": "The Legend of Zelda",
+    "tags": ["Zelda", "Humor", "Tutorial", "Aventura", "Iconico"]
+  },
+  {
+    "content": "Fue el destino quien me trajo aquí, pero soy yo quien trazó mi propio camino.",
+    "author": "Protagonista",
+    "from": "Red Dead Redemption",
+    "tags": ["Red Dead Redemption", "Reflexion", "Destino", "Libre Albedrio"]
+  },
+  {
+    "content": "Afuera el mercurio caía rápido. Hacía más frío que en el corazón del diablo, y llovían bieldas de hielo como si el cielo estuviese listo para caerse.",
+    "author": "Max Payne",
+    "from": "Max Payne",
+    "tags": ["Max Payne", "Narrativo", "Oscuridad", "Noir", "Ambiente"]
+  },
+  {
+    "content": "La mitad de lo que conocemos es mentira… La otra mitad, una mentira bien construida.",
+    "author": "Solid Snake",
+    "from": "Metal Gear Solid 3: Snake Eater",
+    "tags": ["Metal Gear", "Reflexion", "Verdad", "Manipulacion", "Filosofia"]
+  },
+  {
+    "content": "París en otoño. Los últimos meses del año y el final del milenio. Tengo muchos recuerdos de la ciudad: los cafés, la música, el amor… Y la muerte.",
+    "author": "Protagonista",
+    "from": "Broken Sword",
+    "tags": ["Broken Sword", "Narrativo", "Memoria", "Melancolia", "Historia"]
+  },
+  {
+    "content": "No sé si alguna vez habéis decepcionado a alguien, os han dado una paliza o habéis fracasado. Pero son esos momentos los que nos definen. Te empujan a ir más allá de lo que nunca creíste, y te obligan a tomar decisiones a cualquier precio.",
+    "author": "Protagonista",
+    "from": "Infamous 2",
+    "tags": ["Infamous", "Reflexion", "Superacion", "Decisiones", "Identidad"]
+  },
+  {
+    "content": "Cuanto más te acerques a la luz, mayor será tu sombra.",
+    "author": "Protagonista",
+    "from": "Kingdom Hearts",
+    "tags": ["Kingdom Hearts", "Reflexion", "Luz", "Oscuridad", "Dualidad"]
+  },
+  {
+    "content": "La mente humana no está preparada para despertar sabiendo que ese será su último día de vida, pero para mí eso es un lujo, no una maldición. Saber que llega el fin es una liberación.",
+    "author": "Protagonista",
+    "from": "Call of Duty: Modern Warfare 2",
+    "tags": ["Call of Duty", "Reflexion", "Muerte", "Destino", "Libertad"]
+  },
+  {
+    "content": "Los sacrificios los decides tú. Las pérdidas las deciden por ti.",
+    "author": "Protagonista",
+    "from": "Tomb Raider",
+    "tags": ["Tomb Raider", "Reflexion", "Sacrificio", "Perdida", "Destino"]
+  },
+  {
+    "content": "¿Qué es un hombre, más que una miserable pila de secretos?",
+    "author": "Protagonista",
+    "from": "Castlevania: Symphony of the Night",
+    "tags": ["Castlevania", "Reflexion", "Identidad", "Oscuridad", "Naturaleza Humana"]
+  },
+  {
+    "content": "Un hombre me prometió una vez que me libraría de mis cadenas, pero al final, me abandonó en pos de sus propios intereses.",
+    "author": "Protagonista",
+    "from": "BioShock Infinite",
+    "tags": ["Bioshock", "Reflexion", "Traicion", "Libertad", "Destino"]
+  },
+  {
+    "content": "¿Hasta dónde estás dispuesto a llegar para salvar a los que más quieres?",
+    "author": "Protagonista",
+    "from": "Heavy Rain",
+    "tags": ["Heavy Rain", "Reflexion", "Sacrificio", "Moral", "Decisiones"]
+  },
+  {
+    "content": "No sé si creo en el paraíso, pero creo en los ángeles.",
+    "author": "Max Payne",
+    "from": "Max Payne",
+    "tags": ["Max Payne", "Reflexion", "Esperanza", "Fe", "Noir"]
+  },
+  {
+    "content": "Está bien, he estado pensando, cuando la vida te da limones, ¡no hagas limonada! ¡Regrésale a la vida sus limones! ¡Enfurece! ¡No quiero tus malditos limones!",
+    "author": "Cave Johnson",
+    "from": "Portal",
+    "tags": ["Portal", "Humor", "Caos", "Frases Iconicas", "Energico"]
+  },
+  {
+    "content": "Una vieja metiche como tú sabe todo lo que sucede con las personas que viven debajo de su techo. ¿A dónde fue?",
+    "author": "Personaje",
+    "from": "L.A. Noire",
+    "tags": ["L.A. Noire", "Dialogo", "Investigacion", "Noir", "Misterio"]
+  },
+  {
+    "content": "Todo juego tiene una historia… Pero sólo uno es una leyenda.",
+    "author": "Narrador",
+    "from": "The Legend of Zelda",
+    "tags": ["Zelda", "Reflexion", "Aventura", "Leyenda", "Destino"]
+  },
+  {
+    "content": "Las armas y la droga de esta zona pasan a través de Industrias Trevor Philips o no pasan.",
+    "author": "Trevor Philips",
+    "from": "Grand Theft Auto V",
+    "tags": ["GTA", "Crimen", "Caos", "Violencia", "Control"]
+  },
+  {
+    "content": "Hay gente que resulta útil y hay gente que no; y la gente que no es útil debe morir.",
+    "author": "Trevor Philips",
+    "from": "Grand Theft Auto V",
+    "tags": ["GTA", "Crimen", "Psicologia", "Moral Distorcionada", "Violencia"]
+  },
+  {
+    "content": "La puerta del mañana no es la luz del cielo, sino la oscuridad profunda de la Tierra.",
+    "author": "Personaje",
+    "from": "Final Fantasy",
+    "tags": ["Final Fantasy", "Reflexion", "Destino", "Oscuridad", "Futuro"]
+  },
+  {
+    "content": "Te compadezco. Simplemente no lo entiendes … ¡no hay nada que no aprecie!",
+    "author": "Cloud Strife",
+    "from": "Final Fantasy VII",
+    "tags": ["Final Fantasy", "Reflexion", "Identidad", "Conflicto", "Emocion"]
+  },
+  {
+    "content": "Todo se balancea en el filo de todo.",
+    "author": "Personaje",
+    "from": "The Line",
+    "tags": ["The Line", "Reflexion", "Equilibrio", "Destino", "Filosofia"]
+  },
+  {
+    "content": "Me siento como si pudiera… como si pudiera… ¡conquistar el mundo!",
+    "author": "Protagonista",
+    "from": "Day of the Tentacle",
+    "tags": ["Day of the Tentacle", "Humor", "Caos", "Energia", "Comedia"]
+  },
+  {
+    "content": "Odio las tumbas.",
+    "author": "Lara Croft",
+    "from": "Tomb Raider",
+    "tags": ["Tomb Raider", "Humor", "Aventura", "Personalidad", "Ironia"]
+  },
+  {
+    "content": "Madre, están aquí de nuevo. Deberías haber gobernado este planeta. Eras más fuerte, más inteligente.",
+    "author": "Sephiroth",
+    "from": "Final Fantasy VII",
+    "tags": ["Final Fantasy", "Reflexion", "Poder", "Destino", "Oscuridad"]
+  },
+  {
+    "content": "Un hombre fuerte no necesita leer el futuro. Él hace su propio futuro.",
+    "author": "Solid Snake",
+    "from": "Metal Gear Solid",
+    "tags": ["Metal Gear", "Reflexion", "Destino", "Voluntad", "Fuerza"]
+  },
+  {
+    "content": "No te lamentes, sé mejor.",
+    "author": "Kratos",
+    "from": "God of War",
+    "tags": ["God of War", "Motivacion", "Superacion", "Disciplina", "Accion"]
+  },
+  {
+    "content": "Detrás de los mitos siempre hay algo de verdad.",
+    "author": "Lara Croft",
+    "from": "Tomb Raider",
+    "tags": ["Tomb Raider", "Reflexion", "Misterio", "Historia", "Verdad"]
+  },
+  {
+    "content": "Querer algo no te da el derecho de tenerlo.",
+    "author": "Ezio Auditore",
+    "from": "Assassin's Creed II",
+    "tags": ["Assassin's Creed", "Reflexion", "Moral", "Deseo", "Consecuencias"]
+  },
+  {
+    "content": "Por fin podría dejar mi propia huella y buscar aventuras. Sin embargo, ellas me encontraron a mí.",
+    "author": "Lara Croft",
+    "from": "Tomb Raider",
+    "tags": ["Tomb Raider", "Reflexion", "Destino", "Aventura", "Descubrimiento"]
+  },
+  {
+    "content": "Si tus palabras… son mentiras creadas para engañarme… o la verdad… que he buscado toda mi vida… no hay diferencia. Te pudrirás.",
+    "author": "Sephiroth",
+    "from": "Final Fantasy VII",
+    "tags": ["Final Fantasy", "Reflexion", "Obsesion", "Verdad", "Oscuridad"]
+  },
+  {
+    "content": "Si te encuentras en un pozo, lo primero que tienes que hacer es dejar de excavar.",
+    "author": "John Marston",
+    "from": "Red Dead Redemption 2",
+    "tags": ["Red Dead Redemption", "Reflexion", "Consejo", "Superacion", "Decisiones"]
+  },
+  {
+    "content": "No estoy en condiciones de ayudar a nadie, no es mi familia, no son mis amigos, a nadie.",
+    "author": "Cloud Strife",
+    "from": "Final Fantasy VII",
+    "tags": ["Final Fantasy", "Reflexion", "Aislamiento", "Culpa", "Emocion"]
+  },
+  {
+    "content": "No necesito ningún arma; ¡mis amigos son mi poder!",
+    "author": "Sora",
+    "from": "Kingdom Hearts",
+    "tags": ["Kingdom Hearts", "Motivacion", "Amistad", "Poder", "Esperanza"]
+  },
+  {
+    "content": "¡Si me levantas los puños, prepárate para irte al otro barrio!",
+    "author": "Balrog",
+    "from": "Street Fighter",
+    "tags": ["Street Fighter", "Humor", "Combate", "Violencia", "Personalidad"]
+  },
+  {
+    "content": "Incluso en los tiempos de oscuridad, no podemos renunciar a lo que nos hace humanos.",
+    "author": "Khan",
+    "from": "Metro 2033",
+    "tags": ["Metro", "Reflexion", "Humanidad", "Oscuridad", "Esperanza"]
+  },
+  {
+    "content": "Cuando todo parecía perdido, encontré la verdad y supe en qué tenía que convertirme.",
+    "author": "Lara Croft",
+    "from": "Tomb Raider",
+    "tags": ["Tomb Raider", "Reflexion", "Identidad", "Destino", "Revelacion"]
+  },
+  {
+    "content": "No hay nada más peligroso que una multitud con una idea equivocada.",
+    "author": "Edér Teylecg",
+    "from": "Pillars of Eternity",
+    "tags": ["Pillars of Eternity", "Reflexion", "Sociedad", "Peligro", "Ideas"]
+  },
+  {
+    "content": "Si todo es un sueño, no me despiertes.",
+    "author": "Cloud Strife",
+    "from": "Final Fantasy VII",
+    "tags": ["Final Fantasy", "Reflexion", "Realidad", "Sueño", "Emocion"]
+  },
+  {
+    "content": "La muerte por ironía resulta dolorosa.",
+    "author": "Lara Croft",
+    "from": "Tomb Raider",
+    "tags": ["Tomb Raider", "Reflexion", "Muerte", "Ironia", "Destino"]
+  },
+  {
+    "content": "Las batallas más duras se pelean en la mente, no con la espada.",
+    "author": "Dillion",
+    "from": "Hellblade: Senua’s Sacrifice",
+    "tags": ["Hellblade", "Reflexion", "Mente", "Guerra Interna", "Psicologia"]
+  },
+  {
+    "content": "Cuando los débiles cortejan la muerte, la encuentran.",
+    "author": "Grigori",
+    "from": "Dragon’s Dogma: Dark Arisen",
+    "tags": ["Dragons Dogma", "Reflexion", "Destino", "Muerte", "Poder"]
+  },
+  {
+    "content": "El éxito no es el final, el error no es fatal: es el coraje para continuar lo que queda.",
+    "author": "Personaje",
+    "from": "Call of Duty",
+    "tags": ["Call of Duty", "Motivacion", "Superacion", "Persistencia", "Fuerza"]
+  },
+  {
+    "content": "Todo lo que la maldad necesita para triunfar es que los hombres buenos no hagan nada.",
+    "author": "Personaje",
+    "from": "Call of Duty",
+    "tags": ["Call of Duty", "Reflexion", "Moral", "Sociedad", "Accion"]
+  },
+  {
+    "content": "No está mal, pero aún así no alcanzas la perfección que yo encarno.",
+    "author": "Gill",
+    "from": "Street Fighter III",
+    "tags": ["Street Fighter", "Ego", "Poder", "Perfeccion", "Combate"]
+  },
+  {
+    "content": "Las flores aquí son bastante resistentes porque es un lugar sagrado. Dicen que en Midgar no crecen ni la hierba ni las flores, pero por algún motivo, las flores sí. Me encanta este lugar.",
+    "author": "Aerith Gainsborough",
+    "from": "Final Fantasy VII",
+    "tags": ["Final Fantasy", "Naturaleza", "Esperanza", "Belleza", "Vida"]
+  },
+  {
+    "content": "Esta es nuestra historia, vamos a terminarla juntos.",
+    "author": "Yuna",
+    "from": "Final Fantasy X",
+    "tags": ["Final Fantasy", "Reflexion", "Union", "Destino", "Amistad"]
+  },
+  {
+    "content": "Yo soy la mujer más fuerte del mundo.",
+    "author": "Chun-Li",
+    "from": "Street Fighter",
+    "tags": ["Street Fighter", "Confianza", "Fuerza", "Poder", "Identidad"]
+  }
+
+]

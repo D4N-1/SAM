@@ -8,6 +8,7 @@ import { CommunitiesModule } from './modules/communities/communities.module';
 import { ProfilesModule } from './modules/profiles/profiles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { QuotesModule } from './modules/quotes/quotes.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 
     DbModule, UsersModule,
     CommunitiesModule, ProfilesModule,
-    AuthModule ],
+    AuthModule,
+    QuotesModule ],
   controllers: [AppController],
   providers: [AppService],
 })
