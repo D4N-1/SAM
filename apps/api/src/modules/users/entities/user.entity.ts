@@ -1,3 +1,4 @@
+import { enumRole } from "src/common/enums/role.enum";
 import { AuthEntity } from "src/modules/auth/entities/auth.entity";
 import { ProfileEntity } from "src/modules/profiles/entities/profile.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -21,4 +22,7 @@ export class UserEntity {
 
     @Column()
     password: string;
+
+    @Column()
+    role: enumRole;
 }

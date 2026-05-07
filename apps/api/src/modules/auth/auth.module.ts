@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { JwtStrategy } from './strategies/auth.strategy';
+import { ConfigService } from '@nestjs/config';
 
 
 
@@ -12,8 +13,9 @@ import { JwtStrategy } from './strategies/auth.strategy';
 @Module({
   imports: [
     JwtModule.registerAsync({
-      useFactory: () => ({
-        secret: process.env.JWT_SECRET,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '8h' }
       })
     }),
@@ -21,5 +23,6 @@ import { JwtStrategy } from './strategies/auth.strategy';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [AuthService]
 })
 export class AuthModule {}
