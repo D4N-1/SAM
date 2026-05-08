@@ -5,18 +5,16 @@ import path from 'node:path';
 @Injectable()
 export class QuotesService {
   
-  async findByIndex(id: number) {
+  async random() {
 
+    const filePath = path.resolve(__dirname, 'data', 'quotes.json');
 
-    console.log(id)
+    const raw = await fs.readFile(filePath, 'utf-8');
 
-  const filePath = path.resolve(__dirname, 'data', 'quotes.json');
+    const json = JSON.parse(raw);
 
-  const raw = await fs.readFile(filePath, 'utf-8');
-
-  const json = JSON.parse(raw);
-
+    const max = json.length
   
-  return json[Number(id)];
+    return json[Math.floor( Math.random() * max )];
   }
 }

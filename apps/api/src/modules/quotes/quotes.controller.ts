@@ -7,9 +7,9 @@ export class QuotesController {
 
 
   @Get()
-  async findOne(@Query() index: any) {
+  async random() {
 
-    return this.quotesService.findByIndex(Number(index.index))
+    return this.quotesService.random()
   }
 
 }
