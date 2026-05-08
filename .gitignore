@@ -4,4 +4,4 @@ package-lock.json
 **/logs/
 **/temp/
 **.env
-**/auth/
+apps/bot/src/auth/
