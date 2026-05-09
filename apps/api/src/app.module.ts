@@ -9,6 +9,7 @@ import { ProfilesModule } from './modules/profiles/profiles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { QuotesModule } from './modules/quotes/quotes.module';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { QuotesModule } from './modules/quotes/quotes.module';
     DbModule, UsersModule,
     CommunitiesModule, ProfilesModule,
     AuthModule,
-    QuotesModule ],
+    QuotesModule,
+    RolesModule ],
   controllers: [AppController],
   providers: [AppService],
 })
