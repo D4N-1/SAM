@@ -32,5 +32,6 @@ Aun no disponible
 ## Créditos
 
 Proyecto liderado por mi autoria mayoritariamente
+
 Créditos a [yuta578](https://github.com/yuta578) como programador de apoyo en la **API**
 
