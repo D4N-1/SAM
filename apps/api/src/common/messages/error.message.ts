@@ -1,4 +1,4 @@
-export const CODE_ERRORS = {
+export const ERROR_CODES = {
     UNAUTHORIZED: () => (
         {
             statusCode: 401,
