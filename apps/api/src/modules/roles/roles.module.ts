@@ -3,8 +3,8 @@ import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';
-import { RolesSeederService } from '../seeder/roles.seeder.service';
-import { Type } from 'class-transformer';
+import { RolesSeederService } from '../seeders/roles.seeder.service';
+
 
 @Module({
   imports: [

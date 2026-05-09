@@ -1,5 +1,7 @@
+import type { interfaceErrorCodes } from "../types/error.type";
+
 export const ERROR_CODES = {
-    UNAUTHORIZED: () => (
+    UNAUTHORIZED: (): interfaceErrorCodes => (
         {
             statusCode: 401,
             error: 'Unauthorized',
@@ -7,11 +9,18 @@ export const ERROR_CODES = {
         }
     ),
 
-    FORBIDDEN: () => (
+    FORBIDDEN: (): interfaceErrorCodes => (
         {
             statusCode: 403,
             error: 'Forbidden',
             message: 'No tienes permiso para acceder a este metodo'
+        }
+    ),
+    NOT_FOUND: (): interfaceErrorCodes => (
+        {
+            statusCode: 404,
+            error: 'Not Found',
+            message: 'No se encontró el recurso pedido'
         }
     )
 
