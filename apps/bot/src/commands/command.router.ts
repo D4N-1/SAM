@@ -2,8 +2,8 @@ import { commands } from "./index.js"
 import type { ParsedCommand } from "./command.types.js";
 import type { WAPresence, WASocket } from "@itsukichan/baileys";
 import type { ParsedMessage } from "../modules/messages/msg.types.js";
-import { msgERROR_LOG_MESSAGES } from "../shared/messages/error.message.js";
-import { handleError } from "../shared/errors/handler.error.js";
+import { msgERROR_LOG_MESSAGES } from "../common/messages/error.message.js";
+import { handleError } from "../common/errors/handler.error.js";
 
 
 export async function routeCommand( parsed: ParsedCommand, sam: WASocket, message: ParsedMessage) {

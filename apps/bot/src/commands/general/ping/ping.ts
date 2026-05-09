@@ -1,6 +1,6 @@
-import { AppError } from "../../../shared/errors/app.error.js";
-import { enumErrorCode } from "../../../shared/errors/enum.error.js";
-import { wait } from "../../../shared/utils/wait.util.js";
+import { AppError } from "../../../common/errors/app.error.js";
+import { enumErrorCode } from "../../../common/errors/enum.error.js";
+import { wait } from "../../../common/utils/wait.util.js";
 import type { Command } from "../../command.types.js";
 import { enumPingStates } from "./ping.enums.js";
 import { getPingMessage } from "./ping.utils.js";

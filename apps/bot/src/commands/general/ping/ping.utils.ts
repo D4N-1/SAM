@@ -1,4 +1,4 @@
-import { random } from "../../../shared/utils/array.util.js";
+import { random } from "../../../common/utils/array.util.js";
 import type { enumPingStates } from "./ping.enums.js";
 import messages from "./ping.messages.json" with { type: "json" }
 
