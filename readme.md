@@ -22,8 +22,10 @@ codigo `console.log()`
 
 ```ts
 console.log("hola")
+```
 
 ---
 
 ```md
 > Citas
+```
