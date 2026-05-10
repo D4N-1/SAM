@@ -27,14 +27,14 @@ export const ERROR_CODE = {
         {
             statusCode: 404,
             error: 'Not Found',
-            message: 'No se encontró el recurso pedido'
+            message: 'No se encontró el recurso de la petición'
         }
     ),
     CONFLICT: (): interfaceErrorCodes => (
         {
             statusCode: 409,
             error: 'Conflict',
-            message: 'El recurso se halló con un conflicto con el del servidor'
+            message: 'El recurso tiene un conflicto con el registrado en el servidor'
         }
     )
 

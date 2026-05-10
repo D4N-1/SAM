@@ -67,7 +67,7 @@ export class ContactService {
 
         if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
 
-        if (!contact.deletedAt) throw new BadRequestException( 'BAD' )
+        if (!contact.deletedAt) throw new BadRequestException( ERROR_CODE.BAD_REQUEST() )
 
         return await this.ContactRepository.recover(contact)
     }
