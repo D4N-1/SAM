@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ContactEntity } from "./entities/contact.entity";
 import { Repository } from "typeorm";
@@ -56,6 +56,20 @@ export class ContactService {
         const editContact = this.ContactRepository.merge(contact, updateContactDto)
 
         return await this.ContactRepository.save(editContact)
+    }
+
+    async recover(uuid: string) {
+
+        const contact = await this.ContactRepository.findOne({
+            where: { uuid },
+            withDeleted: true
+        })
+
+        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
+
+        if (!contact.deletedAt) throw new BadRequestException( 'BAD' )
+
+        return await this.ContactRepository.recover(contact)
     }
 
     async delete(uuid: string) {

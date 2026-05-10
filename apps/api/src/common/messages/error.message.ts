@@ -1,6 +1,13 @@
 import type { interfaceErrorCodes } from "../types/error.type";
 
 export const ERROR_CODE = {
+    BAD_REQUEST: (): interfaceErrorCodes => (
+        {
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Petición inválida, revisa la ruta o el cuerpo del JSON'
+        }
+    ),
     UNAUTHORIZED: (): interfaceErrorCodes => (
         {
             statusCode: 401,
