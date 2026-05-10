@@ -15,6 +15,11 @@ export class CreateContactDto {
 
     @IsString()
     @IsOptional()
+    @MaxLength(50)
+    email?: string;
+    
+    @IsString()
+    @IsOptional()
     @MaxLength(25)
     name?: string;
 }

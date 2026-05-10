@@ -1,7 +1,7 @@
 import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { RoleEntity } from "../roles/entities/role.entity";
+import { RoleEntity } from "../modules/roles/entities/role.entity";
 import { enumRole } from "src/common/enums/role.enum";
 
 

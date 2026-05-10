@@ -1,11 +1,12 @@
 import { ApiHideProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
-import { UserEntity } from "src/modules/users/entity/user.entity";
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, Generated, OneToOne } from "typeorm";
+import { enumRole } from "src/common/enums/role.enum";
+import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
+import { RoleEntity } from "src/modules/roles/entities/role.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Generated, PrimaryGeneratedColumn, UpdateDateColumn, OneToOne, JoinColumn, Entity } from "typeorm";
 
-
-@Entity('contacts')
-export class ContactEntity {
+@Entity('users')
+export class UserEntity {
 
     @PrimaryGeneratedColumn()
     @Exclude()
@@ -13,33 +14,15 @@ export class ContactEntity {
     index: number;
 
     @Column({
-        type: 'varchar',
+        type: 'uuid',
         unique: true
     })
     @Generated('uuid')
     uuid: string;
 
-    @Column({
-        type: 'varchar',
-        length: 35,
-        unique: true
-    })
-    uid: string;
-
-    @Column({
-        type: 'varchar',
-        length: 35,
-        unique: true,
-        nullable: true
-    })
-    lid?: string;
-
-    @Column({
-        type: 'varchar',
-        length: 50,
-        nullable: true
-    })
-    email?: string;
+    @OneToOne( () => ContactEntity, (contact) => contact.user )
+    @JoinColumn()
+    contact: ContactEntity;
 
     @Column({
         type: 'varchar',
@@ -48,8 +31,29 @@ export class ContactEntity {
     })
     name?: string;
 
-    @OneToOne( () => UserEntity, (user) => user.contact)
-    user: UserEntity
+    @Column({
+        type: 'varchar',
+        length: 255,
+        nullable: true
+    })
+    description?: string;
+
+    @Column({
+        type: 'varchar',
+        length: 255,
+        nullable: true
+    })
+    imageUrl?: string;
+
+    @Column({
+        type: 'varchar',
+        length: 255
+    })
+    passwordHash: string;
+
+    @OneToOne( () => RoleEntity, (role) => role.user )
+    @Column()
+    role: RoleEntity;
 
     @CreateDateColumn({
         type: 'timestamp',
@@ -60,15 +64,12 @@ export class ContactEntity {
     @UpdateDateColumn({
         type: 'timestamp',
         name: 'updated_at'
-
     })
     updatedAt: Date;
 
     @DeleteDateColumn({
         type: 'timestamp',
         name: 'deleted_at'
-
     })
     deletedAt: Date;
-
 }

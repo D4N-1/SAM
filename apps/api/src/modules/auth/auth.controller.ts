@@ -11,6 +11,7 @@ import { enumRole } from 'src/common/enums/role.enum';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /*
   @Post('login')
   login(@Body() dto: CreateAuthDto) {
     return this.authService.login(dto.id, dto.password)
@@ -23,4 +24,5 @@ export class AuthController {
   me(@Req() req) {
     return this.authService.findOne(req.user.index)
   }
+    */
 }

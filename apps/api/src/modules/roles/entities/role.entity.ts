@@ -1,7 +1,8 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { enumRole } from "src/common/enums/role.enum";
-import { Entity, PrimaryGeneratedColumn, Column, Generated } from "typeorm";
+import { UserEntity } from "src/modules/users/entity/user.entity";
+import { Entity, PrimaryGeneratedColumn, Column, Generated, OneToOne } from "typeorm";
 
 @Entity('roles')
 export class RoleEntity {
@@ -34,4 +35,6 @@ export class RoleEntity {
     })
     name: enumRole;
 
+    @OneToOne( () => UserEntity, (user) => user.role)
+    user: UserEntity
 }
