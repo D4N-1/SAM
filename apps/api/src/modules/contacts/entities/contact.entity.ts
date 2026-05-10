@@ -1,11 +1,22 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
+import { ApiHideProperty } from "@nestjs/swagger";
+import { Exclude } from "class-transformer";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, Generated } from "typeorm";
 
 
 @Entity('contacts')
 export class ContactEntity {
 
     @PrimaryGeneratedColumn()
+    @Exclude()
+    @ApiHideProperty()
     index: number;
+
+    @Column({
+        type: 'varchar',
+        unique: true
+    })
+    @Generated('uuid')
+    uuid: string;
 
     @Column({
         type: 'varchar',

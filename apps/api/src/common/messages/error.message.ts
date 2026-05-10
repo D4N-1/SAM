@@ -1,6 +1,6 @@
 import type { interfaceErrorCodes } from "../types/error.type";
 
-export const ERROR_CODES = {
+export const ERROR_CODE = {
     UNAUTHORIZED: (): interfaceErrorCodes => (
         {
             statusCode: 401,
@@ -21,6 +21,13 @@ export const ERROR_CODES = {
             statusCode: 404,
             error: 'Not Found',
             message: 'No se encontró el recurso pedido'
+        }
+    ),
+    CONFLICT: (): interfaceErrorCodes => (
+        {
+            statusCode: 409,
+            error: 'Conflict',
+            message: 'El recurso se halló con un conflicto con el del servidor'
         }
     )
 

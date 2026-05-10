@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { QuotesModule } from './modules/quotes/quotes.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { ContactModule } from './modules/contacts/contact.module';
 
 @Module({
   imports: [
@@ -20,9 +21,8 @@ import { RolesModule } from './modules/roles/roles.module';
 
     DbModule, UsersModule,
     CommunitiesModule, ProfilesModule,
-    AuthModule,
-    QuotesModule,
-    RolesModule ],
+    AuthModule, QuotesModule,
+    RolesModule, ContactModule ],
   controllers: [AppController],
   providers: [AppService],
 })
