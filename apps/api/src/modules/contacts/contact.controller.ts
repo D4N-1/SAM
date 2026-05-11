@@ -4,11 +4,11 @@ import { ContactService } from "./contact.service";
 import { CreateContactDto } from "./dto/create-contact.dto";
 import { UpdateContactDto } from "./dto/update-contact.dto";
 import { pipeValidateUuid } from "src/pipes/uuid.pipe";
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { ERROR_CODE } from "src/common/messages/error.message";
 import { API_PARAM } from "src/common/constants/api-param";
 
-
+@ApiTags('Contacts')
 @Controller('contacts')
 export class ContactController {
 

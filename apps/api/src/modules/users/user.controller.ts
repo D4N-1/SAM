@@ -2,11 +2,11 @@ import { Controller, Get, Param, Body, Post } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserEntity } from "./entity/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse } from "@nestjs/swagger";
+import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags } from "@nestjs/swagger";
 import { ERROR_CODE } from "src/common/messages/error.message";
 import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 
-
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
 

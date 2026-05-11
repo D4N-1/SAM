@@ -2,9 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { GendersService } from './genders.service';
 import { CreateGenderDto } from './dto/create-gender.dto';
 import { UpdateGenderDto } from './dto/update-gender.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
 
-@ApiTags('genders')
 @Controller('genders')
 export class GendersController {
   constructor(private readonly gendersService: GendersService) {}

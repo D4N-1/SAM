@@ -3,9 +3,8 @@ import { AnimeService } from "./animes.service";
 import { ANIME_ERRORS } from "src/common/constants/error-messages";
 import { ensureExists } from "src/common/utils/assertion.util";
 import { CreateAnimeDto } from "./dto/create-anime.dto";
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiQuery } from "@nestjs/swagger";
 
-@ApiTags('animes')
 @Controller('animes')
 export class AnimeController {
 

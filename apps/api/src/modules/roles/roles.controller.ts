@@ -1,11 +1,12 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { ApiOperation, ApiParam, ApiOkResponse, ApiNotFoundResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiOkResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiTags } from '@nestjs/swagger';
 import { RoleEntity } from './entities/role.entity';
 import { ERROR_CODE } from 'src/common/messages/error.message';
 import { API_PARAM } from 'src/common/constants/api-param';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 
+@ApiTags('Roles')
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
