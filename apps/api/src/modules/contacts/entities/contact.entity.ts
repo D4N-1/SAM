@@ -1,4 +1,4 @@
-import { ApiHideProperty } from "@nestjs/swagger";
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { UserEntity } from "src/modules/users/entity/user.entity";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, Generated, OneToOne } from "typeorm";
@@ -7,18 +7,26 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateCol
 @Entity('contacts')
 export class ContactEntity {
 
+    @ApiHideProperty()
     @PrimaryGeneratedColumn()
     @Exclude()
-    @ApiHideProperty()
     index: number;
 
-    @Column({
-        type: 'varchar',
-        unique: true
+    @ApiProperty({
+        description: 'El identificador unico público',
+        example: '550e8400-e29b-41d4-a716-446655440000',
+        type: String,
+        format: 'uuid'
     })
+    @Column({ type: 'uuid', unique: true })
     @Generated('uuid')
     uuid: string;
 
+    @ApiProperty({
+        description: 'El identificador único del contacto (formato @s/numero telefonico)',
+        example: '3107654321@s.whatsapp.net',
+        type: String
+    })
     @Column({
         type: 'varchar',
         length: 35,
@@ -26,6 +34,11 @@ export class ContactEntity {
     })
     uid: string;
 
+    @ApiProperty({
+        description: 'El identificador único del contacto (formato @lid/whatsapp lid)',
+        example: '3107654321@lid',
+        type: String
+    })
     @Column({
         type: 'varchar',
         length: 35,
@@ -34,6 +47,11 @@ export class ContactEntity {
     })
     lid?: string;
 
+    @ApiProperty({
+        description: 'Email único del contacto',
+        example: 'dani@email.com',
+        type: String
+    })
     @Column({
         type: 'varchar',
         length: 50,
@@ -41,6 +59,11 @@ export class ContactEntity {
     })
     email?: string;
 
+    @ApiProperty({
+        description: 'Nombre del contacto',
+        example: 'Dani',
+        type: String
+    })
     @Column({
         type: 'varchar',
         length: 25,
@@ -48,6 +71,7 @@ export class ContactEntity {
     })
     name?: string;
 
+    @ApiHideProperty()
     @OneToOne( () => UserEntity, (user) => user.contact)
     user: UserEntity
 

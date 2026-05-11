@@ -10,6 +10,7 @@ import { ContactService } from "./contact.service";
         TypeOrmModule.forFeature([ContactEntity])
     ],
     controllers: [ContactController],
-    providers: [ContactService]
+    providers: [ContactService],
+    exports: [TypeOrmModule]
 })
 export class ContactModule {}

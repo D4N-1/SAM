@@ -8,6 +8,7 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { QuotesModule } from './modules/quotes/quotes.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { ContactModule } from './modules/contacts/contact.module';
+import { UserModule } from './modules/users/user.module';
 
 @Module({
   imports: [
@@ -16,10 +17,10 @@ import { ContactModule } from './modules/contacts/contact.module';
       envFilePath: '.env'
     }),
 
-    DbModule,
-    //AuthModule,
+    DbModule, RolesModule, ContactModule,
+    UserModule,
     QuotesModule,
-    RolesModule, ContactModule ],
+     ],
   controllers: [AppController],
   providers: [AppService],
 })

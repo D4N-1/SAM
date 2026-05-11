@@ -1,15 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { ApiOperation, ApiParam, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiOkResponse, ApiNotFoundResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 import { RoleEntity } from './entities/role.entity';
+import { ERROR_CODE } from 'src/common/messages/error.message';
+import { API_PARAM } from 'src/common/constants/api-param';
+import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @ApiOperation({ description: 'Lista todos los roles' })
-  @ApiOkResponse({ description: 'Lista de roles obtenida con exito', type: [RoleEntity] })
-  @ApiNotFoundResponse({ description: 'No existen roles creados' })
+  @ApiOkResponse({ description: 'Lista los roles existentes', type: [RoleEntity] })
+  @ApiNotFoundResponse({ description: 'No existen roles creados', schema: { example: ERROR_CODE.NOT_FOUND() } })
   @Get()
   async getAll() {
     return this.rolesService.findAll()
@@ -17,16 +20,11 @@ export class RolesController {
 
   @ApiOperation({ description: 'Busqueda de un rol' })
   @ApiOkResponse({ description: 'Rol obtenido con exito', type: RoleEntity })
-  @ApiNotFoundResponse({ description: 'No existe ese rol' })
-  @ApiParam({
-    name: 'uuid',
-    required: true,
-    description: 'El identificador unico',
-    example: 'abcd-efgh-ijkl-opqr',
-    type: String
-  })
+  @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentar', schema: { example: ERROR_CODE.BAD_REQUEST() } })
+  @ApiNotFoundResponse({ description: 'No existe ese rol', schema: { example: ERROR_CODE.NOT_FOUND() } })
+  @ApiParam(API_PARAM.UUID)
   @Get('/:uuid')
-  async get(@Param('uuid') uuid: string) {
+  async get(@Param('uuid', pipeValidateUuid) uuid: string) {
     return this.rolesService.findOneByUuid(uuid)
   }
 }

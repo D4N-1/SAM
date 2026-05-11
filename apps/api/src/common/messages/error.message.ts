@@ -34,7 +34,7 @@ export const ERROR_CODE = {
         {
             statusCode: 409,
             error: 'Conflict',
-            message: 'El recurso tiene un conflicto con el registrado en el servidor'
+            message: 'No se puede crear, hay un conflicto con un recurso del servidor'
         }
     )
 
