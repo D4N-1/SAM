@@ -77,9 +77,10 @@ export class UserEntity {
     })
     @Column({
         type: 'varchar',
-        length: 255
+        length: 255,
+        nullable: true
     })
-    passwordHash: string;
+    passwordHash?: string;
 
     @ApiProperty({
         description: 'El rol asignado al usuario',

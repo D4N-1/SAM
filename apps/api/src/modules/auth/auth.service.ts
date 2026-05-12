@@ -27,4 +27,9 @@ export class AuthService {
         access_token: await this.jwtService.signAsync(payload)
       }
     }
+
+    async profile(uuid: string) {
+
+      return this.userService.findByUuid(uuid)
+    }
 }
