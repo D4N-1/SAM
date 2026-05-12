@@ -23,16 +23,29 @@ export class UserService {
         private readonly contactRepository: Repository<ContactEntity>
     ) {}
 
-    async getAll(): Promise <UserEntity[]|null> {
+    async findAll(): Promise <UserEntity[]|null> {
         return this.userRepository.find({
             relations: [ 'contact', 'role' ]
         })
     }
 
-    async getByUuid(uuid: string): Promise <UserEntity|null> {
+    async findByUuid(uuid: string): Promise <UserEntity|null> {
         return this.userRepository.findOne({
             where: { uuid },
             relations: [ 'contact', 'role' ]
+        })
+    }
+
+    async findByUid(uid: string): Promise<UserEntity|null> {
+        return this.userRepository.findOne({
+            where: {
+                contact: {
+                    uid
+                }
+            },
+            relations: {
+                contact: true
+            }
         })
     }
 

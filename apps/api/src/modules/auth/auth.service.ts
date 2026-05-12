@@ -1,22 +1,30 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../users/user.service';
 import { ERROR_CODE } from 'src/common/messages/error.message';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
 
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService
+  ) {}
 
-    async signIn(userUuid: string, password: string) {
+    async signIn(userUid: string, password: string): Promise<{ access_token: string }> {
 
-      const user = await this.userService.getByUuid(userUuid)
+      const user = await this.userService.findByUid(userUid)
       if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
 
       if (password !== user.passwordHash) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED() )
 
-      return {
+      const payload = {
         uuid: user.uuid,
-        password: user.passwordHash
+        name: user.name
+      }
+
+      return {
+        access_token: await this.jwtService.signAsync(payload)
       }
     }
 }

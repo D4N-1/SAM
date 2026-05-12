@@ -19,7 +19,7 @@ export class UserController {
     @ApiNotFoundResponse({ description: 'No existen perfiles creados', schema: { example: ERROR_CODE.NOT_FOUND() } })
     @Get()
     async getAll(): Promise<UserEntity[]|null> {
-        return this.userService.getAll()
+        return this.userService.findAll()
     }
 
     @ApiOperation({ description: 'Obtiene un usuario' })
@@ -29,7 +29,7 @@ export class UserController {
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
-        return this.userService.getByUuid(uuid)
+        return this.userService.findByUuid(uuid)
     }
 
     @ApiOperation({ description: 'Crea un nuevo usuario' })

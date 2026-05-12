@@ -10,7 +10,7 @@ export class AuthController {
   @ApiBody({})
   @Post('login')
   login(@Body() signInDto: any) {
-    return this.authService.signIn(signInDto.userUuid, signInDto.password)
+    return this.authService.signIn(signInDto.uid, signInDto.password)
   }
 
 }
