@@ -26,6 +26,7 @@ export class UserController {
     @ApiOkResponse({ description: 'Usuario obtenido con exito', type: UserEntity })
     @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentarlo', schema: { example: ERROR_CODE.BAD_REQUEST() } })
     @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
         return this.userService.getByUuid(uuid)
@@ -48,12 +49,13 @@ export class UserController {
         return this.userService.update(uuid, updateUserDto)
     }
 
-    /*
     @ApiOperation({ description: 'Elimina un usuario' })
     @ApiOkResponse({ description: 'Usuario eliminado con exito', type: UserEntity })
     @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
     @ApiParam(API_PARAM.UUID)
     @Delete('/:uuid')
-    async delete(@Param('uuid', pipeValidateUuid) uuid: string, )
-    */
+    async delete(@Param('uuid', pipeValidateUuid) uuid: string) {
+        return this.userService.delete(uuid)
+    }
+
 }

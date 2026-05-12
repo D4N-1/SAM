@@ -95,4 +95,15 @@ export class UserService {
 
         return await this.userRepository.save(updatedUser);
     }
+
+    async delete(uuid: string) {
+
+        const contact = await this.userRepository.findOneBy({ uuid })
+        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
+
+        return {
+            message: 'Usuario ELIMINADO',
+            user: await this.userRepository.softRemove(contact)
+        }
+    }
 }
