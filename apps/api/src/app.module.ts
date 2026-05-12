@@ -18,7 +18,7 @@ import { UserModule } from './modules/users/user.module';
     }),
 
     DbModule, RolesModule, ContactModule,
-    UserModule,
+    UserModule, AuthModule,
     QuotesModule,
      ],
   controllers: [AppController],

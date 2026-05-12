@@ -21,9 +21,6 @@ async function bootstrap() {
     .addBearerAuth()
     .setDescription('Documentacion basica sobre el uso de esta API')
     .setVersion('1.0')
-    .addTag('Roles')
-    .addTag('Contacts')
-    .addTag('Users')
     .build()
 
   

@@ -1,46 +1,22 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-//import { UserEntity } from '../users/entities/user.entity';
-import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt'
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { UserService } from '../users/user.service';
+import { ERROR_CODE } from 'src/common/messages/error.message';
 
 @Injectable()
 export class AuthService {
 
-  /*
-  constructor(
-    @InjectRepository(UserEntity)
-    private UserRepository: Repository<UserEntity>,
+  constructor(private readonly userService: UserService) {}
 
-    private JwtService: JwtService
-  ) {}
+    async signIn(userUuid: string, password: string) {
 
-  
+      const user = await this.userService.getByUuid(userUuid)
+      if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
 
-  async login(id: string, password: string) {
+      if (password !== user.passwordHash) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED() )
 
-    const user = await this.UserRepository.findOneBy({ id })
-
-    if (!user) throw new UnauthorizedException('No existe ese usuario')
-
-    const isValid = await bcrypt.compare(password, user.password);
-
-    if (!isValid) throw new UnauthorizedException('Contraseña incorrecta');
-
-    const payload = {
-      index: user.index,
-      id: user.id,
-      role: user.role
+      return {
+        uuid: user.uuid,
+        password: user.passwordHash
+      }
     }
-
-    return {
-      access_token: this.JwtService.sign(payload)
-    }
-  }
-
-  async findOne(index: number) {
-    return this.UserRepository.findOneBy({ index: index })
-  }
-    */
 }

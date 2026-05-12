@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@
 import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 import { enumRole } from "src/common/enums/role.enum";
-import { ROLES_KEY } from "../decorators/roles.decorator";
+import { ROLES_KEY } from "../../../decorators/roles.decorator";
 import { ERROR_CODE } from "src/common/messages/error.message";
 
 
