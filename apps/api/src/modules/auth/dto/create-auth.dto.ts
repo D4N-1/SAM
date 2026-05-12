@@ -5,7 +5,7 @@ import { IsString } from "class-validator";
 export class CreateAuthDto {
 
     @ApiProperty({
-        example: '3207654321'
+        example: '310123456789@s.whatsapp.net'
     })
     @IsString()
     uid: string;

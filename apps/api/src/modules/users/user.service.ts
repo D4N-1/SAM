@@ -7,6 +7,7 @@ import { ERROR_CODE } from "src/common/messages/error.message";
 import { RoleEntity } from "../roles/entities/role.entity";
 import { ContactEntity } from "../contacts/entities/contact.entity";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import bcrypt from 'bcrypt'
 
 
 @Injectable()
@@ -20,7 +21,8 @@ export class UserService {
         private readonly roleRepository: Repository<RoleEntity>,
 
         @InjectRepository(ContactEntity)
-        private readonly contactRepository: Repository<ContactEntity>
+        private readonly contactRepository: Repository<ContactEntity>,
+
     ) {}
 
     async findAll(): Promise <UserEntity[]|null> {
@@ -62,10 +64,12 @@ export class UserService {
         });
         if (contactUsed) throw new ConflictException('Este contacto ya está vinculado a un usuario');
 
+        const passwordHash = await bcrypt.hash( createUserDto.password, 10 )
         const newUser = this.userRepository.create({
             ...createUserDto,
-            contact: contact,
-            role: role
+            passwordHash,
+            contact,
+            role
         });
 
         return await this.userRepository.save(newUser);

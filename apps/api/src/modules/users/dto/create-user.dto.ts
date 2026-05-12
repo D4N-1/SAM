@@ -13,7 +13,7 @@ export class CreateUserDto {
     contactUid: string;
 
     @ApiProperty({
-        example: 'Juan'
+        example: 'Dani'
     })
     @IsOptional()
     @IsString()
@@ -21,7 +21,7 @@ export class CreateUserDto {
     name?: string;
 
     @ApiProperty({
-        example: 'Hola, soy Juan'
+        example: 'Hola, soy Dani'
     })
     @IsOptional()
     @IsString()
@@ -37,7 +37,7 @@ export class CreateUserDto {
     imageUrl?: string;
 
     @ApiProperty({
-        example: 'Juan123'
+        example: 'Dani1234'
     })
     @IsString()
     @MinLength(8)

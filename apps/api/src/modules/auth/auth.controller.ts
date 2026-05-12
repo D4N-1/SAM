@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from './guards/auth.guard';
 import { CreateAuthDto } from './dto/create-auth.dto';
+import { Private } from 'src/decorators/private.decorator';
 
 
 @ApiTags('Auth')
@@ -17,8 +18,10 @@ export class AuthController {
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
+  @Private()
   @Get('me')
   profile(@Request() request) {
+    console.log(request.user)
     return this.authService.profile(request.user.uuid)
   }
 

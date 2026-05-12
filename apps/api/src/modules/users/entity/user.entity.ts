@@ -64,6 +64,7 @@ export class UserEntity {
         type: String
     })
     @Column({
+        name: 'image_url',
         type: 'varchar',
         length: 255,
         nullable: true
@@ -76,6 +77,7 @@ export class UserEntity {
         type: String
     })
     @Column({
+        name: 'password_hash',
         type: 'varchar',
         length: 255,
         nullable: true

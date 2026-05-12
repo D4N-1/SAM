@@ -2,6 +2,8 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { UserService } from '../users/user.service';
 import { ERROR_CODE } from 'src/common/messages/error.message';
 import { JwtService } from '@nestjs/jwt';
+import bcrypt from 'bcrypt'
+
 
 @Injectable()
 export class AuthService {
@@ -16,7 +18,8 @@ export class AuthService {
       const user = await this.userService.findByUid(userUid)
       if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
 
-      if (password !== user.passwordHash) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED() )
+      const match = await bcrypt.compare(password, user.passwordHash!)
+      if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED() )
 
       const payload = {
         uuid: user.uuid,
