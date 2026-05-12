@@ -4,9 +4,9 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 export class pipeValidateNumber implements PipeTransform {
     transform(value: any, metadata: ArgumentMetadata) {
 
-        const number = parseInt( value.age )
+        const number = Number( value.age )
 
-        if (isNaN(number)) throw new BadRequestException('Edad debe ser un numero')
+        if ( isNaN(number) ) throw new BadRequestException('Edad debe ser un numero')
 
         return {...value, age: number }
     }

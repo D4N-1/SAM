@@ -6,9 +6,7 @@ import { ERROR_CODE } from "src/common/messages/error.message";
 export class pipeValidateUuid implements PipeTransform {
     transform(value: any, metadata: ArgumentMetadata) {
         
-        console.log(value)
-
-        if (!isUUID(value) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST() )
+        if (!value || !isUUID(value) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST() )
 
         return value
     }

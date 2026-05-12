@@ -38,7 +38,6 @@ export class ContactService {
     async update(uuid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
 
         const contact = await this.contactRepository.findOneBy({ uuid })
-
         if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
 
         if (updateContactDto.lid) {

@@ -1,10 +1,12 @@
-import { Controller, Get, Param, Body, Post } from "@nestjs/common";
+import { Controller, Get, Param, Body, Post, Patch, Delete } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserEntity } from "./entity/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags } from "@nestjs/swagger";
+import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags, ApiParam } from "@nestjs/swagger";
 import { ERROR_CODE } from "src/common/messages/error.message";
 import { pipeValidateUuid } from "src/pipes/uuid.pipe";
+import { API_PARAM } from "src/common/constants/api-param";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 @ApiTags('Users')
 @Controller('users')
@@ -36,4 +38,22 @@ export class UserController {
     async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity|null> {
         return this.userService.create(createUserDto)
     }
+
+    @ApiOperation({ description: 'Actualiza un usuario' })
+    @ApiOkResponse({ description: 'Usuario actualizado con exito', type: UserEntity })
+    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiParam(API_PARAM.UUID)
+    @Patch('/:uuid')
+    async update(@Param('uuid', pipeValidateUuid) uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity|null> {
+        return this.userService.update(uuid, updateUserDto)
+    }
+
+    /*
+    @ApiOperation({ description: 'Elimina un usuario' })
+    @ApiOkResponse({ description: 'Usuario eliminado con exito', type: UserEntity })
+    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiParam(API_PARAM.UUID)
+    @Delete('/:uuid')
+    async delete(@Param('uuid', pipeValidateUuid) uuid: string, )
+    */
 }

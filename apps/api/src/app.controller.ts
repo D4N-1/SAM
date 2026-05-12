@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiExcludeController } from '@nestjs/swagger';
+import { ApiBody, ApiExcludeController } from '@nestjs/swagger';
 import type { interfaceHealth } from './common/types/health.type';
 import { pipeValidateNumber } from './pipes/app.pipe';
 
@@ -20,6 +20,8 @@ export class AppController {
     return this.appService.getHello();
   }
 
+
+  @ApiBody({})
   @Post('/pipe')
   postApp(@Body(pipeValidateNumber) body: { name: string, age: number }) {
     return `Hola ${body.name}, tienes ${body.age} años`
