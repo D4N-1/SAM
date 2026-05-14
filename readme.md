@@ -10,7 +10,11 @@
     </a>
 </p>
 
-[![Typing SVG](http://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=F7BB00&center=true&width=435&lines=Sistema+automatizado+de+mensajeria)](https://github.com/D4N-1/SAM)
+<p align="center">
+    <a href="https://github.com/D4N-1/SAM">
+        <img src="http://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=F7BB00&center=true&width=435&lines=Sistema+automatizado+de+mensajeria">
+    </a>
+</p>
 
 <p align="center">
     <a href="https://github.com/D4N-1/SAM">
@@ -18,7 +22,6 @@
     </a>
 </p>
 
-# SAM - Sistema Automatizado de Mensajeria 
 Sistema monorepo de tres aplicaciones
 
 ## ¿Qué es Sam?
