@@ -1,14 +1,22 @@
 <p align="center">
-    <img src="/common/images/amphoreus.avif">
+    <a href="https://github.com/D4N-1/SAM">
+        <img src="/common/images/amphoreus.avif">
+    </a>
 </p>
 
 <p align="center">
-    <img src="https://capsule-render.vercel.app/api?type=blur&height=300&color=timeGradient&text=SAM%20proyect&section=header&reversal=false&textBg=false&fontColor=F5C827&animation=twinkling&stroke=F5E727">
+    <a href="https://github.com/D4N-1/SAM">
+        <img src="https://capsule-render.vercel.app/api?type=blur&height=300&color=timeGradient&text=SAM%20proyect&section=header&reversal=false&textBg=false&fontColor=F5C827&animation=twinkling&stroke=F5E727">
+    </a>
 </p>
 
 [![Typing SVG](http://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=F7BB00&center=true&width=435&lines=Sistema+automatizado+de+mensajeria)](https://github.com/D4N-1/SAM)
 
-![static Badge](https://img.shields.io/badge/github-repository-orange?logo=github)
+<p align="center">
+    <a href="https://github.com/D4N-1/SAM">
+        <img src="https://img.shields.io/badge/github-repository-orange?logo=github">
+    </a>
+</p>
 
 # SAM - Sistema Automatizado de Mensajeria 
 Sistema monorepo de tres aplicaciones
