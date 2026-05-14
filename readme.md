@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="/common/images/amphoreus.avif" align="center">
+</p>
+
 # SAM - Sistema Automatizado de Mensajeria 
 Sistema monorepo de tres aplicaciones
 
