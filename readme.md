@@ -28,7 +28,7 @@
     </a>
 </p>
 
-<p>
+<p align="center">
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=youtube"/></a>
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=facebook"/></a>
@@ -67,12 +67,21 @@ Aun no disponible
 ## Créditos
 
 Proyecto liderado por mi autoria mayoritariamente
+<p align="center">
+    <b>Autoria principal:</b>
+    <a href="https://github.com/D4N-1">
+        <img src="https://github.com/D4N-1.png" width="75px"><br>
+        <b>@D4N-1</b>
+    </a>
+</p>
 
 ### Co-autores
 
 <p align="center">
+    <b>Soporte en la aplicación backend (API):</b>
     <a href="https://github.com/yuta578">
-        <img src="https://github.com/yuta578.png" width="75px">
+        <img src="https://github.com/yuta578.png" width="75px"><br>
+        <b>@yuta578</b>
     </a>
 </p>
 
