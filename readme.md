@@ -68,7 +68,7 @@ Aun no disponible
 
 Proyecto liderado por mi autoria mayoritariamente
 <p align="center">
-    <b>Autoria principal:</b>
+    <b>Autoria principal:</b><br>
     <a href="https://github.com/D4N-1">
         <img src="https://github.com/D4N-1.png" width="75px"><br>
         <b>@D4N-1</b>
@@ -78,7 +78,7 @@ Proyecto liderado por mi autoria mayoritariamente
 ### Co-autores
 
 <p align="center">
-    <b>Soporte en la aplicación backend (API):</b>
+    <b>Soporte en la aplicación backend (API):</b><br>
     <a href="https://github.com/yuta578">
         <img src="https://github.com/yuta578.png" width="75px"><br>
         <b>@yuta578</b>
