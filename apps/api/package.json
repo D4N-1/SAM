@@ -6,6 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "test": "nest start --watch",
+    "start": "node apps/api/dist/main.js",
     "uuid-generator": "cd ./src/common/dev && node uuid-generator.util.mjs"
   },
   "dependencies": {

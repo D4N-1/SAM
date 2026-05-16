@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "@sam/bot-test": "tsx watch apps/bot/src/main.ts",
-    "@sam/bot-run": "tsc -p apps/bot && node apps/bot/dist/main.js",
-    "@sam/api-test": "cd apps/api && nest start --watch",
-    "@sam/api-run": "tsc -p apps/api && node apps/api/dist/main.js",
-    "@sam/web-test": "cd apps/web && ng build --watch --configuration development"
+    "@sam/bot-start": "tsc -p apps/bot && node apps/bot/dist/main.js",
+    "@sam/api-test": "cd apps/api && npm run test",
+    "@sam/api-start": "tsc -p apps/api && npm run start",
+    "@sam/web-test": "cd apps/web && npm run watch",
+    "@sam/web-start": "cd apps/web && npm run start"
   },
   "workspaces": [
     "apps/*"
