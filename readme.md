@@ -19,6 +19,7 @@
 <p align="center">
     <a href="https://github.com/D4N-1/SAM">
         <img src="https://img.shields.io/badge/github-repository-orange?logo=github">
+        <img src="https://img.shields.io/badge/Versi%C3%B3n-BETA_2.0.0-F5C827?style=for-the-badge&logo=github">
     </a>
 </p>
 
