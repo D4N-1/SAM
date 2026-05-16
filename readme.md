@@ -27,13 +27,9 @@
 </p>
 
 <p>
-    <--! 25D366 WS>
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
-    <--! FF0000 YT>
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=youtube"/></a>
-    <--! 1877F2 FB>
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=facebook"/></a>
-    <--! E4405F IG>
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=instagram"/></a>
     <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=tiktok"/></a>
 </p>
@@ -74,7 +70,7 @@ Proyecto liderado por mi autoria mayoritariamente
 
 <p align="center">
     <a href="https://github.com/yuta578.png">
-        <img src="https://github.com/yuta578.png">
+        <img src="https://github.com/yuta578.png" width="75px">
     </a>
 </p>
 
