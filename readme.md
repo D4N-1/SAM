@@ -66,10 +66,10 @@ Aun no disponible
 
 Proyecto liderado por mi autoria mayoritariamente
 
-# Co-autores
+### Co-autores
 
 <p align="center">
-    <a href="https://github.com/yuta578.png">
+    <a href="https://github.com/yuta578">
         <img src="https://github.com/yuta578.png" width="75px">
     </a>
 </p>
