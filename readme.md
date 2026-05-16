@@ -37,7 +37,7 @@
 </p>
 
 ---
-
+<br>
 
 Sistema monorepo de tres aplicaciones
 
@@ -85,4 +85,24 @@ Proyecto liderado por mi autoria mayoritariamente
     </a>
 </p>
 
+<br>
+---
+<br>
+
+### AVISOS IMPORTANTES
+
+<p align="center">
+    <img src="https://capsule-render.vercel.app/api?type=waving&height=100&color=DEC800&section=header&reversal=false">
+</p>
+
+<p align="center">
+    <sub>
+        <b>Repositorio público para su uso libre<b>
+        <b>Al hacer uso libre, dejar créditos al repositorio original<b>
+    </sub>
+</p>
+
+<p align="center">
+    <img src="https://capsule-render.vercel.app/api?type=waving&height=100&color=DEC800&section=footer&reversal=false">
+</p>
 
