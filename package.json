@@ -6,7 +6,8 @@
     "@sam/bot-test": "tsx watch apps/bot/src/main.ts",
     "@sam/bot-run": "tsc -p apps/bot && node apps/bot/dist/main.js",
     "@sam/api-test": "cd apps/api && nest start --watch",
-    "@sam/api-run": "tsc -p apps/api && node apps/api/dist/main.js"
+    "@sam/api-run": "tsc -p apps/api && node apps/api/dist/main.js",
+    "@sam/web-test": "cd apps/web && ng build --watch --configuration development"
   },
   "workspaces": [
     "apps/*"
