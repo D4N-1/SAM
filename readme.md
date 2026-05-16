@@ -22,6 +22,8 @@
         <img src="https://img.shields.io/badge/Versi%C3%B3n-BETA_0.2-F5C827?style=for-the-badge&logo=github">
         <img src="https://img.shields.io/github/stars/D4N-1/SAM?color=yellow&style=for-the-badge" alt="stars"/>
         <img src="https://img.shields.io/github/forks/D4N-1/SAM?color=blue&style=for-the-badge" alt="forks"/>
+    </a>
+    <a href="https://github.com/D4N-1/SAM/commits/main">
         <img src="https://img.shields.io/github/commit-activity/w/D4N-1/SAM?color=purple&style=for-the-badge" alt="commits">
     </a>
 </p>
