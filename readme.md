@@ -12,16 +12,34 @@
 
 <p align="center">
     <a href="https://github.com/D4N-1/SAM">
-        <img src="http://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=F7BB00&center=true&width=435&lines=Sistema+automatizado+de+mensajeria">
+        <img src="http://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=F5D627&random=true&width=435&lines=Sistema+Automatizado+de+Mensajeria;Economia%2C+minijuegos+y+colecci%C3%B3n;SAM;Proyecto+monorepo+(Web+-+API+-+Bot);Gesti%C3%B3n+de+comunidades+y+grupos;Desarrollado+en+TS+%2F+NESTJS;Lorem;Desarrollado+por%3A+D4N-1;%5B+Insertar+texto+%5D" alt="Typing SVG" />
     </a>
 </p>
 
 <p align="center">
     <a href="https://github.com/D4N-1/SAM">
-        <img src="https://img.shields.io/badge/github-repository-orange?logo=github">
-        <img src="https://img.shields.io/badge/Versi%C3%B3n-BETA_2.0.0-F5C827?style=for-the-badge&logo=github">
+        <img src="https://img.shields.io/badge/Github-Repository-F59827?style=for-the-badge&logo=github">
+        <img src="https://img.shields.io/badge/Versi%C3%B3n-BETA_0.2-F5C827?style=for-the-badge&logo=github">
+        <img src="https://img.shields.io/github/stars/D4N-1/SAM?color=yellow&style=for-the-badge" alt="stars"/>
+        <img src="https://img.shields.io/github/forks/D4N-1/SAM?color=blue&style=for-the-badge" alt="forks"/>
+        <img src="https://img.shields.io/github/commit-activity/w/D4N-1/SAM?color=purple&style=for-the-badge" alt="commits">
     </a>
 </p>
+
+<p>
+    <--! 25D366 WS>
+    <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=whatsapp&logoColor=white"/></a>
+    <--! FF0000 YT>
+    <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=youtube"/></a>
+    <--! 1877F2 FB>
+    <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=facebook"/></a>
+    <--! E4405F IG>
+    <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=instagram"/></a>
+    <a href="https://github.com/D4N-1/SAM"><img src="https://img.shields.io/badge/-4D4D4D?style=for-the-badge&logo=tiktok"/></a>
+</p>
+
+---
+
 
 Sistema monorepo de tres aplicaciones
 
@@ -31,11 +49,6 @@ Sam es un **proyecto monorepo** donde convivirán **tres aplicaciones** (Bot, AP
 
 La idea central es que exista un **sistema de usuarios** (identidad, progreso, inventario, economía, reputación, etc.) que pueda vivir “más allá” de una sola conversación, y que ese estado se pueda usar para habilitar **dinámicas, minijuegos y automatizaciones** dentro de los grupos.
 
-
-### Qué problema resuelve (y qué NO)
-
-- **Qué sí**: crear una base técnica seria para una experiencia divertida y extensible en WhatsApp: comandos, eventos, minijuegos, perfiles, economía, moderación ligera, y funciones que ayuden a mantener viva una comunidad.
-- **Qué no** (por ahora): competir con plataformas de comunidad externas o construir una red social. El foco es **WhatsApp-first** y en un **MVP** con alcance controlado.
 
 ### Componentes del sistema (visión general)
 
@@ -57,5 +70,12 @@ Aun no disponible
 
 Proyecto liderado por mi autoria mayoritariamente
 
-Créditos a [yuta578](https://github.com/yuta578) como programador de apoyo en la **API**
+# Co-autores
+
+<p align="center">
+    <a href="https://github.com/yuta578.png">
+        <img src="https://github.com/yuta578.png">
+    </a>
+</p>
+
 
