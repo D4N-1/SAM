@@ -85,7 +85,7 @@ Proyecto liderado por mi autoria mayoritariamente
     </a>
 </p>
 
-<br>
+
 ---
 <br>
 
@@ -97,7 +97,7 @@ Proyecto liderado por mi autoria mayoritariamente
 
 <p align="center">
     <sub>
-        <b>Repositorio público para su uso libre<b>
+        <b>Repositorio público para su uso libre<b><br>
         <b>Al hacer uso libre, dejar créditos al repositorio original<b>
     </sub>
 </p>
