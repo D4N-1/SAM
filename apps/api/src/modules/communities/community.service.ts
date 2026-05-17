@@ -48,19 +48,25 @@ export class CommunityService {
 
     async create(createCommunityDto: CreateCommunityDto): Promise<CommunityEntity | null> {
 
-        const community = await this.findOneBy.uid(createCommunityDto.uid);
+        const community = await this.communityRepository.findOneBy({ uid: createCommunityDto.uid });
         if (community) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad') );
 
-        if (createCommunityDto.contactOwnerUid) {
-            const contact = await this.contactService.findOneBy.uid( createCommunityDto.contactOwnerUid )
+        const { contactOwnerUid, ...communityData } = createCommunityDto
+        
+        const newCommunityData: Partial<CommunityEntity> = { ...communityData }
+
+        if (contactOwnerUid) {
+            const contact = await this.contactService.findOneBy.uid( contactOwnerUid )
 
             const isContactUsed = await this.communityRepository.findOne({
                 where: { contactOwner: { index: contact.index }, uid: Not(contact.uid)}
             })
             if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad', 'Ese contacto ya es dueño de otra comunidad'))
-        }
+
+            newCommunityData.contactOwner = contact
+        } else { newCommunityData.contactOwner = null }
     
-        const newCommunity = this.communityRepository.create(createCommunityDto);
+        const newCommunity = this.communityRepository.create(newCommunityData);
 
         return await this.communityRepository.save(newCommunity);
     }
@@ -80,6 +86,7 @@ export class CommunityService {
                 where: { uid: updateCommunityDto.uid, uuid: Not(uuid) }
             })
             if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad', 'Ese UID ya le pertenece a otra comunidad') )
+            updateData.uid = updateCommunityDto.uid
         }
 
         if (updateCommunityDto.contactOwnerUid) {
