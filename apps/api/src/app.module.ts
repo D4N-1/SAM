@@ -9,6 +9,7 @@ import { QuotesModule } from './modules/quotes/quotes.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { ContactModule } from './modules/contacts/contact.module';
 import { UserModule } from './modules/users/user.module';
+import { ComunityModule } from './modules/communities/community.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserModule } from './modules/users/user.module';
     }),
 
     DbModule, RolesModule, ContactModule,
-    UserModule, AuthModule,
+    UserModule, AuthModule, ComunityModule,
     QuotesModule,
      ],
   controllers: [AppController],

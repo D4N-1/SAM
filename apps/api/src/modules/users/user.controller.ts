@@ -3,7 +3,7 @@ import { UserService } from "./user.service";
 import { UserEntity } from "./entity/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags, ApiParam } from "@nestjs/swagger";
-import { ERROR_CODE } from "src/common/messages/error.message";
+import { ERROR_CODE } from "src/common/utils/error.utils";
 import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { API_PARAM } from "src/common/constants/api-param";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -24,7 +24,7 @@ export class UserController {
 
     @ApiOperation({ description: 'Obtiene un usuario' })
     @ApiOkResponse({ description: 'Usuario obtenido con exito', type: UserEntity })
-    @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentarlo', schema: { example: ERROR_CODE.BAD_REQUEST() } })
+    @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentarlo', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')

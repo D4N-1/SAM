@@ -1,8 +1,8 @@
-import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -42,6 +42,6 @@ async function bootstrap() {
   
   await app.listen(process.env.PORT ?? 3000);
 
-  console.log(`Servicio escuchando en el puerto ${process.env.PORT ?? 3000}`)
+  console.log(`Servicio escuchando en http://127.0.0.1:${process.env.PORT ?? 3000}`)
 }
 bootstrap();

@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entity/user.entity";
 import { Not, Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { ERROR_CODE } from "src/common/messages/error.message";
+import { ERROR_CODE } from "src/common/utils/error.utils";
 import { RoleEntity } from "../roles/entities/role.entity";
 import { ContactEntity } from "../contacts/entities/contact.entity";
 import { UpdateUserDto } from "./dto/update-user.dto";

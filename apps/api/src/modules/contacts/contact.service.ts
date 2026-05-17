@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ContactEntity } from "./entities/contact.entity";
 import { Repository } from "typeorm";
 import { CreateContactDto } from "./dto/create-contact.dto";
-import { ERROR_CODE } from "src/common/messages/error.message";
+import { ERROR_CODE } from "src/common/utils/error.utils";
 import { UpdateContactDto } from "./dto/update-contact.dto";
 
 @Injectable()
@@ -66,7 +66,7 @@ export class ContactService {
 
         if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
 
-        if (!contact.deletedAt) throw new BadRequestException( ERROR_CODE.BAD_REQUEST() )
+        if (!contact.deletedAt) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('ANY', 'El contacto no ha sido eliminado aún') )
 
         return await this.contactRepository.recover(contact)
     }

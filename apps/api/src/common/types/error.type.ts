@@ -1,5 +1,1 @@
-export interface interfaceErrorCodes {
-    statusCode: number,
-    error: string,
-    message: string
-}
+export type BAD_REQUEST = 'ANY' | 'BODY' | 'PATH' | 'QUERY'

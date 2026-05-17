@@ -1,7 +1,7 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { UserEntity } from "src/modules/users/entity/user.entity";
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, Generated, OneToOne } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity('contacts')
@@ -27,11 +27,7 @@ export class ContactEntity {
         example: '3107654321@s.whatsapp.net',
         type: String
     })
-    @Column({
-        type: 'varchar',
-        length: 35,
-        unique: true
-    })
+    @Column({ type: 'varchar', length: 35, unique: true })
     uid: string;
 
     @ApiProperty({
@@ -39,12 +35,7 @@ export class ContactEntity {
         example: '3107654321@lid',
         type: String
     })
-    @Column({
-        type: 'varchar',
-        length: 35,
-        unique: true,
-        nullable: true
-    })
+    @Column({ type: 'varchar', length: 35, unique: true, nullable: true })
     lid?: string;
 
     @ApiProperty({

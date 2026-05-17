@@ -2,7 +2,7 @@ import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RoleEntity } from "src/modules/roles/entities/role.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Generated, PrimaryGeneratedColumn, UpdateDateColumn, OneToOne, JoinColumn, Entity, ManyToOne } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('users')
 export class UserEntity {
@@ -18,10 +18,7 @@ export class UserEntity {
         type: String,
         format: 'uuid'
     })
-    @Column({
-        type: 'uuid',
-        unique: true
-    })
+    @Column({ type: 'uuid', unique: true })
     @Generated('uuid')
     uuid: string;
 
@@ -35,15 +32,11 @@ export class UserEntity {
     contact: ContactEntity;
 
     @ApiProperty({
-        description: 'Nombre del usuario',
+        description: 'Nombre del usuario (Debe ser único)',
         example: 'Dani',
         type: String
     })
-    @Column({
-        type: 'varchar',
-        length: 25,
-        nullable: true
-    })
+    @Column({ type: 'varchar', length: 25, nullable: true, unique: true })
     name?: string;
 
     @ApiProperty({
@@ -51,11 +44,7 @@ export class UserEntity {
         example: 'Hola, soy Dani',
         type: String
     })
-    @Column({
-        type: 'varchar',
-        length: 255,
-        nullable: true
-    })
+    @Column({ type: 'varchar', length: 255, nullable: true })
     description?: string;
 
     @ApiProperty({
@@ -63,12 +52,7 @@ export class UserEntity {
         example: 'Dani.png',
         type: String
     })
-    @Column({
-        name: 'image_url',
-        type: 'varchar',
-        length: 255,
-        nullable: true
-    })
+    @Column({ name: 'image_url', type: 'varchar', length: 255, nullable: true })
     imageUrl?: string;
 
     @ApiProperty({
@@ -76,12 +60,7 @@ export class UserEntity {
         example: 'Dani123',
         type: String
     })
-    @Column({
-        name: 'password_hash',
-        type: 'varchar',
-        length: 255,
-        nullable: true
-    })
+    @Column({ name: 'password_hash', type: 'varchar', length: 255, nullable: true })
     passwordHash?: string;
 
     @ApiProperty({
@@ -92,21 +71,12 @@ export class UserEntity {
     @JoinColumn({ name: 'role' })
     role: RoleEntity;
 
-    @CreateDateColumn({
-        type: 'timestamp',
-        name: 'created_at'
-    })
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt: Date;
 
-    @UpdateDateColumn({
-        type: 'timestamp',
-        name: 'updated_at'
-    })
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
     updatedAt: Date;
 
-    @DeleteDateColumn({
-        type: 'timestamp',
-        name: 'deleted_at'
-    })
+    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
     deletedAt: Date;
 }
