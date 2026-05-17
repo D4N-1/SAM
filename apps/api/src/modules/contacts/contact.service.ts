@@ -28,8 +28,8 @@ export class ContactService {
 
     async create(createContactDto: CreateContactDto): Promise<ContactEntity|null> {
 
-        if ( await this.contactRepository.findOneBy({ uid: createContactDto.uid }) ) throw new ConflictException( ERROR_CODE.CONFLICT() )
-        if ( createContactDto.lid && await this.contactRepository.findOneBy({ lid: createContactDto.lid }) ) throw new ConflictException( ERROR_CODE.CONFLICT() )
+        if ( await this.contactRepository.findOneBy({ uid: createContactDto.uid }) ) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+        if ( createContactDto.lid && await this.contactRepository.findOneBy({ lid: createContactDto.lid }) ) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
         const newContact = this.contactRepository.create(createContactDto)
         return this.contactRepository.save(newContact)
@@ -43,12 +43,12 @@ export class ContactService {
         if (updateContactDto.lid) {
             const exist = await this.contactRepository.findOneBy({ lid: updateContactDto.lid })
 
-            if (exist && exist.uuid !== uuid) throw new ConflictException( ERROR_CODE.CONFLICT() )
+            if (exist && exist.uuid !== uuid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
         } else if (updateContactDto.uid) {
             const exist = await this.contactRepository.findOneBy({ uid: updateContactDto.uid })
 
-            if (exist && exist.uuid !== uuid) throw new ConflictException( ERROR_CODE.CONFLICT() )
+            if (exist && exist.uuid !== uuid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
         }
 
@@ -57,19 +57,6 @@ export class ContactService {
         return await this.contactRepository.save(editContact)
     }
 
-    async recover(uuid: string) {
-
-        const contact = await this.contactRepository.findOne({
-            where: { uuid },
-            withDeleted: true
-        })
-
-        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
-
-        if (!contact.deletedAt) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('ANY', 'El contacto no ha sido eliminado aún') )
-
-        return await this.contactRepository.recover(contact)
-    }
 
     async delete(uuid: string) {
 
@@ -81,5 +68,19 @@ export class ContactService {
             message: 'Contacto ELIMINADO',
             contact: await this.contactRepository.softRemove(contact)
         }
+    }
+
+    async recover(uuid: string) {
+
+        const contact = await this.contactRepository.findOne({
+            where: { uuid },
+            withDeleted: true
+        })
+
+        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
+
+        if (!contact.deletedAt) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'El contacto no ha sido eliminado aún') )
+
+        return await this.contactRepository.recover(contact)
     }
 }

@@ -24,7 +24,7 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('contacto') })
     @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('contacto'), type: ContactEntity })
-    @ApiConflictResponse({ description: SWAGGER.CONFLICT('contacto'), schema: { example: ERROR_CODE.CONFLICT() } })
+    @ApiConflictResponse({ description: SWAGGER.CONFLICT('contacto'), schema: { example: ERROR_CODE.CONFLICT('usuario') } })
     @Post()
     async create(@Body() createContactDto: CreateContactDto): Promise<ContactEntity|null> {
         return this.contactService.create(createContactDto)

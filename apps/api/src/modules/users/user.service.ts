@@ -8,6 +8,8 @@ import { RoleEntity } from "../roles/entities/role.entity";
 import { ContactEntity } from "../contacts/entities/contact.entity";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import bcrypt from 'bcrypt'
+import { use } from "passport";
+import { SWAGGER } from "src/common/utils/swagger.utils";
 
 
 @Injectable()
@@ -31,11 +33,14 @@ export class UserService {
         })
     }
 
-    async findByUuid(uuid: string): Promise <UserEntity|null> {
-        return this.userRepository.findOne({
+    async findOneByUuid(uuid: string): Promise <UserEntity|null> {
+        const user = await this.userRepository.findOne({
             where: { uuid },
             relations: [ 'contact', 'role' ]
         })
+
+        if (!user) throw new NotFoundException( SWAGGER.NOT_FOUND('usuario') )
+        return user
     }
 
     async findByUid(uid: string): Promise<UserEntity|null> {
@@ -54,15 +59,15 @@ export class UserService {
     async create(createUserDto: CreateUserDto): Promise<UserEntity | null> {
 
         const role = await this.roleRepository.findOneBy({ name: createUserDto.roleName });
-        if (!role) throw new NotFoundException('El rol especificado no existe');
+        if (!role) throw new NotFoundException( ERROR_CODE.NOT_FOUND('rol') );
 
         const contact = await this.contactRepository.findOneBy({ uid: createUserDto.contactUid });
-        if (!contact) throw new NotFoundException('El contacto no existe');
+        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
 
         const contactUsed = await this.userRepository.findOne({
             where: { contact: { index: contact.index } }
         });
-        if (contactUsed) throw new ConflictException('Este contacto ya está vinculado a un usuario');
+        if (contactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
 
         const passwordHash = await bcrypt.hash( createUserDto.password, 10 )
         const newUser = this.userRepository.create({
@@ -87,7 +92,7 @@ export class UserService {
 
         if (updateUserDto.contactUid) {
             const contact = await this.contactRepository.findOneBy({ uid: updateUserDto.contactUid });
-            if (!contact) throw new NotFoundException('El contacto especificado no existe');
+            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
 
             const contactUsed = await this.userRepository.findOne({
                 where: { 
@@ -96,14 +101,14 @@ export class UserService {
                 }
             });
 
-            if (contactUsed) throw new ConflictException('Este contacto ya está vinculado a otro usuario');
+            if (contactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
 
             updateData.contact = contact;
         }
 
         if (updateUserDto.roleName) {
             const role = await this.roleRepository.findOneBy({ name: updateUserDto.roleName });
-            if (!role) throw new NotFoundException('El rol especificado no existe');
+            if (!role) throw new NotFoundException( ERROR_CODE.NOT_FOUND('rol') );
 
             updateData.role = role;
         }
@@ -122,5 +127,19 @@ export class UserService {
             message: 'Usuario ELIMINADO',
             user: await this.userRepository.softRemove(contact)
         }
+    }
+
+    async recover(uuid: string) {
+
+        const user = await this.userRepository.findOne({
+            where: { uuid },
+            withDeleted: true
+        });
+
+        if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') );
+        if (!user.deletedAt) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'El usuario no ha sido eliminado aun') )
+
+        return await this.userRepository.recover(user)
+
     }
 }

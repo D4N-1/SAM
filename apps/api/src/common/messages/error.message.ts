@@ -9,3 +9,5 @@ export const msgBAD_REQUEST: Record<BAD_REQUEST, string> = {
 
 };
 
+export const msgWRONG_PASSWORD: string = 'Contraseña incorrecta, verifica e intenta de nuevo'
+

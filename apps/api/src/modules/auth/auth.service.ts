@@ -3,6 +3,7 @@ import { UserService } from '../users/user.service';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt'
+import { msgWRONG_PASSWORD } from 'src/common/messages/error.message';
 
 
 @Injectable()
@@ -19,7 +20,7 @@ export class AuthService {
       if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
 
       const match = await bcrypt.compare(password, user.passwordHash!)
-      if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED() )
+      if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) )
 
       const payload = {
         uuid: user.uuid,
@@ -33,6 +34,6 @@ export class AuthService {
 
     async profile(uuid: string) {
 
-      return this.userService.findByUuid(uuid)
+      return this.userService.findOneByUuid(uuid)
     }
 }

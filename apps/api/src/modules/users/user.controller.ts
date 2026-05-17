@@ -7,6 +7,7 @@ import { ERROR_CODE } from "src/common/utils/error.utils";
 import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { API_PARAM } from "src/common/constants/api-param";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { SWAGGER } from "src/common/utils/swagger.utils";
 
 @ApiTags('Users')
 @Controller('users')
@@ -14,48 +15,56 @@ export class UserController {
 
     constructor( private readonly userService: UserService) {}
 
-    @ApiOperation({ description: 'Obtiene todos los usuarios' })
-    @ApiOkResponse({ description: 'Lista los usuarios existentes', type: [UserEntity] })
-    @ApiNotFoundResponse({ description: 'No existen perfiles creados', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
+    @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('usuarios') })
+    @ApiOkResponse({ description: SWAGGER.OK.ALL('usuarios'), type: [UserEntity] })
     @Get()
     async getAll(): Promise<UserEntity[]|null> {
         return this.userService.findAll()
     }
 
-    @ApiOperation({ description: 'Obtiene un usuario' })
-    @ApiOkResponse({ description: 'Usuario obtenido con exito', type: UserEntity })
-    @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentarlo', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
-    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
+    @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('usuario') })
+    @ApiOkResponse({ description: SWAGGER.OK.FIND('usuario'), type: UserEntity })
+    @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
-        return this.userService.findByUuid(uuid)
+        return this.userService.findOneByUuid(uuid)
     }
 
-    @ApiOperation({ description: 'Crea un nuevo usuario' })
-    @ApiCreatedResponse({ description: 'Usuario creado con exito', type: UserEntity })
-    @ApiConflictResponse({ description: 'Ya existe ese usuario', schema: { example: ERROR_CODE.CONFLICT() } })
+    @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('usuario') })
+    @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('usuario'), type: UserEntity })
+    @ApiConflictResponse({ description: SWAGGER.CONFLICT('usuario'), schema: { example: ERROR_CODE.CONFLICT('usuario') } })
     @Post()
     async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity|null> {
         return this.userService.create(createUserDto)
     }
 
-    @ApiOperation({ description: 'Actualiza un usuario' })
-    @ApiOkResponse({ description: 'Usuario actualizado con exito', type: UserEntity })
-    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
+    @ApiOperation({ summary: SWAGGER.SUMMARY.EDIT('usuario') })
+    @ApiOkResponse({ description: SWAGGER.OK.EDIT('usuario'), type: UserEntity })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
     @Patch('/:uuid')
     async update(@Param('uuid', pipeValidateUuid) uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity|null> {
         return this.userService.update(uuid, updateUserDto)
     }
 
-    @ApiOperation({ description: 'Elimina un usuario' })
-    @ApiOkResponse({ description: 'Usuario eliminado con exito', type: UserEntity })
-    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
+    @ApiOperation({ summary: SWAGGER.SUMMARY.DELETE('usuario') })
+    @ApiOkResponse({ description: SWAGGER.OK.DELETE('usuario'), type: UserEntity })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
     @Delete('/:uuid')
     async delete(@Param('uuid', pipeValidateUuid) uuid: string) {
         return this.userService.delete(uuid)
+    }
+
+    @ApiOperation({ summary: SWAGGER.SUMMARY.RECOVER('usuario') })
+    @ApiOkResponse({ description: SWAGGER.OK.RECOVER('usuario'), type: UserEntity })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
+    @ApiConflictResponse({ description: SWAGGER.CONFLICT('usuario'), schema: { example: ERROR_CODE.CONFLICT('usuario') }} )
+    @Patch('/recover/:uuid')
+    async recover(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
+        return this.userService.recover(uuid)
     }
 
 }

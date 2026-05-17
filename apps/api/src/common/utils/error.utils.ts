@@ -12,11 +12,11 @@ export const ERROR_CODE = {
         }
     ),
 
-    UNAUTHORIZED: () => (
+    UNAUTHORIZED: (text?: string) => (
         {
             statusCode: 401,
             error: 'Unauthorized',
-            message: 'Credenciales invalidas, por favor, inicia sesión',
+            message: text || 'Credenciales invalidas, por favor, inicia sesión',
         }
     ),
 
@@ -24,7 +24,7 @@ export const ERROR_CODE = {
         {
             statusCode: 403,
             error: 'Forbidden',
-            message: 'No tienes permiso para acceder a este metodo'
+            message: 'No tienes permiso suficiente para acceder a este metodo'
         }
     ),
     NOT_FOUND: (type: CREATED_MODULES) => (
@@ -34,11 +34,11 @@ export const ERROR_CODE = {
             message: `No se encontró ese ${type}`
         }
     ),
-    CONFLICT: () => (
+    CONFLICT: (type: CREATED_MODULES, text?: string) => (
         {
             statusCode: 409,
             error: 'Conflict',
-            message: 'No se puede crear, hay un conflicto con un recurso del servidor'
+            message: text || `No se puede crear, ya existe un ${type} con esos datos`
         }
     )
 }
