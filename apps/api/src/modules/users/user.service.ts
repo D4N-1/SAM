@@ -52,7 +52,7 @@ export class UserService {
         }
     }
 
-    async create(createUserDto: CreateUserDto): Promise<UserEntity | null> {
+    async create(createUserDto: CreateUserDto): Promise<UserEntity> {
 
         const role = await this.roleService.findOneBy.name( createUserDto.roleName );
         const contact = await this.contactService.findOneBy.uid(createUserDto.contactUid);
@@ -62,9 +62,20 @@ export class UserService {
         });
         if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
 
+        const { name, ...userData } = createUserDto
+        const newUserData: Partial<UserEntity> = { ...userData }
+
+
+        if (name) {
+            const exists = await this.userRepository.findOneBy({ name })
+            if (exists) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
+            
+            newUserData.name = name
+        }
+
         const passwordHash = await bcrypt.hash( createUserDto.password, 10 )
         const newUser = this.userRepository.create({
-            ...createUserDto,
+            ...newUserData,
             passwordHash,
             contact,
             role
@@ -89,6 +100,14 @@ export class UserService {
             if (contactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
 
             updateData.contact = contact;
+        }
+
+        if (updateUserDto.name) {
+            const exists = await this.userRepository.findOne({
+                where: { name: updateUserDto.name, uuid: Not(user.uuid) } })
+            if (exists) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
+            
+            updateData.name = updateUserDto.name
         }
 
         if (updateUserDto.roleName) updateData.role = await this.roleService.findOneBy.name( updateUserDto.roleName )
