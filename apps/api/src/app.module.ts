@@ -6,10 +6,11 @@ import { DbModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { QuotesModule } from './modules/quotes/quotes.module';
-import { RolesModule } from './modules/roles/roles.module';
+import { RoleModule } from './modules/roles/roles.module';
 import { ContactModule } from './modules/contacts/contact.module';
 import { UserModule } from './modules/users/user.module';
-import { ComunityModule } from './modules/communities/community.module';
+import { CommunityModule } from './modules/communities/community.module';
+import { GroupModule } from './modules/groups/groups.module';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import { ComunityModule } from './modules/communities/community.module';
       envFilePath: '.env'
     }),
 
-    DbModule, RolesModule, ContactModule,
-    UserModule, AuthModule, ComunityModule,
+    DbModule, RoleModule, ContactModule,
+    UserModule, AuthModule, CommunityModule,
+    GroupModule,
     QuotesModule,
      ],
   controllers: [AppController],

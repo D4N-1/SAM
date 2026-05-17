@@ -21,14 +21,14 @@ export class ContactService {
 
     findOneBy = {
 
-        Uuid: async (uuid: string): Promise<ContactEntity> => {
+        uuid: async (uuid: string): Promise<ContactEntity> => {
             const contact = await this.contactRepository.findOneBy({ uuid })
 
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
             return contact
         },
 
-        Uid: async (uid: string): Promise<ContactEntity> => {
+        uid: async (uid: string): Promise<ContactEntity> => {
             const contact = await this.contactRepository.findOneBy({ uid })
 
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
@@ -48,7 +48,7 @@ export class ContactService {
 
     async update(uuid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
 
-        const contact = await this.findOneBy.Uuid(uuid)
+        const contact = await this.findOneBy.uuid(uuid)
 
         if (updateContactDto.lid) {
             const exist = await this.contactRepository.findOneBy({ lid: updateContactDto.lid })
@@ -70,7 +70,7 @@ export class ContactService {
 
     async delete(uuid: string) {
 
-        const contact = await this.findOneBy.Uuid(uuid)
+        const contact = await this.findOneBy.uuid(uuid)
 
         return {
             message: 'Contacto ELIMINADO',

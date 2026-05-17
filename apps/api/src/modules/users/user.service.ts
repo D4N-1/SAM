@@ -55,7 +55,7 @@ export class UserService {
     async create(createUserDto: CreateUserDto): Promise<UserEntity | null> {
 
         const role = await this.roleService.findOneBy.name( createUserDto.roleName );
-        const contact = await this.contactService.findOneBy.Uid(createUserDto.contactUid);
+        const contact = await this.contactService.findOneBy.uid(createUserDto.contactUid);
 
         const isContactUsed = await this.userRepository.findOne({
             where: { contact: { index: contact.index } }
@@ -81,7 +81,7 @@ export class UserService {
         if (updateUserDto.imageUrl) updateData.imageUrl = updateData.imageUrl
 
         if (updateUserDto.contactUid) {
-            const contact = await this.contactService.findOneBy.Uid(updateUserDto.contactUid);
+            const contact = await this.contactService.findOneBy.uid(updateUserDto.contactUid);
 
             const contactUsed = await this.userRepository.findOne({
                 where: { contact: { index: contact.index }, uuid: Not(uuid) }

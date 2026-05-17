@@ -1,7 +1,8 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { GroupEntity } from "src/modules/groups/entities/group.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('communities')
 export class CommunityEntity {
@@ -31,7 +32,6 @@ export class CommunityEntity {
 
     @ApiProperty({
         description: 'El contacto dueño de la comunidad',
-        example: () => CommunityEntity,
         type: () => ContactEntity,
         nullable: true
     })
@@ -67,7 +67,6 @@ export class CommunityEntity {
     @Column({ type: 'varchar', length: 255, nullable: true })
     link?: string;
 
-
     @ApiProperty({
         description: 'Indica si la comunidad esta abierta a nuevos miembros',
         example: true,
@@ -75,6 +74,10 @@ export class CommunityEntity {
     })
     @Column({ type: Boolean, name: 'is_public' })
     isPublic: boolean;
+
+    @ApiHideProperty()
+    @OneToMany( () => GroupEntity, (group) => group.community)
+    groups: GroupEntity[];
 
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt: Date;

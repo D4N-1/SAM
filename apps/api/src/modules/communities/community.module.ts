@@ -12,6 +12,7 @@ import { ContactModule } from "../contacts/contact.module";
         ContactModule
     ],
     controllers: [CommunityController],
-    providers: [CommunityService]
+    providers: [CommunityService],
+    exports: [CommunityService]
 })
-export class ComunityModule {}
+export class CommunityModule {}

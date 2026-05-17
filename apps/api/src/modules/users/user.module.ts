@@ -4,14 +4,14 @@ import { UserEntity } from "./entity/user.entity";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { ContactModule } from "../contacts/contact.module";
-import { RolesModule } from "../roles/roles.module";
+import { RoleModule } from "../roles/roles.module";
 
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([UserEntity]),
         ContactModule,
-        RolesModule
+        RoleModule
     ],
     controllers: [UserController],
     providers: [UserService],

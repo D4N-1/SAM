@@ -14,4 +14,4 @@ import { RolesSeederService } from '../../seeders/roles.seeder.service';
   providers: [RoleService, RolesSeederService],
   exports: [RoleService]
 })
-export class RolesModule {}
+export class RoleModule {}
