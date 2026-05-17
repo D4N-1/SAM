@@ -1,2 +1,4 @@
 export type CREATED_MODULES =
-    'contactos' | 'contacto'
+    'contactos' | 'contacto' |
+    'roles' | 'rol' |
+    'usuarios' | 'usuario'

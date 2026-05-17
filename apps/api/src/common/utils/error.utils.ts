@@ -1,5 +1,6 @@
 import { msgBAD_REQUEST } from "../messages/error.message";
 import { BAD_REQUEST } from "../types/error.type";
+import { CREATED_MODULES } from "../types/module.type";
 
 export const ERROR_CODE = {
 
@@ -26,11 +27,11 @@ export const ERROR_CODE = {
             message: 'No tienes permiso para acceder a este metodo'
         }
     ),
-    NOT_FOUND: () => (
+    NOT_FOUND: (type: CREATED_MODULES) => (
         {
             statusCode: 404,
             error: 'Not Found',
-            message: 'No se encontró el recurso de la petición'
+            message: `No se encontró ese ${type}`
         }
     ),
     CONFLICT: () => (

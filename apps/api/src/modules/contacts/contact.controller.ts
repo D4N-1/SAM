@@ -17,7 +17,6 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('contactos') })
     @ApiOkResponse({ description: SWAGGER.OK.ALL('contactos'), type: [ContactEntity] })
-    @ApiNotFoundResponse({ description: 'No existen contactos creados', schema: { example: ERROR_CODE.NOT_FOUND() } })
     @Get()
     async getAll(): Promise<ContactEntity[]> {
         return this.contactService.findAll()
@@ -25,7 +24,7 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('contacto') })
     @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('contacto'), type: ContactEntity })
-    @ApiConflictResponse({ description: 'Ya existe ese contacto', schema: { example: ERROR_CODE.CONFLICT() } })
+    @ApiConflictResponse({ description: SWAGGER.CONFLICT('contacto'), schema: { example: ERROR_CODE.CONFLICT() } })
     @Post()
     async create(@Body() createContactDto: CreateContactDto): Promise<ContactEntity|null> {
         return this.contactService.create(createContactDto)
@@ -33,8 +32,8 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('contacto') })
     @ApiOkResponse({ description: SWAGGER.OK.ALL('contacto'), type: ContactEntity })
-    @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentar', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
-    @ApiNotFoundResponse({ description: 'No existe ese contacto', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<ContactEntity|null> {
@@ -43,8 +42,8 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.EDIT('contacto') })
     @ApiOkResponse({ description: SWAGGER.OK.EDIT('contacto'), type: ContactEntity })
-    @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentar', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
-    @ApiNotFoundResponse({ description: 'No existen ese contacto', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
     @ApiParam(API_PARAM.UUID)
     @Patch('/:uuid')
     async edit(@Param('uuid', pipeValidateUuid) uuid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
@@ -53,8 +52,8 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.DELETE('contacto') })
     @ApiOkResponse({ description: SWAGGER.OK.DELETE('contacto'), type: ContactEntity })
-    @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentar', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
-    @ApiNotFoundResponse({ description: 'No existe ese contacto', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
     @ApiParam(API_PARAM.UUID)
     @Delete('/:uuid')
     async delete(@Param('uuid', pipeValidateUuid) uuid: string) {
@@ -63,8 +62,8 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.RECOVER('contacto') })
     @ApiOkResponse({ description: SWAGGER.OK.RECOVER('contacto'), type: ContactEntity })
-    @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentar', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
-    @ApiNotFoundResponse({ description: 'No existe ese contacto', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
     @ApiParam(API_PARAM.UUID)
     @Patch('/recover/:uuid')
     async recover(@Param('uuid', pipeValidateUuid) uuid: string): Promise<ContactEntity|null> {

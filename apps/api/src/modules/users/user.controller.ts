@@ -16,7 +16,7 @@ export class UserController {
 
     @ApiOperation({ description: 'Obtiene todos los usuarios' })
     @ApiOkResponse({ description: 'Lista los usuarios existentes', type: [UserEntity] })
-    @ApiNotFoundResponse({ description: 'No existen perfiles creados', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiNotFoundResponse({ description: 'No existen perfiles creados', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @Get()
     async getAll(): Promise<UserEntity[]|null> {
         return this.userService.findAll()
@@ -25,7 +25,7 @@ export class UserController {
     @ApiOperation({ description: 'Obtiene un usuario' })
     @ApiOkResponse({ description: 'Usuario obtenido con exito', type: UserEntity })
     @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentarlo', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
-    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
@@ -42,7 +42,7 @@ export class UserController {
 
     @ApiOperation({ description: 'Actualiza un usuario' })
     @ApiOkResponse({ description: 'Usuario actualizado con exito', type: UserEntity })
-    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
     @Patch('/:uuid')
     async update(@Param('uuid', pipeValidateUuid) uuid: string, @Body() updateUserDto: UpdateUserDto): Promise<UserEntity|null> {
@@ -51,7 +51,7 @@ export class UserController {
 
     @ApiOperation({ description: 'Elimina un usuario' })
     @ApiOkResponse({ description: 'Usuario eliminado con exito', type: UserEntity })
-    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND() } })
+    @ApiNotFoundResponse({ description: 'No existe ese usuario', schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
     @Delete('/:uuid')
     async delete(@Param('uuid', pipeValidateUuid) uuid: string) {

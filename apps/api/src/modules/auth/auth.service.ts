@@ -16,7 +16,7 @@ export class AuthService {
     async signIn(userUid: string, password: string): Promise<{ access_token: string }> {
 
       const user = await this.userService.findByUid(userUid)
-      if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
+      if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
 
       const match = await bcrypt.compare(password, user.passwordHash!)
       if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED() )

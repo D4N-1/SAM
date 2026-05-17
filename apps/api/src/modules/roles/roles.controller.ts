@@ -5,24 +5,24 @@ import { RoleEntity } from './entities/role.entity';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { API_PARAM } from 'src/common/constants/api-param';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
+import { SWAGGER } from 'src/common/utils/swagger.utils';
 
 @ApiTags('Roles')
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
-  @ApiOperation({ summary: 'Lista todos los roles', description: 'Lista todos los roles' })
-  @ApiOkResponse({ description: 'Lista los roles existentes', type: [RoleEntity] })
-  @ApiNotFoundResponse({ description: 'No existen roles creados', schema: { example: ERROR_CODE.NOT_FOUND() } })
+  @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('roles') })
+  @ApiOkResponse({ description: SWAGGER.OK.ALL('roles'), type: [RoleEntity] })
   @Get()
   async getAll() {
     return this.rolesService.findAll()
   }
 
-  @ApiOperation({ summary: 'Busqueda de un rol', description: 'Busqueda de un rol' })
-  @ApiOkResponse({ description: 'Rol obtenido con exito', type: RoleEntity })
-  @ApiBadRequestResponse({ description: 'UUID mal formado, revisa y vuelve a intentar', schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
-  @ApiNotFoundResponse({ description: 'No existe ese rol', schema: { example: ERROR_CODE.NOT_FOUND() } })
+  @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('rol') })
+  @ApiOkResponse({ description: SWAGGER.OK.FIND('rol'), type: RoleEntity })
+  @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+  @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('rol'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
   @ApiParam(API_PARAM.UUID)
   @Get('/:uuid')
   async get(@Param('uuid', pipeValidateUuid) uuid: string) {

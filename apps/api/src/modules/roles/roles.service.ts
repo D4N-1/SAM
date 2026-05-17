@@ -20,7 +20,7 @@ export class RolesService {
   async findOneByUuid(uuid: string) {
     const role = await this.RoleRepository.findOneBy({ uuid })
 
-    if (!role) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
+    if (!role) throw new NotFoundException( ERROR_CODE.NOT_FOUND('rol') )
     return role
   }
 }

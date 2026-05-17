@@ -17,5 +17,9 @@ export const SWAGGER = {
         EDIT: (type: CREATED_MODULES) => `${type} editado con exito`,
         DELETE: (type: CREATED_MODULES) => `${type} eliminado con exito`,
         RECOVER: (type: CREATED_MODULES) => `${type} recuperado con exito`
-    }
+    },
+    NOT_FOUND: (type: CREATED_MODULES) => `No existe ese ${type}`,
+    CONFLICT: (type: CREATED_MODULES) => `Ya existe ese ${type}`,
+    BAD_RQUEST: () => `Petición inválida, revisa el mensaje del error para obtener mas información`
+
 }

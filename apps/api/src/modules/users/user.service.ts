@@ -81,7 +81,7 @@ export class UserService {
             relations: ['contact', 'role'] 
         });
 
-        if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND() );
+        if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') );
 
         const updateData: Partial<UserEntity> = { ...updateUserDto as any };
 
@@ -116,7 +116,7 @@ export class UserService {
     async delete(uuid: string) {
 
         const contact = await this.userRepository.findOneBy({ uuid })
-        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND() )
+        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
 
         return {
             message: 'Usuario ELIMINADO',
