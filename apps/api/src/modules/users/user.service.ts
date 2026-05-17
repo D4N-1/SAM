@@ -39,16 +39,6 @@ export class UserService {
 
             if (!user) throw new NotFoundException( SWAGGER.NOT_FOUND('usuario') )
             return user
-        },
-
-        ContactUid: async (uid: string): Promise<UserEntity|null> => {
-            const user = this.userRepository.findOne({
-                where: { contact: { uid } },
-                relations: { role: true, contact: true }
-            })
-
-            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
-            return user
         }
     }
 
@@ -74,35 +64,25 @@ export class UserService {
     }
 
     async update(uuid: string, updateUserDto: UpdateUserDto): Promise<UserEntity | null> {
-        const user = await this.userRepository.findOne({ 
-            where: { uuid },
-            relations: ['contact', 'role'] 
-        });
-
-        if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') );
-
-        const updateData: Partial<UserEntity> = { ...updateUserDto as any };
+        const user = await this.findOneBy.Uuid( uuid )
+        
+        const updateData: Partial<UserEntity> = {}
+        if (updateUserDto.description) updateData.description = updateUserDto.description
+        if (updateUserDto.imageUrl) updateData.imageUrl = updateData.imageUrl
 
         if (updateUserDto.contactUid) {
             const contact = await this.contactService.findOneBy.Uid(updateUserDto.contactUid);
 
             const contactUsed = await this.userRepository.findOne({
-                where: { 
-                    contact: { index: contact.index },
-                    uuid: Not(uuid)
-                }
+                where: { contact: { index: contact.index }, uuid: Not(uuid) }
             });
-
             if (contactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
 
             updateData.contact = contact;
         }
 
-        if (updateUserDto.roleName) {
-            const role = await this.roleService.findOneBy.name( updateUserDto.roleName );
-
-            updateData.role = role;
-        }
+        if (updateUserDto.roleName) updateData.role = await this.roleService.findOneBy.name( updateUserDto.roleName )
+        if (updateUserDto.password) updateData.passwordHash = await bcrypt.hash(updateUserDto.password, 10)
 
         const updatedUser = this.userRepository.merge(user, updateData);
 
@@ -111,8 +91,7 @@ export class UserService {
 
     async delete(uuid: string) {
 
-        const contact = await this.userRepository.findOneBy({ uuid })
-        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
+        const contact = await this.findOneBy.Uuid( uuid )
 
         return {
             message: 'Usuario ELIMINADO',
