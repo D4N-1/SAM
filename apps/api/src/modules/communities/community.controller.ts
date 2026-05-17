@@ -32,7 +32,7 @@ export class CommunityController {
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<CommunityEntity|null> {
-        return this.communityService.findOneBy.Uuid(uuid)
+        return this.communityService.findOneBy.uuid(uuid)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('comunidad') })

@@ -31,13 +31,23 @@ export class UserService {
 
     findOneBy = {
 
-        Uuid: async (uuid: string): Promise <UserEntity> => {
+        uuid: async (uuid: string): Promise <UserEntity> => {
             const user = await this.userRepository.findOne({
                 where: { uuid },
                 relations: { contact: true, role: true }
             })
 
             if (!user) throw new NotFoundException( SWAGGER.NOT_FOUND('usuario') )
+            return user
+        },
+        
+        contactUid: async (uid: string): Promise<UserEntity> => {
+            const user = await this.userRepository.findOne({
+                where: { contact: { uid } },
+                relations: { contact: true, role: true }
+            })
+
+            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
             return user
         }
     }
@@ -47,10 +57,10 @@ export class UserService {
         const role = await this.roleService.findOneBy.name( createUserDto.roleName );
         const contact = await this.contactService.findOneBy.Uid(createUserDto.contactUid);
 
-        const contactUsed = await this.userRepository.findOne({
+        const isContactUsed = await this.userRepository.findOne({
             where: { contact: { index: contact.index } }
         });
-        if (contactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
+        if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
 
         const passwordHash = await bcrypt.hash( createUserDto.password, 10 )
         const newUser = this.userRepository.create({
@@ -64,7 +74,7 @@ export class UserService {
     }
 
     async update(uuid: string, updateUserDto: UpdateUserDto): Promise<UserEntity | null> {
-        const user = await this.findOneBy.Uuid( uuid )
+        const user = await this.findOneBy.uuid( uuid )
         
         const updateData: Partial<UserEntity> = {}
         if (updateUserDto.description) updateData.description = updateUserDto.description
@@ -91,7 +101,7 @@ export class UserService {
 
     async delete(uuid: string) {
 
-        const contact = await this.findOneBy.Uuid( uuid )
+        const contact = await this.findOneBy.uuid( uuid )
 
         return {
             message: 'Usuario ELIMINADO',

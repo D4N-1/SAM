@@ -25,7 +25,7 @@ export class CommunityService {
 
     findOneBy = {
 
-        Uuid: async (uuid: string): Promise<CommunityEntity> => {
+        uuid: async (uuid: string): Promise<CommunityEntity> => {
             const community = await this.communityRepository.findOne({
                 where: { uuid },
                 relations: { contactOwner: true }
@@ -35,7 +35,7 @@ export class CommunityService {
 
             return community
         },
-        Uid: async (uid: string): Promise<CommunityEntity> => {
+        uid: async (uid: string): Promise<CommunityEntity> => {
             const community = await this.communityRepository.findOne({
                 where: { uid },
                 relations: { contactOwner: true }
@@ -57,7 +57,7 @@ export class CommunityService {
     }
 
     async update(uuid: string, updateCommunityDto: UpdateCommunityDto): Promise<CommunityEntity|null> {
-        const community = await this.findOneBy.Uuid( uuid )
+        const community = await this.findOneBy.uuid( uuid )
 
         const updateData: Partial<CommunityEntity> = {}
         if (updateCommunityDto.name) updateData.name = updateCommunityDto.name
@@ -90,7 +90,7 @@ export class CommunityService {
     }
 
     async delete(uuid: string) {
-        const community = await this.findOneBy.Uuid(uuid)
+        const community = await this.findOneBy.uuid(uuid)
 
         return {
             message: 'Comunidad ELIMINADA',

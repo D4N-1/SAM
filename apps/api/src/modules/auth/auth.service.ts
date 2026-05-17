@@ -14,9 +14,9 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-    async signIn(userUid: string, password: string): Promise<{ access_token: string }> {
+    async signIn(userContactUid: string, password: string): Promise<{ access_token: string }> {
 
-      const user = await this.userService.findByUid(userUid)
+      const user = await this.userService.findOneBy.contactUid(userContactUid)
       if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
 
       const match = await bcrypt.compare(password, user.passwordHash!)
@@ -34,6 +34,6 @@ export class AuthService {
 
     async profile(uuid: string) {
 
-      return this.userService.findOneByUuid(uuid)
+      return this.userService.findOneBy.uuid(uuid)
     }
 }

@@ -29,7 +29,7 @@ export class UserController {
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
-        return this.userService.findOneBy.Uuid(uuid)
+        return this.userService.findOneBy.uuid(uuid)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('usuario') })

@@ -26,6 +26,6 @@ export class RolesController {
   @ApiParam(API_PARAM.UUID)
   @Get('/:uuid')
   async get(@Param('uuid', pipeValidateUuid) uuid: string) {
-    return this.rolesService.findOneBy.Uuid(uuid)
+    return this.rolesService.findOneBy.uuid(uuid)
   }
 }
