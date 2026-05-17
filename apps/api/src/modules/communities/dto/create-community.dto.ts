@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 
 export class CreateCommunityDto {
@@ -9,6 +9,7 @@ export class CreateCommunityDto {
     })
     @IsNotEmpty()
     @IsString()
+    @MaxLength(35)
     uid: string
 
     @ApiProperty({
@@ -16,13 +17,15 @@ export class CreateCommunityDto {
     })
     @IsString()
     @IsOptional()
+    @MaxLength(255)
     name?: string;
 
     @ApiProperty({
         example: 'Bienvenidos a la comunidad de SAM'
     })
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
+    @MaxLength(255)
     description?: string;
 
     @ApiProperty({
@@ -30,11 +33,13 @@ export class CreateCommunityDto {
     })
     @IsString()
     @IsOptional()
+    @MaxLength(255)
     link?: string
 
     @ApiProperty({
         example: true
     })
     @IsBoolean()
-    isPublic: boolean;
+    @IsOptional()
+    isPublic?: boolean;
 }
