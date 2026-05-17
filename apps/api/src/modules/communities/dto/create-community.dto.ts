@@ -13,6 +13,13 @@ export class CreateCommunityDto {
     uid: string
 
     @ApiProperty({
+        example: '320987654321@s.whatsapp.net'
+    })
+    @IsOptional()
+    @IsString()
+    contactOwnerUid: string
+
+    @ApiProperty({
         example: 'SAM x Comunidad',
     })
     @IsString()

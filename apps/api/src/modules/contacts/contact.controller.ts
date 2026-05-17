@@ -37,7 +37,7 @@ export class ContactController {
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
     async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<ContactEntity|null> {
-        return this.contactService.findOneByUuid(uuid)
+        return this.contactService.findOneBy.Uuid(uuid)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.EDIT('contacto') })

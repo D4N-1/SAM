@@ -11,6 +11,6 @@ import { ContactService } from "./contact.service";
     ],
     controllers: [ContactController],
     providers: [ContactService],
-    exports: [TypeOrmModule]
+    exports: [ContactService]
 })
 export class ContactModule {}

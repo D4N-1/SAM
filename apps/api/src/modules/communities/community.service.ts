@@ -20,12 +20,18 @@ export class CommunityService {
         return this.communityRepository.find()
     }
 
-    async findOneByUuid(uuid: string): Promise<CommunityEntity> {
-        const community = await this.communityRepository.findOneBy({ uuid })
+    findOneBy = {
 
-        if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
+        Uuid: async (uuid: string): Promise<CommunityEntity> => {
+            const community = await this.communityRepository.findOne({
+                where: { uuid },
+                relations: { contactOwner: true }
+             })
 
-        return community
+            if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
+
+            return community
+        }
     }
 
     async create(createCommunityDto: CreateCommunityDto): Promise<CommunityEntity | null> {
@@ -40,7 +46,7 @@ export class CommunityService {
 
     async update(uuid: string, updateCommunityDto: UpdateCommunityDto): Promise<CommunityEntity|null> {
 
-        const community = await this.findOneByUuid(uuid)
+        const community = await this.findOneBy.Uuid(uuid)
 
         if (updateCommunityDto.uid) {
             const exist = await this.communityRepository.findOneBy({ uid: updateCommunityDto.uid })
@@ -52,7 +58,7 @@ export class CommunityService {
     }
 
     async delete(uuid: string) {
-        const community = await this.findOneByUuid(uuid)
+        const community = await this.findOneBy.Uuid(uuid)
 
         return {
             message: 'Comunidad ELIMINADA',

@@ -27,7 +27,10 @@ export class UserEntity {
         example: ContactEntity,
         type: () => ContactEntity
     })
-    @OneToOne( () => ContactEntity, (contact) => contact.user )
+    @OneToOne( () => ContactEntity, (contact) => contact.user, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+    } )
     @JoinColumn({ name: 'contact' })
     contact: ContactEntity;
 
@@ -65,7 +68,8 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'El rol asignado al usuario',
-        type: () => RoleEntity
+        type: () => RoleEntity,
+        example: () => RoleEntity
     })
     @ManyToOne( () => RoleEntity, (role) => role.users )
     @JoinColumn({ name: 'role' })

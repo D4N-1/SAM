@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { RolesService } from './roles.service';
+import { RoleService } from './roles.service';
 import { ApiOperation, ApiParam, ApiOkResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiTags } from '@nestjs/swagger';
 import { RoleEntity } from './entities/role.entity';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
@@ -10,7 +10,7 @@ import { SWAGGER } from 'src/common/utils/swagger.utils';
 @ApiTags('Roles')
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+  constructor(private readonly rolesService: RoleService) {}
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('roles') })
   @ApiOkResponse({ description: SWAGGER.OK.ALL('roles'), type: [RoleEntity] })
@@ -26,6 +26,6 @@ export class RolesController {
   @ApiParam(API_PARAM.UUID)
   @Get('/:uuid')
   async get(@Param('uuid', pipeValidateUuid) uuid: string) {
-    return this.rolesService.findOneByUuid(uuid)
+    return this.rolesService.findOneBy.Uuid(uuid)
   }
 }

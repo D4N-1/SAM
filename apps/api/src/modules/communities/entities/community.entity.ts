@@ -1,6 +1,7 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('communities')
 export class CommunityEntity {
@@ -22,11 +23,25 @@ export class CommunityEntity {
 
     @ApiProperty({
         description: 'El identificador único de la comunidad',
-        example: '',
+        example: '320987654321@g',
         type: String
     })
     @Column({ type: 'varchar', length: 35, unique: true })
     uid: string;
+
+    @ApiProperty({
+        description: 'El contacto dueño de la comunidad',
+        example: () => CommunityEntity,
+        type: () => ContactEntity,
+        nullable: true
+    })
+    @OneToOne( () => ContactEntity, (contact) => contact.community, {
+        nullable: true,
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+    })
+    @JoinColumn({ name: 'contact_owner' })
+    contactOwner?: ContactEntity | null;
 
     @ApiProperty({
         description: 'El nombre de la comunidad',

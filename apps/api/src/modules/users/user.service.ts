@@ -4,12 +4,11 @@ import { UserEntity } from "./entity/user.entity";
 import { Not, Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { ERROR_CODE } from "src/common/utils/error.utils";
-import { RoleEntity } from "../roles/entities/role.entity";
-import { ContactEntity } from "../contacts/entities/contact.entity";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import bcrypt from 'bcrypt'
-import { use } from "passport";
 import { SWAGGER } from "src/common/utils/swagger.utils";
+import { ContactService } from "../contacts/contact.service";
+import { RoleService } from "../roles/roles.service";
 
 
 @Injectable()
@@ -19,11 +18,8 @@ export class UserService {
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
 
-        @InjectRepository(RoleEntity)
-        private readonly roleRepository: Repository<RoleEntity>,
-
-        @InjectRepository(ContactEntity)
-        private readonly contactRepository: Repository<ContactEntity>,
+        private readonly roleService: RoleService,
+        private readonly contactService: ContactService,
 
     ) {}
 
@@ -33,36 +29,33 @@ export class UserService {
         })
     }
 
-    async findOneByUuid(uuid: string): Promise <UserEntity|null> {
-        const user = await this.userRepository.findOne({
-            where: { uuid },
-            relations: [ 'contact', 'role' ]
-        })
+    findOneBy = {
 
-        if (!user) throw new NotFoundException( SWAGGER.NOT_FOUND('usuario') )
-        return user
-    }
+        Uuid: async (uuid: string): Promise <UserEntity> => {
+            const user = await this.userRepository.findOne({
+                where: { uuid },
+                relations: { contact: true, role: true }
+            })
 
-    async findByUid(uid: string): Promise<UserEntity|null> {
-        return this.userRepository.findOne({
-            where: {
-                contact: {
-                    uid
-                }
-            },
-            relations: {
-                contact: true
-            }
-        })
+            if (!user) throw new NotFoundException( SWAGGER.NOT_FOUND('usuario') )
+            return user
+        },
+
+        ContactUid: async (uid: string): Promise<UserEntity|null> => {
+            const user = this.userRepository.findOne({
+                where: { contact: { uid } },
+                relations: { role: true, contact: true }
+            })
+
+            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
+            return user
+        }
     }
 
     async create(createUserDto: CreateUserDto): Promise<UserEntity | null> {
 
-        const role = await this.roleRepository.findOneBy({ name: createUserDto.roleName });
-        if (!role) throw new NotFoundException( ERROR_CODE.NOT_FOUND('rol') );
-
-        const contact = await this.contactRepository.findOneBy({ uid: createUserDto.contactUid });
-        if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
+        const role = await this.roleService.findOneBy.name( createUserDto.roleName );
+        const contact = await this.contactService.findOneBy.Uid(createUserDto.contactUid);
 
         const contactUsed = await this.userRepository.findOne({
             where: { contact: { index: contact.index } }
@@ -91,8 +84,7 @@ export class UserService {
         const updateData: Partial<UserEntity> = { ...updateUserDto as any };
 
         if (updateUserDto.contactUid) {
-            const contact = await this.contactRepository.findOneBy({ uid: updateUserDto.contactUid });
-            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
+            const contact = await this.contactService.findOneBy.Uid(updateUserDto.contactUid);
 
             const contactUsed = await this.userRepository.findOne({
                 where: { 
@@ -107,8 +99,7 @@ export class UserService {
         }
 
         if (updateUserDto.roleName) {
-            const role = await this.roleRepository.findOneBy({ name: updateUserDto.roleName });
-            if (!role) throw new NotFoundException( ERROR_CODE.NOT_FOUND('rol') );
+            const role = await this.roleService.findOneBy.name( updateUserDto.roleName );
 
             updateData.role = role;
         }
