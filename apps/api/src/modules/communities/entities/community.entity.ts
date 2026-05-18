@@ -40,8 +40,8 @@ export class CommunityEntity {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'contact_owner' })
-    contactOwner?: ContactEntity | null;
+    @JoinColumn({ name: 'owner_contact' })
+    ownerContact?: ContactEntity | null;
 
     @ApiProperty({
         description: 'El nombre de la comunidad',

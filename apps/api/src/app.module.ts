@@ -11,6 +11,7 @@ import { ContactModule } from './modules/contacts/contact.module';
 import { UserModule } from './modules/users/user.module';
 import { CommunityModule } from './modules/communities/community.module';
 import { GroupModule } from './modules/groups/groups.module';
+import { BotsModule } from './modules/bots/bots.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { GroupModule } from './modules/groups/groups.module';
     UserModule, AuthModule, CommunityModule,
     GroupModule,
     QuotesModule,
+    BotsModule,
      ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,7 +19,7 @@ export class RolesController {
   @ApiOkResponse({ description: SWAGGER.OK.ALL('roles'), type: [RoleEntity] })
   @ApiBearerAuth()
   @Private()
-  @Roles([enumRole.ADMIN])
+  @Roles([enumRole.ADMIN, enumRole.MODERATOR])
   @Get()
   async getAll() {
     return this.rolesService.findAll()
@@ -32,6 +32,7 @@ export class RolesController {
   @ApiParam(API_PARAM.UUID)
   @ApiBearerAuth()
   @Private()
+  @Roles([enumRole.ADMIN, enumRole.MODERATOR])
   @Get('/:uuid')
   async get(@Param('uuid', pipeValidateUuid) uuid: string) {
     return this.rolesService.findOneBy.uuid(uuid)

@@ -1,5 +1,6 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
+import { BotEntity } from "src/modules/bots/entities/bot.entity";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { UserEntity } from "src/modules/users/entity/user.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -56,8 +57,16 @@ export class ContactEntity {
     user: UserEntity;
 
     @ApiHideProperty()
-    @OneToOne( () => CommunityEntity, (community) => community.contactOwner)
+    @OneToOne( () => CommunityEntity, (community) => community.ownerContact)
     community?: CommunityEntity | null;
+
+    @ApiHideProperty()
+    @OneToOne( () => BotEntity, (bot) => bot.contact)
+    bot: BotEntity;
+
+    @ApiHideProperty()
+    @OneToOne( () => BotEntity, (bot) => bot.ownerContact)
+    botOwner: BotEntity;
 
     @CreateDateColumn({
         type: 'timestamp',

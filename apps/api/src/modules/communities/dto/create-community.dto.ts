@@ -17,7 +17,7 @@ export class CreateCommunityDto {
     })
     @IsOptional()
     @IsString()
-    contactOwnerUid: string
+    ownerContactUid?: string
 
     @ApiProperty({
         example: 'SAM x Comunidad',
