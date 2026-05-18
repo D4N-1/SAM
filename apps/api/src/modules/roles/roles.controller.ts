@@ -7,6 +7,8 @@ import { API_PARAM } from 'src/common/constants/api-param';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { Private } from 'src/decorators/private.decorator';
+import { Roles } from 'src/decorators/roles-user.decorator';
+import { enumRole } from 'src/common/enums/role.enum';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -17,6 +19,7 @@ export class RolesController {
   @ApiOkResponse({ description: SWAGGER.OK.ALL('roles'), type: [RoleEntity] })
   @ApiBearerAuth()
   @Private()
+  @Roles([enumRole.ADMIN])
   @Get()
   async getAll() {
     return this.rolesService.findAll()

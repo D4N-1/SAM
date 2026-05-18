@@ -19,14 +19,6 @@ export class CreateContactDto {
     @IsOptional()
     @MaxLength(35)
     lid?: string;
-
-    @ApiProperty({
-        example: 'dani@gmail.com'
-    })
-    @IsString()
-    @IsOptional()
-    @MaxLength(50)
-    email?: string;
     
     @ApiProperty({
         example: 'Dani'

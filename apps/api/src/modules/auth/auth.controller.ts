@@ -21,7 +21,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: msgWRONG_PASSWORD, schema: { example: ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) } })
   @Post('login')
   login(@Body() signInDto: CreateAuthDto) {
-    return this.authService.signIn(signInDto.uid, signInDto.password)
+    return this.authService.signIn(signInDto.contactUid, signInDto.password)
   }
 
   @ApiBearerAuth()

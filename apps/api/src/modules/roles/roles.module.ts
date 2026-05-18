@@ -6,6 +6,7 @@ import { RoleEntity } from './entities/role.entity';
 import { RolesSeederService } from '../../seeders/roles.seeder.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from '../auth/guards/auth.guard';
+import { RolesGuard } from '../auth/guards/role.guard';
 
 
 @Module({
@@ -19,6 +20,10 @@ import { JwtGuard } from '../auth/guards/auth.guard';
     {
       provide: APP_GUARD,
       useClass: JwtGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
     }
   ],
   exports: [RoleService]

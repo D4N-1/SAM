@@ -59,6 +59,18 @@ export class UserEntity {
     imageUrl?: string;
 
     @ApiProperty({
+        description: 'Email único del usuario',
+        example: 'dani@email.com',
+        type: String
+    })
+    @Column({
+        type: 'varchar',
+        length: 50,
+        nullable: true
+    })
+    email?: string;
+
+    @ApiProperty({
         description: 'Contraseña del usuario',
         example: 'Dani123',
         type: String

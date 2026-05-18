@@ -1,11 +1,10 @@
-import { CanActivate, ExecutionContext, ForbiddenException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { Observable } from "rxjs";
 import { AuthenticatedRequest } from "src/common/types/req-user.type";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { Roles } from "src/decorators/roles-user.decorator";
 
-
+@Injectable()
 export class RolesGuard implements CanActivate {
     constructor(private reflector: Reflector) {}
 
@@ -16,6 +15,9 @@ export class RolesGuard implements CanActivate {
         if (!requiredRoles) return true
 
         const request = context.switchToHttp().getRequest();
+
+        console.log(request)
+        
         const user: AuthenticatedRequest = request.user;
 
         if (!user || !user.role) throw new ForbiddenException( ERROR_CODE.FORBIDDEN('No tienes un rol asignado para validar tu permiso') )

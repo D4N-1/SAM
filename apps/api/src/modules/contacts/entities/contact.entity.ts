@@ -40,18 +40,6 @@ export class ContactEntity {
     lid?: string;
 
     @ApiProperty({
-        description: 'Email único del contacto',
-        example: 'dani@email.com',
-        type: String
-    })
-    @Column({
-        type: 'varchar',
-        length: 50,
-        nullable: true
-    })
-    email?: string;
-
-    @ApiProperty({
         description: 'Nombre del contacto',
         example: 'Dani',
         type: String

@@ -8,7 +8,7 @@ export class CreateAuthDto {
         example: '310123456789@s.whatsapp.net'
     })
     @IsString()
-    uid: string;
+    contactUid: string;
 
     @ApiProperty({
         example: 'dani123'
