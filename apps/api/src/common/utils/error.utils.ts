@@ -20,11 +20,11 @@ export const ERROR_CODE = {
         }
     ),
 
-    FORBIDDEN: () => (
+    FORBIDDEN: (text?: string) => (
         {
             statusCode: 403,
             error: 'Forbidden',
-            message: 'No tienes permiso suficiente para acceder a este metodo'
+            message: text || 'No tienes permiso suficiente para acceder a este metodo'
         }
     ),
     NOT_FOUND: (type: CREATED_MODULES) => (
