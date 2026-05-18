@@ -14,22 +14,23 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-    async signIn(userContactUid: string, password: string): Promise<{ access_token: string }> {
+    async signIn(userContactUid: string, password: string) {
 
       const user = await this.userService.findOneBy.contactUid(userContactUid)
-      if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
 
       const match = await bcrypt.compare(password, user.passwordHash!)
       if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) )
 
       const payload = {
         uuid: user.uuid,
-        name: user.name
+        role: user.role.name
       }
 
       return {
+        message: 'Inicio de sesión correcto',
         access_token: await this.jwtService.signAsync(payload)
       }
+      
     }
 
     async profile(uuid: string) {

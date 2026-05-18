@@ -8,7 +8,8 @@
   "scripts": {
     "test": "nest start --watch",
     "start": "node apps/api/dist/main.js",
-    "uuid-generator": "cd ./src/common/dev && node uuid-generator.util.mjs"
+    "uuid-generator": "cd ./src/common/dev && node uuid-generator.dev.mjs",
+    "hash": "cd ./src/common/dev && node hash.dev.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
