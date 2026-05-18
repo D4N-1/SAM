@@ -27,9 +27,9 @@ export class AuthController {
   @ApiBearerAuth()
   @Private()
   @Get('me')
-  profile(@CurrentUser () request: AuthenticatedRequest) {
-    console.log(request)
-    return this.authService.profile(request.user.uuid)
+  profile(@CurrentUser () user: AuthenticatedRequest) {
+    console.log(user)
+    return this.authService.profile(user.uuid)
   }
 
 }

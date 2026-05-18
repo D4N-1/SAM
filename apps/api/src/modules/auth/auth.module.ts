@@ -32,6 +32,5 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       useClass: JwtGuard
     }
   ],
-  exports: [AuthService]
 })
 export class AuthModule {}
