@@ -35,6 +35,7 @@ export class UserController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('usuario') })
     @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('usuario'), type: UserEntity })
     @ApiConflictResponse({ description: SWAGGER.CONFLICT('usuario'), schema: { example: ERROR_CODE.CONFLICT('usuario') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @Post()
     async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity|null> {
         return this.userService.create(createUserDto)

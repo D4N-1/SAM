@@ -12,7 +12,7 @@ export class CreateBotDto {
     contactUid: string;
 
     @ApiProperty({
-        example: '320987654321'
+        example: '320987654321 (opcional)'
     })
     @IsString()
     @IsOptional()

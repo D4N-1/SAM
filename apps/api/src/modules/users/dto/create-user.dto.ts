@@ -15,13 +15,13 @@ export class CreateUserDto {
     @ApiProperty({
         example: 'Dani'
     })
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     @MaxLength(25)
-    name?: string;
+    name: string;
 
     @ApiProperty({
-        example: 'Hola, soy Dani'
+        example: 'Hola, soy Dani (opcional)'
     })
     @IsOptional()
     @IsString()
@@ -29,7 +29,7 @@ export class CreateUserDto {
     description?: string;
 
     @ApiProperty({
-        example: 'JuanPhoto'
+        example: 'JuanPhoto (opcional)'
     })
     @IsOptional()
     @IsString()
@@ -37,7 +37,7 @@ export class CreateUserDto {
     imageUrl?: string;
 
     @ApiProperty({
-        example: 'dani@gmail.com'
+        example: 'dani@gmail.com (opcional)'
     })
     @IsString()
     @IsOptional()

@@ -13,7 +13,7 @@ export class CreateContactDto {
     uid: string;
 
     @ApiProperty({
-        example: '123456789@lid'
+        example: '123456789@lid (opcional)'
     })
     @IsString()
     @IsOptional()
@@ -21,7 +21,7 @@ export class CreateContactDto {
     lid?: string;
     
     @ApiProperty({
-        example: 'Dani'
+        example: 'Dani (opcional)'
     })
     @IsString()
     @IsOptional()

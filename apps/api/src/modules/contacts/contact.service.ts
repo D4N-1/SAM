@@ -39,10 +39,20 @@ export class ContactService {
 
     async create(createContactDto: CreateContactDto): Promise<ContactEntity|null> {
 
-        if ( await this.contactRepository.findOneBy({ uid: createContactDto.uid }) ) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
-        if ( createContactDto.lid && await this.contactRepository.findOneBy({ lid: createContactDto.lid }) ) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+        const { lid, ...newData } = createContactDto
 
-        const newContact = this.contactRepository.create(createContactDto)
+        const newContactData: Partial<ContactEntity> = { ...newData }
+        const contact = await this.contactRepository.findOneBy({ uid: newData.uid })
+        if (contact) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa UID') )
+
+        if (lid) {
+            const contact = await this.contactRepository.findOneBy({ lid })
+
+            if (contact) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa LID') )
+            newContactData.lid = lid;
+        }
+
+        const newContact = this.contactRepository.create(newContactData)
         return this.contactRepository.save(newContact)
     }
 

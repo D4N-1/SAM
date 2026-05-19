@@ -54,32 +54,27 @@ export class UserService {
 
     async create(createUserDto: CreateUserDto): Promise<UserEntity> {
 
-        const role = await this.roleService.findOneBy.name( createUserDto.roleName );
-        const contact = await this.contactService.findOneBy.uid(createUserDto.contactUid);
+        const { name, contactUid, password, roleName, ...newData } = createUserDto;
+
+        const newUserData: Partial<UserEntity> = { ...newData }
+
+        newUserData.role = await this.roleService.findOneBy.name( roleName );
+
+        const contact = await this.contactService.findOneBy.uid( contactUid );
 
         const isContactUsed = await this.userRepository.findOne({
             where: { contact: { index: contact.index } }
         });
         if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
+        newUserData.contact = contact;
 
-        const { name, ...userData } = createUserDto
-        const newUserData: Partial<UserEntity> = { ...userData }
+        const exists = await this.userRepository.findOneBy({ name })
+        if (exists) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
+        newUserData.name = name
+        
+        newUserData.passwordHash = await bcrypt.hash( createUserDto.password, 10 )
 
-
-        if (name) {
-            const exists = await this.userRepository.findOneBy({ name })
-            if (exists) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
-            
-            newUserData.name = name
-        }
-
-        const passwordHash = await bcrypt.hash( createUserDto.password, 10 )
-        const newUser = this.userRepository.create({
-            ...newUserData,
-            passwordHash,
-            contact,
-            role
-        });
+        const newUser = this.userRepository.create( newUserData );
 
         return await this.userRepository.save(newUser);
     }

@@ -3,4 +3,5 @@ export type CREATED_MODULES =
     'roles' | 'rol' |
     'usuarios' | 'usuario' |
     'comunidades' | 'comunidad' |
-    'grupos' | 'grupo'
+    'grupos' | 'grupo' |
+    'bots' | 'bot'

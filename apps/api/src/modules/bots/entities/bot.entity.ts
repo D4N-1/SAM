@@ -32,7 +32,7 @@ export class BotEntity {
         onUpdate: 'CASCADE'
     })
     @JoinColumn({ name: 'owner_contact' })
-    ownerContact: ContactEntity | null;
+    ownerContact?: ContactEntity | null;
 
     @ApiProperty({
         description: 'El token HASHEADO de 6 digitos para registrarse',

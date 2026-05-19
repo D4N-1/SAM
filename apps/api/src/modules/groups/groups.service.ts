@@ -36,12 +36,12 @@ export class GroupService {
 
   async create(createGroupDto: CreateGroupDto): Promise<GroupEntity> {
 
+    const newGroupData: Partial<GroupEntity> = { ...createGroupDto }
+
     const group = await this.groupRepository.findOneBy({ uid: createGroupDto.uid })
     if (group) throw new ConflictException( ERROR_CODE.CONFLICT('grupo') )
 
-    const community = await this.communityService.findOneBy.uid(createGroupDto.communityUid)
-
-    const newGroupData: Partial<GroupEntity> = { ...createGroupDto, community }
+    newGroupData.community = await this.communityService.findOneBy.uid(createGroupDto.communityUid)
 
     const newGroup = this.groupRepository.create(newGroupData)
 

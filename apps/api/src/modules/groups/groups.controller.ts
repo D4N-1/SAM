@@ -30,6 +30,7 @@ export class GroupsController {
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('grupo') })
   @ApiOkResponse({ description: SWAGGER.OK.CREATE('grupo'), type: GroupEntity })
+  @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('comunidad'), schema: { example: ERROR_CODE.NOT_FOUND('comunidad') } })
   @Post()
   async create(@Body() createGroupDto: CreateGroupDto) {
     return this.groupsService.create(createGroupDto)
