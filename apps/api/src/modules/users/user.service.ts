@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt'
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { ContactService } from "../contacts/contact.service";
 import { RoleService } from "../roles/roles.service";
+import { AllResponse } from "src/common/types/response.type";
 
 
 @Injectable()
@@ -23,7 +24,7 @@ export class UserService {
 
     ) {}
 
-    async findAll(query) {
+    async findAll(query): Promise<AllResponse> {
         const relations = query?.include ? query.include.split(',') : []
 
         const page = Math.max(1, parseInt( query?.page, 10) || 1);

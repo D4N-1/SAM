@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { CommunityEntity } from "./entities/community.entity";
 import { CommunityService } from "./community.service";
@@ -8,6 +8,8 @@ import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { CreateCommunityDto } from "./dto/create-community.dto";
 import { UpdateCommunityDto } from "./dto/update-community.dto";
+import { GetQueryDto } from "src/common/dto/get.dto";
+import { AllResponse } from "src/common/types/response.type";
 
 @ApiTags('Communities')
 @Controller('communities')
@@ -21,8 +23,8 @@ export class CommunityController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('comunidades') })
     @ApiOkResponse({ description: SWAGGER.SUMMARY.ALL('comunidades'), type: [CommunityEntity]})
     @Get()
-    async getAll(): Promise<CommunityEntity[]|null> {
-        return this.communityService.findAll()
+    async getAll(@Query() query: GetQueryDto): Promise<AllResponse> {
+        return this.communityService.findAll(query)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('comunidad') })

@@ -6,6 +6,7 @@ import { ERROR_CODE } from "src/common/utils/error.utils";
 import { CreateCommunityDto } from "./dto/create-community.dto";
 import { UpdateCommunityDto } from "./dto/update-community.dto";
 import { ContactService } from "../contacts/contact.service";
+import { AllResponse } from "src/common/types/response.type";
 
 
 @Injectable()
@@ -19,8 +20,27 @@ export class CommunityService {
     ) {}
 
 
-    findAll(): Promise<CommunityEntity[]|[]> {
-        return this.communityRepository.find()
+    async findAll(query): Promise<AllResponse> {
+        const page = Math.max(1, parseInt( query?.page, 10) || 1);
+        const limit = Math.max(1, parseInt( query?.limit, 10) || 10);
+        const skip = (page - 1) * limit;
+
+        const [ data, total ] = await this.communityRepository.findAndCount({
+            skip,
+            take: limit,
+            order: { createdAt: 'DESC' }
+        })
+
+        return {
+            data,
+            meta: {
+                totalItems: total,
+                itemCount: data.length,
+                itemsPerPage: limit,
+                totalPages: Math.ceil(total / limit),
+                currentPage: page
+            }
+        }
     }
 
     findOneBy = {

@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString } from "class-validator";
+import { GetQueryDto } from "src/common/dto/get.dto";
 
 
-export class GetUserQueryDto {
+export class GetUserQueryDto extends GetQueryDto {
 
     @ApiProperty({
         description: 'Relaciones extensibles a usuario',
@@ -11,20 +12,4 @@ export class GetUserQueryDto {
     @IsOptional()
     @IsString()
     include?: string;
-
-    @ApiProperty({
-        description: 'Limitar la cantidad de entidades por páginas',
-        example: '10'
-    })
-    @IsOptional()
-    @IsString()
-    limit?: string;
-
-    @ApiProperty({
-        description: 'Especificar el número de página',
-        example: 2
-    })
-    @IsString()
-    @IsOptional()
-    page?: string;
 }
