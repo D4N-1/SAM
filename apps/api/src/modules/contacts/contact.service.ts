@@ -21,17 +21,17 @@ export class ContactService {
 
     findOneBy = {
 
-        uuid: async (uuid: string): Promise<ContactEntity> => {
+        uuid: async (uuid: string, text?: string): Promise<ContactEntity> => {
             const contact = await this.contactRepository.findOneBy({ uuid })
 
-            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
+            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
             return contact
         },
 
-        uid: async (uid: string): Promise<ContactEntity> => {
+        uid: async (uid: string, text?: string): Promise<ContactEntity> => {
             const contact = await this.contactRepository.findOneBy({ uid })
 
-            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
+            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
             return contact
         }
     }

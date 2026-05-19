@@ -24,6 +24,6 @@ export class CreateBotDto {
     })
     @IsString()
     @IsNotEmpty()
-    @MaxLength(6)
+    @MaxLength(8)
     token: string;
 }

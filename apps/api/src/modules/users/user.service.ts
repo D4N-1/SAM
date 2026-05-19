@@ -23,9 +23,11 @@ export class UserService {
 
     ) {}
 
-    async findAll(): Promise <UserEntity[]|null> {
+    async findAll(query): Promise <UserEntity[]> {
+        const relations = query?.include ? query.include.split(',') : []
+
         return this.userRepository.find({
-            relations: [ 'contact', 'role' ]
+            relations: relations.filter( rel => [ 'contact', 'role' ].includes(rel) )
         })
     }
 

@@ -27,11 +27,11 @@ export const ERROR_CODE = {
             message: text || 'No tienes permiso suficiente para acceder a este metodo'
         }
     ),
-    NOT_FOUND: (type: CREATED_MODULES) => (
+    NOT_FOUND: (type: CREATED_MODULES, text?: string) => (
         {
             statusCode: 404,
             error: 'Not Found',
-            message: `No se encontró ese ${type}`
+            message: text || `No se encontró ese ${type}`
         }
     ),
     CONFLICT: (type: CREATED_MODULES, text?: string) => (

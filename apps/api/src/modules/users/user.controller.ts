@@ -1,13 +1,14 @@
-import { Controller, Get, Param, Body, Post, Patch, Delete } from "@nestjs/common";
+import { Controller, Get, Param, Body, Post, Patch, Delete, Query } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserEntity } from "./entity/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags, ApiParam } from "@nestjs/swagger";
+import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags, ApiParam, ApiQuery } from "@nestjs/swagger";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { API_PARAM } from "src/common/constants/api-param";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { SWAGGER } from "src/common/utils/swagger.utils";
+import { GetUserQueryDto } from "./dto/get-user.dto";
 
 @ApiTags('Users')
 @Controller('users')
@@ -18,8 +19,8 @@ export class UserController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('usuarios') })
     @ApiOkResponse({ description: SWAGGER.OK.ALL('usuarios'), type: [UserEntity] })
     @Get()
-    async getAll(): Promise<UserEntity[]|null> {
-        return this.userService.findAll()
+    async getAll(@Query() query: GetUserQueryDto): Promise<UserEntity[]> {
+        return this.userService.findAll(query)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('usuario') })

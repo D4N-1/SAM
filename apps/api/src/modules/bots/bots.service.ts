@@ -29,17 +29,17 @@ export class BotsService {
 
     const newBotData: Partial<BotEntity> = { ...newData }
     
-    newBotData.contact = await this.contactService.findOneBy.uid(createBotDto.contactUid)
+    newBotData.contact = await this.contactService.findOneBy.uid( contactUid );
 
     if (ownerContactUid) {
-      const exist = await this.contactService.findOneBy.uid(ownerContactUid)
+      const contact = await this.contactService.findOneBy.uid( ownerContactUid, 'No se encontró ese contacto del dueño' )
 
       const isOwner = await this.botRepository.findOne({
-        where: { ownerContact: { index: exist.index } }
+        where: { ownerContact: { index: contact.index } }
       })
       if (!isOwner) throw new ConflictException( ERROR_CODE.CONFLICT('bot', 'Este contacto ya es dueño de otro bot') )
 
-      newBotData.ownerContact = exist;
+      newBotData.ownerContact = contact;
     }
 
     newBotData.tokenHash = await hash(token, 10)
