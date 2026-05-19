@@ -23,12 +23,31 @@ export class UserService {
 
     ) {}
 
-    async findAll(query): Promise <UserEntity[]> {
+    async findAll(query) {
         const relations = query?.include ? query.include.split(',') : []
 
-        return this.userRepository.find({
-            relations: relations.filter( rel => [ 'contact', 'role' ].includes(rel) )
-        })
+        const page = Math.max(1, parseInt( query?.page, 10) || 1);
+        const limit = Math.max(1, parseInt( query?.limit, 10) || 10);
+        const skip = (page - 1) * limit;
+
+        const [ data, total ] = await this.userRepository.findAndCount({
+            relations: relations.filter( rel => [ 'contact', 'role' ].includes(rel) ),
+            skip,
+            take: limit,
+            order: { createdAt: 'DESC' }
+        });
+
+
+        return {
+            data,
+            meta: {
+                totalItems: total,
+                itemCount: data.length,
+                itemsPerPage: limit,
+                totalPages: Math.ceil(total / limit),
+                currentPage: page
+            }
+        }
     }
 
     findOneBy = {

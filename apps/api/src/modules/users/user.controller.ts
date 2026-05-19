@@ -19,7 +19,7 @@ export class UserController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('usuarios') })
     @ApiOkResponse({ description: SWAGGER.OK.ALL('usuarios'), type: [UserEntity] })
     @Get()
-    async getAll(@Query() query: GetUserQueryDto): Promise<UserEntity[]> {
+    async getAll(@Query() query: GetUserQueryDto) {
         return this.userService.findAll(query)
     }
 
