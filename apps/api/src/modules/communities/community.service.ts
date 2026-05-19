@@ -59,7 +59,7 @@ export class CommunityService {
             const contact = await this.contactService.findOneBy.uid( ownerContactUid )
 
             const isContactUsed = await this.communityRepository.findOne({
-                where: { ownerContact: { index: contact.index }, uid: Not(contact.uid)}
+                where: { ownerContact: { index: contact.index }}
             })
             if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad', 'Ese contacto ya es dueño de otra comunidad'))
 
