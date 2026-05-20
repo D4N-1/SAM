@@ -22,11 +22,7 @@ export class UserEntity {
     @Generated('uuid')
     uuid: string;
 
-    @ApiProperty({
-        description: 'El contacto ligado al usuario',
-        example: ContactEntity,
-        type: () => ContactEntity
-    })
+    @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.user, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'

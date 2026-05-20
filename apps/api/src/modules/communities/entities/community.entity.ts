@@ -30,11 +30,7 @@ export class CommunityEntity {
     @Column({ type: 'varchar', length: 35, unique: true })
     uid: string;
 
-    @ApiProperty({
-        description: 'El contacto dueño de la comunidad',
-        type: () => ContactEntity,
-        nullable: true
-    })
+    @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.community, {
         nullable: true,
         onDelete: 'SET NULL',

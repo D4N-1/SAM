@@ -1,7 +1,10 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { hash } from "bcrypt";
+import { enumRole } from "src/common/enums/role.enum";
+import { ContactService } from "src/modules/contacts/contact.service";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
+import { RoleService } from "src/modules/roles/role.service";
 import { CreateUserDto } from "src/modules/users/dto/create-user.dto";
 import { UserEntity } from "src/modules/users/entities/user.entity";
 import { Repository } from "typeorm";
@@ -12,7 +15,10 @@ export class UserSeederService implements OnModuleInit {
 
     constructor(
         @InjectRepository(UserEntity)
-        private readonly userRepository: Repository<UserEntity>
+        private readonly userRepository: Repository<UserEntity>,
+
+        private readonly contactRepository: ContactService,
+        private readonly roleRepository: RoleService
     ) {}
 
     async onModuleInit() {
@@ -50,9 +56,12 @@ export class UserSeederService implements OnModuleInit {
 
                 newData.passwordHash = await hash(user.password, 10)
 
+                const contact = await this.contactRepository.findOneBy.uid(user.contactUid)
+                const role = await this.roleRepository.findOneBy.name(user?.roleName || enumRole.MODERATOR)
                 await this.userRepository.save({
                     ...newData,
-                    contact: { uid: user.contactUid } as ContactEntity
+                    contact,
+                    role
                 })
             }
         }

@@ -22,10 +22,7 @@ export class BotEntity {
     @JoinColumn({ name: 'contact' })
     contact: ContactEntity;
 
-    @ApiProperty({
-        description: 'El contacto del dueño del bot',
-        type: () => ContactEntity,
-    })
+    @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.botOwner, {
         nullable: true,
         onDelete: 'SET NULL',
