@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 
 @Injectable()
-export class GendersService {
+export class GenderService {
   constructor(
     @InjectRepository(GendersEntity)
     private GendersRepository: Repository<GendersEntity>,

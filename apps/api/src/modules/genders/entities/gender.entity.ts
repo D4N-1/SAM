@@ -1,8 +1,8 @@
-import { Column, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AnimesEntity } from "src/modules/animes/entities/anime.entity";
 
 @Entity({ name: 'genders' })
-export class GendersEntity {
+export class GenderEntity {
 
     @PrimaryGeneratedColumn()
     index: number;

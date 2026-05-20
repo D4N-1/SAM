@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "./entity/user.entity";
+import { UserEntity } from "./entities/user.entity";
 import { Not, Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { ERROR_CODE } from "src/common/utils/error.utils";
@@ -8,7 +8,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import bcrypt from 'bcrypt'
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { ContactService } from "../contacts/contact.service";
-import { RoleService } from "../roles/roles.service";
+import { RoleService } from "../roles/role.service";
 import { AllResponse } from "src/common/types/response.type";
 
 

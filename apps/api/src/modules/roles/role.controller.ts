@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { RoleService } from './roles.service';
+import { RoleService } from './role.service';
 import { ApiOperation, ApiParam, ApiOkResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { RoleEntity } from './entities/role.entity';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
@@ -12,7 +12,7 @@ import { enumRole } from 'src/common/enums/role.enum';
 
 @ApiTags('Roles')
 @Controller('roles')
-export class RolesController {
+export class RoleController {
   constructor(private readonly rolesService: RoleService) {}
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('roles') })

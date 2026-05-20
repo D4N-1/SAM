@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { BotsService } from './bots.service';
-import { BotsController } from './bots.controller';
+import { BotService } from './bot.service';
+import { BotController } from './bot.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BotEntity } from './entities/bot.entity';
 import { ContactModule } from '../contacts/contact.module';
@@ -10,7 +10,7 @@ import { ContactModule } from '../contacts/contact.module';
     TypeOrmModule.forFeature([BotEntity]),
     ContactModule
   ],
-  controllers: [BotsController],
-  providers: [BotsService],
+  controllers: [BotController],
+  providers: [BotService],
 })
 export class BotModule {}

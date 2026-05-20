@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RoleService } from './roles.service';
-import { RolesController } from './roles.controller';
+import { RoleService } from './role.service';
+import { RolesController } from './role.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';
-import { RolesSeederService } from '../../seeders/roles.seeder.service';
+import { RolesSeederService } from '../../seeders/roles-seeder.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from '../auth/guards/auth.guard';
 import { RolesGuard } from '../auth/guards/role.guard';

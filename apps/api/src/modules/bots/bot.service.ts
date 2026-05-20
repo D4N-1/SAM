@@ -9,7 +9,7 @@ import { hash } from 'bcrypt';
 
 
 @Injectable()
-export class BotsService {
+export class BotService {
   
   constructor(
     @InjectRepository(BotEntity)

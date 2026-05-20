@@ -27,6 +27,6 @@ export class RolesSeederService implements OnApplicationBootstrap {
             )
         }
 
-        console.log(`Seeder de Roles realizado`)
+        console.log(`[] - Seeder de Roles realizado`)
     }
 }

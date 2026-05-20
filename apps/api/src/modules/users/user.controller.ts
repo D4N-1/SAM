@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Body, Post, Patch, Delete, Query } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { UserEntity } from "./entity/user.entity";
+import { UserEntity } from "./entities/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags, ApiParam, ApiQuery } from "@nestjs/swagger";
 import { ERROR_CODE } from "src/common/utils/error.utils";

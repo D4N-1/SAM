@@ -7,14 +7,13 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: (ConfigService: ConfigService) => ({
-
-                type: ConfigService.get<string>('DB_TYPE', 'mariadb') as any,
-                host: ConfigService.get<string>('DB_HOST'),
-                port: ConfigService.get<string>('DB_PORT'),
-                username: ConfigService.get<string>('DB_USER'),
-                password: ConfigService.get<string>('DB_PASSWORD'),
-                database: ConfigService.get<string>('DB_DATABASE'),
+            useFactory: (configService: ConfigService) => ({
+                type: 'mysql',
+                host: configService.get<string>('DB_HOST'),
+                port: configService.get<number>('DB_PORT'),
+                username: configService.get<string>('DB_USER'),
+                password: configService.get<string>('DB_PASSWORD'),
+                database: configService.get<string>('DB_DATABASE'),
                 autoLoadEntities: true,
                 synchronize: true,
                 logging: false,
@@ -22,4 +21,4 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         })
     ],
 })
-export class DbModule {}
+export class DatabaseModule {}

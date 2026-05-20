@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GroupService } from './groups.service';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { GroupService } from './group.service';
 import { GroupEntity } from './entities/group.entity';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { SWAGGER } from 'src/common/utils/swagger.utils';
@@ -9,7 +9,7 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { API_PARAM } from 'src/common/constants/api-param';
 
 @Controller('groups')
-export class GroupsController {
+export class GroupController {
   constructor(private readonly groupsService: GroupService) {}
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('grupos') })

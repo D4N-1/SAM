@@ -1,15 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { BotsService } from './bots.service';
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { BotService } from './bot.service';
 import { CreateBotDto } from './dto/create-bot.dto';
-import { UpdateBotDto } from './dto/update-bot.dto';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { BotEntity } from './entities/bot.entity';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 
 @Controller('bots')
-export class BotsController {
-  constructor(private readonly botsService: BotsService) {}
+export class BotController {
+  constructor(private readonly botsService: BotService) {}
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('bots') })
   @ApiOkResponse({ description: SWAGGER.OK.ALL('bots'), type: [BotEntity] })

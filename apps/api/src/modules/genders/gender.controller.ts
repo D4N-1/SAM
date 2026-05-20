@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { GendersService } from './genders.service';
+import { GenderService } from './gender.service';
 import { CreateGenderDto } from './dto/create-gender.dto';
 import { UpdateGenderDto } from './dto/update-gender.dto';
 import { ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
 
 @Controller('genders')
-export class GendersController {
-  constructor(private readonly gendersService: GendersService) {}
+export class GenderController {
+  constructor(private readonly gendersService: GenderService) {}
 
 
   @ApiOperation({ summary: 'Postea un nuevo genero' })
