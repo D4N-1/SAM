@@ -3,7 +3,7 @@ import { AnimesEntity } from "./entities/anime.entity"
 import { Like, Repository } from "typeorm"
 import { InjectRepository } from "@nestjs/typeorm"
 import { CreateAnimeDto } from "./dto/create-anime.dto"
-import { GendersEntity } from "src/modules/genders/entities/gender.entity"
+import { GenderEntity } from "src/modules/genders/entities/gender.entity"
 
 @Injectable()
 export class AnimeService {
@@ -47,7 +47,7 @@ export class AnimeService {
 
         const newAnime = this.AnimeRepository.create(animeData)
 
-        if (gendersIds && gendersIds.length > 0) newAnime.genders = gendersIds.map(id => ({ index: id } as GendersEntity))
+        if (gendersIds && gendersIds.length > 0) newAnime.genders = gendersIds.map(id => ({ index: id } as GenderEntity))
 
         return await this.AnimeRepository.save(newAnime)
     }

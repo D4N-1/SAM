@@ -10,6 +10,7 @@ import { SWAGGER } from "src/common/utils/swagger.utils";
 import { ContactService } from "../contacts/contact.service";
 import { RoleService } from "../roles/role.service";
 import { AllResponse } from "src/common/types/response.type";
+import { enumRole } from "src/common/enums/role.enum";
 
 
 @Injectable()
@@ -80,7 +81,7 @@ export class UserService {
 
         const newUserData: Partial<UserEntity> = { ...newData }
 
-        newUserData.role = await this.roleService.findOneBy.name( roleName );
+        newUserData.role = await this.roleService.findOneBy.name( roleName ?? enumRole.USER );
 
         const contact = await this.contactService.findOneBy.uid( contactUid );
 

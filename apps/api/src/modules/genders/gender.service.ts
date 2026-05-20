@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGenderDto } from './dto/create-gender.dto';
 import { UpdateGenderDto } from './dto/update-gender.dto';
-import { GendersEntity } from './entities/gender.entity';
+import { GenderEntity } from './entities/gender.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 
 @Injectable()
 export class GenderService {
   constructor(
-    @InjectRepository(GendersEntity)
-    private GendersRepository: Repository<GendersEntity>,
+    @InjectRepository(GenderEntity)
+    private GendersRepository: Repository<GenderEntity>,
   ) {}
 
 
-  findAll(): Promise<GendersEntity[]> {
+  findAll(): Promise<GenderEntity[]> {
     return this.GendersRepository.find()
   }
 
@@ -22,11 +22,11 @@ export class GenderService {
     return this.GendersRepository.save(newGender)
   }
 
-  findOneIndex(id: number): Promise<GendersEntity|null> {
+  findOneIndex(id: number): Promise<GenderEntity|null> {
     return this.GendersRepository.findOneBy({ index: id })
   }
 
-  findLikeGender(name: string): Promise<GendersEntity[]|null> {
+  findLikeGender(name: string): Promise<GenderEntity[]|null> {
     return this.GendersRepository.findBy({ name: Like(`%${name}%`) })
   }
 

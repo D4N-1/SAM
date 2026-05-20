@@ -1,7 +1,7 @@
 import { Column, Entity, Generated, Index, JoinColumn, ManyToMany, PrimaryColumn, JoinTable, DeleteDateColumn } from "typeorm";
 import { AnimeFormat } from "src/common/enums/anime-format.enum";
 import { AnimeSeason } from "src/common/enums/anime-season.enum";
-import { GendersEntity } from "src/modules/genders/entities/gender.entity";
+import { GenderEntity } from "src/modules/genders/entities/gender.entity";
 
 @Entity('animes')
 export class AnimesEntity {
@@ -42,13 +42,13 @@ export class AnimesEntity {
     @Column({ type: 'int', default: 0 })
     likes: number;
 
-    @ManyToMany(() => GendersEntity, (gender) => gender.animes)
+    @ManyToMany(() => GenderEntity, (gender) => gender.animes)
     @JoinTable({
         name: 'uni_animes_genders',
         joinColumn: { name: 'anime_id', referencedColumnName: 'index' },
         inverseJoinColumn: { name: 'gender_id', referencedColumnName: 'index' }
     })
-    genders: GendersEntity[];
+    genders: GenderEntity[];
 
     @Column({ type: 'int', nullable: true })
     episodes: number;

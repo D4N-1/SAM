@@ -52,7 +52,7 @@ export class CreateUserDto {
     @MaxLength(15)
     password: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsEnum(enumRole)
-    roleName: enumRole;
+    roleName?: enumRole;
 }
