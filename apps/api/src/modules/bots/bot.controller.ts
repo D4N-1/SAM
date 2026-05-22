@@ -17,7 +17,6 @@ export class BotController {
     return this.botsService.findAll();
   }
 
-
   @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('bot') })
   @ApiOkResponse({ description: SWAGGER.OK.CREATE('bot'), type: BotEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
@@ -25,5 +24,7 @@ export class BotController {
   create(@Body() createBotDto: CreateBotDto) {
     return this.botsService.create(createBotDto)
   }
+
+  
   
 }

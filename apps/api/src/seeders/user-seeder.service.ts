@@ -57,7 +57,7 @@ export class UserSeederService implements OnModuleInit {
                 newData.passwordHash = await hash(user.password, 10)
 
                 const contact = await this.contactRepository.findOneBy.uid(user.contactUid)
-                const role = await this.roleRepository.findOneBy.name(user?.roleName || enumRole.MODERATOR)
+                const role = await this.roleRepository.findOneBy.name(user?.roleName || enumRole.USER)
                 await this.userRepository.save({
                     ...newData,
                     contact,

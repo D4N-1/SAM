@@ -11,6 +11,7 @@ import { ContactService } from "../contacts/contact.service";
 import { RoleService } from "../roles/role.service";
 import { AllResponse } from "src/common/types/response.type";
 import { enumRole } from "src/common/enums/role.enum";
+import { GetAllUserQueryDto } from "./dto/get-user.dto";
 
 
 @Injectable()
@@ -25,11 +26,10 @@ export class UserService {
 
     ) {}
 
-    async findAll(query): Promise<AllResponse> {
-        const relations = query?.include ? query.include.split(',') : []
+    async findAll(query: GetAllUserQueryDto): Promise<AllResponse> {
+        const { include, page = 1, limit = 10 } = query
 
-        const page = Math.max(1, parseInt( query?.page, 10) || 1);
-        const limit = Math.max(1, parseInt( query?.limit, 10) || 10);
+        const relations = include ? include.split(' ') : [];
         const skip = (page - 1) * limit;
 
         const [ data, total ] = await this.userRepository.findAndCount({

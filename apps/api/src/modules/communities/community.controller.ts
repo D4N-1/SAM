@@ -8,7 +8,7 @@ import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { CreateCommunityDto } from "./dto/create-community.dto";
 import { UpdateCommunityDto } from "./dto/update-community.dto";
-import { GetQueryDto } from "src/common/dto/get.dto";
+import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { AllResponse } from "src/common/types/response.type";
 
 @ApiTags('Communities')
@@ -23,7 +23,7 @@ export class CommunityController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('comunidades') })
     @ApiOkResponse({ description: SWAGGER.SUMMARY.ALL('comunidades'), type: [CommunityEntity]})
     @Get()
-    async getAll(@Query() query: GetQueryDto): Promise<AllResponse> {
+    async getAll(@Query() query: GetAllQueryDto): Promise<AllResponse> {
         return this.communityService.findAll(query)
     }
 

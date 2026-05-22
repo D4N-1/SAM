@@ -5,6 +5,8 @@ import { GroupEntity } from './entities/group.entity';
 import { Repository } from 'typeorm';
 import { CommunityService } from '../communities/community.service';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
+import { GetAllGroupQueryDto } from './dto/get-group.dto';
+import { AllResponse } from 'src/common/types/response.type';
 
 @Injectable()
 export class GroupService {
@@ -17,8 +19,29 @@ export class GroupService {
   ) {}
 
 
-  async findAll(): Promise<GroupEntity[]|[]> {
-    return this.groupRepository.find()
+  async findAll(query: GetAllGroupQueryDto): Promise<AllResponse> {
+    const { include, page = 1, limit = 10 } = query;
+
+    const relations = include ? include.split(',') : []
+    const skip = (page - 1) * limit;
+
+    const [ data, total ] = await this.groupRepository.findAndCount({
+      relations: relations.filter( rel => [ 'community' ].includes(rel) ),
+      skip,
+      take: limit,
+      order: { index: 'DESC' }
+    })
+
+    return {
+      data,
+      meta: {
+        totalItems: total,
+        itemCount: data.length,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page
+      }
+    }
   }
 
   findOneBy = {

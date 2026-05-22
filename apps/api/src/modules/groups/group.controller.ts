@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { GroupEntity } from './entities/group.entity';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
@@ -7,6 +7,8 @@ import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { API_PARAM } from 'src/common/constants/api-param';
+import { GetAllGroupQueryDto } from './dto/get-group.dto';
+import { AllResponse } from 'src/common/types/response.type';
 
 @Controller('groups')
 export class GroupController {
@@ -15,8 +17,8 @@ export class GroupController {
   @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('grupos') })
   @ApiOkResponse({ description: SWAGGER.OK.ALL('grupos'), type: [GroupEntity] } )
   @Get()
-  async getAll(): Promise<GroupEntity[]|[]> {
-    return this.groupsService.findAll()
+  async getAll(@Query() query: GetAllGroupQueryDto): Promise<AllResponse> {
+    return this.groupsService.findAll(query)
   }
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('grupo') })

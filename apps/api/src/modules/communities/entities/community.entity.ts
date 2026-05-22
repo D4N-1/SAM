@@ -68,7 +68,7 @@ export class CommunityEntity {
         example: true,
         type: Boolean
     })
-    @Column({ type: Boolean, name: 'is_public' })
+    @Column({ type: Boolean, name: 'is_public', nullable: true })
     isPublic: boolean;
 
     @ApiHideProperty()

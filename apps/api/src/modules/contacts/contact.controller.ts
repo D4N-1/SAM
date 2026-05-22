@@ -8,7 +8,7 @@ import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotF
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { API_PARAM } from "src/common/constants/api-param";
 import { SWAGGER } from "src/common/utils/swagger.utils";
-import { GetQueryDto } from "src/common/dto/get.dto";
+import { GetAllQueryDto } from "src/common/dto/get.dto";
 
 @ApiTags('Contacts')
 @Controller('contacts')
@@ -19,7 +19,7 @@ export class ContactController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('contactos') })
     @ApiOkResponse({ description: SWAGGER.OK.ALL('contactos'), type: [ContactEntity] })
     @Get()
-    async getAll(@Query() query: GetQueryDto) {
+    async getAll(@Query() query: GetAllQueryDto) {
         return this.contactService.findAll(query)
     }
 

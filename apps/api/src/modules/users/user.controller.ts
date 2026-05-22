@@ -8,7 +8,7 @@ import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { API_PARAM } from "src/common/constants/api-param";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { SWAGGER } from "src/common/utils/swagger.utils";
-import { GetUserQueryDto } from "./dto/get-user.dto";
+import { GetAllUserQueryDto } from "./dto/get-user.dto";
 
 @ApiTags('Users')
 @Controller('users')
@@ -19,7 +19,7 @@ export class UserController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('usuarios') })
     @ApiOkResponse({ description: SWAGGER.OK.ALL('usuarios'), type: [UserEntity] })
     @Get()
-    async getAll(@Query() query: GetUserQueryDto) {
+    async getAll(@Query() query: GetAllUserQueryDto) {
         return this.userService.findAll(query)
     }
 

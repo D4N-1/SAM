@@ -1,21 +1,26 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsNumber, IsOptional, Min } from "class-validator";
 
-export class GetQueryDto {
+export class GetAllQueryDto {
 
     @ApiProperty({
         description: 'Limitar la cantidad de entidades por página',
-        example: '10'
+        example: 10
     })
+    @Type( () => Number)
     @IsOptional()
-    @IsString()
-    limit?: string;
+    @IsNumber()
+    @Min(1)
+    limit?: number;
 
     @ApiProperty({
         description: 'Especificar el número de página',
-        example: 2
+        example: 1
     })
-    @IsString()
+    @Type( () => Number)
+    @IsNumber()
     @IsOptional()
-    page?: string;
+    @Min(1)
+    page?: number;
 }

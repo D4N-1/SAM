@@ -24,7 +24,7 @@ export class RoleSeederService implements OnModuleInit {
             const exist = await this.roleRepository.findOneBy({ name: role })
 
             if (!exist) {
-                const newRole = this.roleRepository.create(enumRole[role])
+                const newRole = this.roleRepository.create({ name: role })
                 await this.roleRepository.save(newRole)
             }
         }
