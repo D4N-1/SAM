@@ -1,7 +1,7 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('bots')
 export class BotEntity {
@@ -10,6 +10,16 @@ export class BotEntity {
     @PrimaryGeneratedColumn()
     @Exclude()
     index: number;
+
+    @ApiProperty({
+        description: 'El indice único público del bot',
+        example: '550e8400-e29b-41d4-a716-446655440000',
+        type: String,
+        format: 'uuid'
+    })
+    @Column({ type: 'uuid', unique: true })
+    @Generated('uuid')
+    uuid: string;
 
     @ApiProperty({
         description: 'El contacto del bot',
@@ -32,12 +42,12 @@ export class BotEntity {
     ownerContact?: ContactEntity | null;
 
     @ApiProperty({
-        description: 'El token HASHEADO de 6 digitos para registrarse',
+        description: 'El codigo HASHEADO de 8 digitos para registrarse',
         example: 'S4MWWBOT => Hash',
         type: String
     })
-    @Column({ type: 'varchar', length: 255, name: 'token_hash', unique: true })
-    tokenHash: string;
+    @Column({ type: 'varchar', length: 255, name: 'code_hash', unique: true })
+    codeHash: string;
 
     @CreateDateColumn()
     createdAt: Date;

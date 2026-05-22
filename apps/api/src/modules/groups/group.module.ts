@@ -4,6 +4,7 @@ import { GroupController } from './group.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GroupEntity } from './entities/group.entity';
 import { CommunityModule } from '../communities/community.module';
+import { GroupSeederService } from 'src/seeders/group-seeder.service';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { CommunityModule } from '../communities/community.module';
     CommunityModule
     ],
   controllers: [GroupController],
-  providers: [GroupService],
+  providers: [GroupService, GroupSeederService],
 })
 export class GroupModule {}

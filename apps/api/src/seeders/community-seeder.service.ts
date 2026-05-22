@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { Repository } from "typeorm";
 
-
 export class CommunitySeederService implements OnModuleInit {
 
     constructor(

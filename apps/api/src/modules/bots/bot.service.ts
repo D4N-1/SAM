@@ -23,9 +23,13 @@ export class BotService {
     return this.botRepository.find()
   }
 
+  findOneBy = {
+
+    
+  }
   async create(createBotDto: CreateBotDto) {
 
-    const { ownerContactUid, token, contactUid, ...newData } = createBotDto;
+    const { ownerContactUid, code, contactUid, ...newData } = createBotDto;
 
     const newBotData: Partial<BotEntity> = { ...newData }
     
@@ -42,7 +46,7 @@ export class BotService {
       newBotData.ownerContact = contact;
     }
 
-    newBotData.tokenHash = await hash(token, 10)
+    newBotData.codeHash = await hash(code, 10)
 
     const newBot = this.botRepository.create(newBotData)
 

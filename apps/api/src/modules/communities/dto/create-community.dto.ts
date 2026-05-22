@@ -44,7 +44,8 @@ export class CreateCommunityDto {
     link?: string
 
     @ApiProperty({
-        example: true
+        example: true,
+        type: Boolean
     })
     @IsBoolean()
     @IsOptional()

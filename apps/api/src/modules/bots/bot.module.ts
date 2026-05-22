@@ -12,5 +12,6 @@ import { ContactModule } from '../contacts/contact.module';
   ],
   controllers: [BotController],
   providers: [BotService],
+  exports: [BotService]
 })
 export class BotModule {}

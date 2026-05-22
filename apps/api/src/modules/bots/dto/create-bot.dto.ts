@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString, Max, MaxLength } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class CreateBotDto {
 
@@ -25,5 +25,5 @@ export class CreateBotDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(8)
-    token: string;
+    code: string;
 }
