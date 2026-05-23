@@ -7,6 +7,7 @@ import { CommunityService } from '../communities/community.service';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { GetAllGroupQueryDto } from './dto/get-group.dto';
 import { AllResponse } from 'src/common/types/response.type';
+import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Injectable()
 export class GroupService {
@@ -29,7 +30,7 @@ export class GroupService {
       relations: relations.filter( rel => [ 'community' ].includes(rel) ),
       skip,
       take: limit,
-      order: { index: 'DESC' }
+      order: { index: 'ASC' }
     })
 
     return {
@@ -46,28 +47,62 @@ export class GroupService {
 
   findOneBy = {
 
-    uuid: async (uuid: string): Promise<GroupEntity> => {
+    uuid: async(uuid: string): Promise<GroupEntity> => {
           const group = await this.groupRepository.findOne({
               where: { uuid },
               relations: { community: true }
            })
           if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
           return group
-      },
+    },
+
+    uid: async(uid: string): Promise<GroupEntity> => {
+      const group = await this.groupRepository.findOne({
+        where: { uid },
+        relations: { community: true }
+      })
+      if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
+        return group;
+    }
+
+
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<GroupEntity> {
 
-    const newGroupData: Partial<GroupEntity> = { ...createGroupDto }
+    const { communityUid, ...newData } = createGroupDto;
 
-    const group = await this.groupRepository.findOneBy({ uid: createGroupDto.uid })
+    const group = await this.groupRepository.findOneBy({ uid: newData.uid })
     if (group) throw new ConflictException( ERROR_CODE.CONFLICT('grupo') )
 
-    newGroupData.community = await this.communityService.findOneBy.uid(createGroupDto.communityUid)
+    const newGroupData: Partial<GroupEntity> = { ...newData }
+
+    newGroupData.community = await this.communityService.findOneBy.uid(communityUid)
 
     const newGroup = this.groupRepository.create(newGroupData)
 
     return await this.groupRepository.save(newGroup)
+
+  }
+
+
+  async update(uuid: string, updateGroupDto: UpdateGroupDto) {
+    const group = await this.findOneBy.uuid(uuid);
+
+    const { communityUid, ...newData } = updateGroupDto;
+
+    const updateData: Partial<GroupEntity> = { ...newData };
+
+    if (communityUid) {
+
+      const community = await this.communityService.findOneBy.uid(communityUid)
+
+      updateData.community = community
+    }
+
+    const updatedGroup = this.groupRepository.merge(group, updateData);
+
+    return await this.groupRepository.save(updatedGroup);
 
   }
 

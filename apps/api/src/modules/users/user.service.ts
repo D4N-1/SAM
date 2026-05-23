@@ -36,7 +36,7 @@ export class UserService {
             relations: relations.filter( rel => [ 'contact', 'role' ].includes(rel) ),
             skip,
             take: limit,
-            order: { createdAt: 'DESC' }
+            order: { index: 'ASC' }
         });
 
 
@@ -105,12 +105,11 @@ export class UserService {
     async update(uuid: string, updateUserDto: UpdateUserDto): Promise<UserEntity | null> {
         const user = await this.findOneBy.uuid( uuid )
         
-        const updateData: Partial<UserEntity> = {}
-        if (updateUserDto.description) updateData.description = updateUserDto.description
-        if (updateUserDto.imageUrl) updateData.imageUrl = updateData.imageUrl
+        const { contactUid, roleName, name, password, ...newData } = updateUserDto;
+        const updateData: Partial<UserEntity> = { ...newData }
 
-        if (updateUserDto.contactUid) {
-            const contact = await this.contactService.findOneBy.uid(updateUserDto.contactUid);
+        if (contactUid) {
+            const contact = await this.contactService.findOneBy.uid(contactUid);
 
             const contactUsed = await this.userRepository.findOne({
                 where: { contact: { index: contact.index }, uuid: Not(uuid) }
@@ -120,16 +119,16 @@ export class UserService {
             updateData.contact = contact;
         }
 
-        if (updateUserDto.name) {
+        if (name) {
             const exists = await this.userRepository.findOne({
-                where: { name: updateUserDto.name, uuid: Not(user.uuid) } })
+                where: { name, uuid: Not(user.uuid) } })
             if (exists) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
             
-            updateData.name = updateUserDto.name
+            updateData.name = name;
         }
 
-        if (updateUserDto.roleName) updateData.role = await this.roleService.findOneBy.name( updateUserDto.roleName )
-        if (updateUserDto.password) updateData.passwordHash = await bcrypt.hash(updateUserDto.password, 10)
+        if (roleName) updateData.role = await this.roleService.findOneBy.name( roleName )
+        if (password) updateData.passwordHash = await bcrypt.hash(password, 10)
 
         const updatedUser = this.userRepository.merge(user, updateData);
 

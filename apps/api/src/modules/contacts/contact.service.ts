@@ -25,7 +25,7 @@ export class ContactService {
         const [ data, total ] = await this.contactRepository.findAndCount({
             skip,
             take: limit,
-            order: { createdAt: 'DESC' }
+            order: { createdAt: 'ASC' }
         })
 
         return {

@@ -28,7 +28,7 @@ export class CommunityService {
         const [ data, total ] = await this.communityRepository.findAndCount({
             skip,
             take: limit,
-            order: { createdAt: 'DESC' }
+            order: { index: 'ASC' }
         })
 
         return {
