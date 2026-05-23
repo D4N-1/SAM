@@ -6,13 +6,10 @@ export function parseMessage(sam: WASocket, msg: any): any {
 
     const message: any = msg[0]?.messages[0]?.message;
 
-    let sender = message?.key?.participant
-    let senderAlt = message?.key?.participantAlt
+    let sender = message?.key?.participant || message?.key?.remoteJid;
+    let senderAlt = message?.key?.participantAlt || message?.key?.remoteJidAlt;
 
-    const group = sender == undefined && senderAlt == undefined ? false : true
-
-    sender = group ? sender : message?.key?.remoteJid
-    senderAlt = group ? senderAlt : message?.key?.remoteJidAlt
+    const group = sender == undefined && senderAlt == undefined ? false : true;
 
     const isFromMe = message?.key?.fromMe
     const pushName = isFromMe ? sam?.user?.name : message?.pushName

@@ -1,5 +1,6 @@
 import * as qrcode from "qrcode"
-import type { WASocket, BaileysEventMap } from "@whiskeysockets/baileys"
+import { Boom } from "@hapi/boom";
+import type { WASocket, BaileysEventMap } from "@itsukichan/baileys"
 import { deleteAuth } from "./whatsapp.auth.js"
 import { startWhatsappBot } from "./whatsapp.client.js"
 import { enumStatusConnection } from "../../common/enums/enum.status.js"
@@ -23,9 +24,7 @@ export async function registerConnectionEvent(sam: WASocket) {
 
         if (connection) {
             console.log(msgSTATUS_TITLE)
-            console.log(msgSTATUS_CONNECTION[connection])
-            console.log(lastDisconnect)
-            console.log('\n')
+            console.log(msgSTATUS_CONNECTION[connection] + '\n')
         }
 
         if (!sam.authState.creds.registered && connection === enumStatusConnection.CONNECTING) {
@@ -35,14 +34,16 @@ export async function registerConnectionEvent(sam: WASocket) {
             const number = '573134359055'
 
             console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
-            const code = await sam.requestPairingCode(number)
+
+            const reqCode = undefined;
+            const code = await sam.requestPairingCode(number, reqCode)
 
             console.log(`CODIGO DE EMPAREJAMIENTO: ${code}`)
         }
 
         if (connection === enumStatusConnection.CLOSE) {
 
-            const reason = lastDisconnect?.error?.output?.statusCode;
+            const reason = (lastDisconnect?.error as Boom)?.output?.statusCode;
 
 
             if (reason == 401) {
@@ -55,6 +56,8 @@ export async function registerConnectionEvent(sam: WASocket) {
         }
 
         if (connection === enumStatusConnection.OPEN) {
+
+            
         }
     })
 
@@ -81,7 +84,7 @@ export function registerMessagesEvent(sam: WASocket) {
             console.log("\nDATA")
             console.log(JSON.stringify(msg,null,2))
 
-            const timestamp = (msg.conversationTimestamp ?? 0) * 1_000;
+            const timestamp = ( Number( msg.conversationTimestamp) ?? 0) * 1_000;
             const now = Date.now();
 
             if (now - timestamp > max_age) {

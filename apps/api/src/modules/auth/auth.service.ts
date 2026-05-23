@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../users/user.service';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcrypt'
+import { compare } from 'bcrypt'
 import { msgWRONG_PASSWORD } from 'src/common/messages/error.message';
 import { SignInUserDto } from './dto/sign-user.dto';
 import { SignInBotDto } from './dto/sign-bot.dto';
@@ -26,7 +26,7 @@ export class AuthService {
 
       const user = await this.userService.findOneBy.contactUid(contactUid)
 
-      const match = await bcrypt.compare(password, user.passwordHash!)
+      const match = await compare(password, user.passwordHash!)
       if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) )
 
       const payload = {
@@ -43,9 +43,25 @@ export class AuthService {
     
     bot: async(signInBotDto: SignInBotDto) => {
 
-      const { contactUid, token } = signInBotDto;
+      const { contactUid, code } = signInBotDto;
 
-      const bot = await this.botService
+      const bot = await this.botService.findOneBy.contactUid(contactUid)
+
+      if (!bot.codeHash) throw new ForbiddenException( ERROR_CODE.FORBIDDEN('El bot aun no tiene CODIGO registrado') )
+
+      const match = await compare(code, bot.codeHash)
+      if (!match) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED('El CODIGO es incorrecto') )
+
+      const payload = {
+        uuid: bot.uuid,
+        contactUid: bot.contact.uid,
+        ownerContactUid: bot.ownerContact?.uid
+      }
+
+      return {
+        message: 'Bot autorizado',
+        access_token: await this.jwtService.signAsync(payload)
+      }
     }
 
   }

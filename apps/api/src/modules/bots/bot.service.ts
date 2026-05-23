@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BotEntity } from './entities/bot.entity';
@@ -6,6 +6,9 @@ import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { ContactService } from '../contacts/contact.service';
 import { hash } from 'bcrypt';
+import { UpdateBotDto } from './dto/update-bot.dto';
+import { GetAllBotQueryDto } from './dto/get-bot.dto';
+import { AllResponse } from 'src/common/types/response.type';
 
 
 @Injectable()
@@ -19,19 +22,63 @@ export class BotService {
   ) {}
 
 
-  async findAll(): Promise<BotEntity[]> {
-    return this.botRepository.find()
-  }
+    async findAll(query: GetAllBotQueryDto): Promise<AllResponse> {
+        const { include, page = 1, limit = 10 } = query
+
+        const relations = include ? include.split(',') : [];
+        const skip = (page - 1) * limit;
+
+        const [ data, total ] = await this.botRepository.findAndCount({
+            relations: relations.filter( rel => [ 'contact', 'ownerContact' ].includes(rel) ),
+            skip,
+            take: limit,
+            order: { index: 'ASC' }
+        });
+
+
+        return {
+            data,
+            meta: {
+                totalItems: total,
+                itemCount: data.length,
+                itemsPerPage: limit,
+                totalPages: Math.ceil(total / limit),
+                currentPage: page
+            }
+        }
+    }
 
   findOneBy = {
 
-    
+    uuid: async(uuid: string) => {
+
+      const bot = await this.botRepository.findOne({
+        where: { uuid },
+        relations: { contact: true, ownerContact: true }
+      })
+
+      if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
+        return bot
+    },
+
+    contactUid: async(uid: string) => {
+
+      const bot = await this.botRepository.findOne({
+        where: { contact: { uid } },
+        relations: { contact: true, ownerContact: true }
+      })
+
+      if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
+        return bot
+    }
   }
+
+
   async create(createBotDto: CreateBotDto) {
 
-    const { ownerContactUid, code, contactUid, ...newData } = createBotDto;
+    const { ownerContactUid, contactUid } = createBotDto;
 
-    const newBotData: Partial<BotEntity> = { ...newData }
+    const newBotData: Partial<BotEntity> = {}
     
     newBotData.contact = await this.contactService.findOneBy.uid( contactUid );
 
@@ -46,11 +93,36 @@ export class BotService {
       newBotData.ownerContact = contact;
     }
 
-    newBotData.codeHash = await hash(code, 10)
-
     const newBot = this.botRepository.create(newBotData)
 
     return this.botRepository.save(newBot)
+  }
+
+
+  async update(uuid: string, updateBotDto: UpdateBotDto) {
+    const bot = await this.findOneBy.uuid(uuid)
+
+    const { ownerContactUid, code, contactUid } = updateBotDto;
+    const editBotData: Partial<BotEntity> = {}
+
+    if (ownerContactUid) {
+      const contact = await this.contactService.findOneBy.uid( ownerContactUid, 'No se encontro ese contacto del dueño' )
+
+      const isOwner = await this.botRepository.findOne({
+        where: { ownerContact: { index: contact.index } }
+      })
+      if (isOwner) throw new ConflictException( ERROR_CODE.CONFLICT('bot', 'Este contacto ya es dueño de otro bot') );
+
+      editBotData.ownerContact = contact;
+    }
+
+    if (contactUid) editBotData.contact = await this.contactService.findOneBy.uid(contactUid)
+
+    if (code) editBotData.codeHash = await hash(code, 10);
+
+    const editBot = this.botRepository.merge(bot, editBotData)
+
+    return await this.botRepository.save(editBot)
   }
 
 }

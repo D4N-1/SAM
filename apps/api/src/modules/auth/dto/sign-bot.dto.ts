@@ -20,5 +20,5 @@ export class SignInBotDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(8)
-    token: string;
+    code: string;
 }

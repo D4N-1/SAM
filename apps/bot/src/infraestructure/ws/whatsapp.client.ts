@@ -1,5 +1,5 @@
 import P from "pino"
-import { Browsers, makeWASocket } from "@whiskeysockets/baileys";
+import { makeWASocket } from "@itsukichan/baileys";
 import { createAuthState } from "./whatsapp.auth.js";
 import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp.events.js";
 

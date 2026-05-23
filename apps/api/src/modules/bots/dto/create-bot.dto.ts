@@ -19,11 +19,4 @@ export class CreateBotDto {
     @MaxLength(35)
     ownerContactUid?: string;
 
-    @ApiProperty({
-        example: 'S4MWWBOT'
-    })
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(8)
-    code: string;
 }

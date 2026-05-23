@@ -46,8 +46,8 @@ export class BotEntity {
         example: 'S4MWWBOT => Hash',
         type: String
     })
-    @Column({ type: 'varchar', length: 255, name: 'code_hash', unique: true })
-    codeHash: string;
+    @Column({ type: 'varchar', length: 255, name: 'code_hash', unique: true, nullable: true })
+    codeHash?: string;
 
     @CreateDateColumn()
     createdAt: Date;

@@ -5,6 +5,7 @@ import 'dotenv/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
   app.enableCors()
 
@@ -40,8 +41,11 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document, SwaggerOptions)
   
-  await app.listen(process.env.PORT ?? 3000);
+  const PORT = process.env.PORT ?? 3000;
+  const IP = `http://127.0.0.1:${PORT} https://api.sambot.live`
+  await app.listen(PORT);
 
-  console.log(`Servicio escuchando en http://127.0.0.1:${process.env.PORT ?? 3000}`)
+  console.log(`Servicio escuchando en ${IP}`)
+  console.log(`Documentación disponible en ${IP}/docs`)
 }
 bootstrap();
