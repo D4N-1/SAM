@@ -3,13 +3,13 @@ import { Boom } from "@hapi/boom";
 import type { WASocket, BaileysEventMap } from "@itsukichan/baileys"
 import { deleteAuth } from "./whatsapp.auth.js"
 import { startWhatsappBot } from "./whatsapp.client.js"
-import { enumStatusConnection } from "../../common/enums/enum.status.js"
-import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../../common/messages/log-status.message.js"
-import { parseMessage } from "../../messages/msg.parser.js"
-import type { ParsedMessage } from "../../messages/msg.types.js"
-import { parseCommand } from "../../commands/command.parser.js"
-import { routeCommand } from "../../commands/command.router.js"
-import { wait } from "../../common/utils/function.util.js"
+import { enumStatusConnection } from "../common/enums/enum.status.js"
+import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
+import { parseMessage } from "../messages/msg.parser.js"
+import type { ParsedMessage } from "../messages/msg.types.js"
+import { parseCommand } from "../commands/command.parser.js"
+import { routeCommand } from "../commands/command.router.js"
+import { wait } from "../common/utils/function.util.js"
 
 
 export async function registerConnectionEvent(sam: WASocket) {
