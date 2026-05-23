@@ -1,40 +1,52 @@
-import { commands } from "./index.js"
-import type { ParsedCommand } from "./command.types.js";
-import type { WAPresence, WASocket } from "@itsukichan/baileys";
-import type { ParsedMessage } from "../messages/msg.types.js";
-import { msgERROR_LOG_MESSAGES } from "../common/messages/error.message.js";
-import { handleError } from "../common/errors/handler.error.js";
+import type { interMessage } from "../messages/msg.types.js";
+import { msgERROR_USER_MESSAGES } from "../common/messages/error.message.js";
+import type { interCommand } from "./command.interface.js";
+import { WhatsappService } from "../estructure/whatsapp.service.js";
+import type { WASocket } from "@itsukichan/baileys";
+import { ALL_COMMANDS } from "./modules/index.js";
+import { Logger } from "../common/utils/logger.util.js";
 
+export class CommandRouter {
+    private commands = new Map<string, interCommand>
 
-export async function routeCommand( parsed: ParsedCommand, sam: WASocket, message: ParsedMessage) {
+    constructor() {}
 
-    const command = commands[parsed.command];
+    public registerCommands() {
 
-    if (!command) return console.log(msgERROR_LOG_MESSAGES.NOT_FOUND);
+        for (const commandClass of ALL_COMMANDS) {
+            const start = performance.now();
 
-    const ctx = {
-        socket: sam,
-        parsed,
-        message,
+            const commandInstance = new commandClass();
+            this.add(commandInstance);
 
-        sendMessage: (text: string) => {
-            return sam.sendMessage(message.chatId, { text: text })
-        },
-        editMessage: (text: string, key: any) => {
-            return sam.sendMessage(message.chatId, { edit: key, text: text })
-        },
-        readMessage: (key: string) => {
-            return sam.readMessages([key])
-        },
-        sendPresenceUpdate: (type: WAPresence, chatId: string) => {
-            return sam.sendPresenceUpdate(type, chatId)
+            Logger('CommandRouter', `Mapped ${commandInstance.name}`, start)
         }
     }
 
-    try {
-        await command.execute(ctx)
+    private add(command: interCommand) {
+        this.commands.set(command.name, command);
+        command.aliases?.forEach( alias => this.commands.set(alias, command) )
+    }
 
-    } catch (error) {
-        await handleError(error, ctx)
+    async handler(sam: WASocket,message: interMessage) {
+
+        if (!message.content?.startsWith("!")) return null;
+
+        const commandName = message.content.trim().split(" ")[0]?.replace("!", "").toLowerCase();
+        if (!commandName) return;
+
+        const command = this.commands.get(commandName)
+        if (!command) return;
+
+        const whatsappService = new WhatsappService(sam);
+
+        try {
+
+            await command.execute(message, whatsappService);
+            
+        } catch (error) {
+            console.error(error)
+            await whatsappService.send.text(message.chatId, msgERROR_USER_MESSAGES.INTERNAL() )
+        }
     }
 }

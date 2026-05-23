@@ -1,4 +1,4 @@
-export interface ParsedMessage {
+export interface interMessage {
     chatId: string,
     sender: string,
     senderAlt: string,
@@ -19,4 +19,15 @@ export interface ParsedMessage {
     platform: string,
     broadcast: boolean,
     newsletter: boolean
+}
+
+export interface interKey {
+
+  remoteJid: string,
+  remoteJidAlt: string,
+  fromMe: boolean,
+  id: string,
+  participant: string,
+  participantAlt: string
+  
 }

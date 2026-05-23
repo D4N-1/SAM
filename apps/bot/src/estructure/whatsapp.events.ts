@@ -6,11 +6,13 @@ import { startWhatsappBot } from "./whatsapp.client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
 import { parseMessage } from "../messages/msg.parser.js"
-import type { ParsedMessage } from "../messages/msg.types.js"
-import { parseCommand } from "../commands/command.parser.js"
-import { routeCommand } from "../commands/command.router.js"
+import type { interMessage } from "../messages/msg.types.js"
 import { wait } from "../common/utils/function.util.js"
+import { CommandRouter } from "../commands/command.router.js";
 
+
+const commandRouter = new CommandRouter();
+const max_age = 60_000;
 
 export async function registerConnectionEvent(sam: WASocket) {
     
@@ -18,12 +20,11 @@ export async function registerConnectionEvent(sam: WASocket) {
 
         let { connection, qr, lastDisconnect } = data
 
-        console.log(data)
 
         if (qr) return console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
 
         if (connection) {
-            console.log(msgSTATUS_TITLE)
+            console.log("\n" + msgSTATUS_TITLE)
             console.log(msgSTATUS_CONNECTION[connection] + '\n')
         }
 
@@ -70,11 +71,6 @@ export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 }
 
 
-
-
-const max_age = 60_000;
-
-
 export function registerMessagesEvent(sam: WASocket) {
 
     sam.ev.on("chats.update", async (data: BaileysEventMap['chats.update']) => {
@@ -93,7 +89,7 @@ export function registerMessagesEvent(sam: WASocket) {
             }
 
             
-            let message: ParsedMessage = parseMessage(sam, data)
+            let message: interMessage = parseMessage(sam, data)
             if (!message) return;
 
             //if (message.chatId == "159893176774698@lid") {
@@ -101,10 +97,7 @@ export function registerMessagesEvent(sam: WASocket) {
                 console.log(message)
             //}
 
-            let parsedCommand = parseCommand(message.content);
-            if (!parsedCommand) return;
-
-            routeCommand( parsedCommand, sam, message )
+            await commandRouter.handler(sam, message)
 
         }
     })
