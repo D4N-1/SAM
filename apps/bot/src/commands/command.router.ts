@@ -1,10 +1,12 @@
 import type { interMessage } from "../messages/msg.types.js";
-import { msgERROR_USER_MESSAGES } from "../common/messages/error.message.js";
+import { ERROR_LOG } from "../common/utils/error-log.util.js";
 import type { interCommand } from "./command.interface.js";
 import { WhatsappService } from "../estructure/whatsapp.service.js";
 import type { WASocket } from "@itsukichan/baileys";
-import { ALL_COMMANDS } from "./modules/index.js";
+import { ALL_COMMANDS } from "./command.module.js";
 import { Logger } from "../common/utils/logger.util.js";
+import { ERROR_USER } from "../common/utils/error-log.util.js";
+
 
 export class CommandRouter {
     private commands = new Map<string, interCommand>
@@ -28,9 +30,7 @@ export class CommandRouter {
         command.aliases?.forEach( alias => this.commands.set(alias, command) )
     }
 
-    async handler(sam: WASocket,message: interMessage) {
-
-        if (!message.content?.startsWith("!")) return null;
+    public async handler(sam: WASocket,message: interMessage) {
 
         const commandName = message.content.trim().split(" ")[0]?.replace("!", "").toLowerCase();
         if (!commandName) return;
@@ -45,8 +45,8 @@ export class CommandRouter {
             await command.execute(message, whatsappService);
             
         } catch (error) {
-            console.error(error)
-            await whatsappService.send.text(message.chatId, msgERROR_USER_MESSAGES.INTERNAL() )
+            ERROR_LOG.INTERNAL('CommandRouter')
+            await whatsappService.send.text(message.chatId, ERROR_USER.INTERNAL('el comando') )
         }
     }
 }

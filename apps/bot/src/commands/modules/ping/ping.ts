@@ -1,5 +1,6 @@
 import { AppError } from "../../../common/errors/app.error.js";
 import { enumErrorCode } from "../../../common/errors/enum.error.js";
+import { ERROR_LOG } from "../../../common/utils/error-log.util.js";
 import { wait } from "../../../common/utils/function.util.js";
 import type { WhatsappService } from "../../../estructure/whatsapp.service.js";
 import type { interMessage } from "../../../messages/msg.types.js";
@@ -13,27 +14,34 @@ export class PingCommand implements interCommand {
 
     async execute(message: interMessage, whatsapp: WhatsappService): Promise<void> {
 
-        await whatsapp.readMessage( message.key )
+        try {
 
-        const start = Date.now();
-        const start_text = getPingMessage( enumPingStates.CALCULANDO );
+            await whatsapp.readMessage( message.key )
 
-        if (!start_text) throw new AppError( enumErrorCode.MESSAGE_NOT_FOUND );
+            const start = Date.now();
+            const start_text = getPingMessage( enumPingStates.CALCULANDO );
 
-        const sentMessage = await whatsapp.send.text( message.chatId, start_text );
-        const end = Date.now();
+            if (!start_text) throw new AppError( enumErrorCode.MESSAGE_NOT_FOUND );
 
-        const diff = end - start;
+            const sentMessage = await whatsapp.send.text( message.chatId, start_text );
+            const end = Date.now();
 
-        await wait(300)
-        await whatsapp.sendPresenceUpdate('composing', message.chatId)
-        await wait(2_500);
+            const diff = end - start;
 
-        const end_message = getPingMessage(enumPingStates.CALCULADO, diff);
-        if (!start_text) throw new AppError(enumErrorCode.MESSAGE_NOT_FOUND);
-        await whatsapp.editMessage(message.chatId, end_message, sentMessage.key );
+            await wait(300)
+            await whatsapp.sendPresenceUpdate('composing', message.chatId)
+            await wait(2_500);
 
-        await whatsapp.sendPresenceUpdate('paused', message.chatId)
+            const end_message = getPingMessage(enumPingStates.CALCULADO, diff);
+            if (!start_text) throw new AppError(enumErrorCode.MESSAGE_NOT_FOUND);
+            await whatsapp.editMessage(message.chatId, end_message, sentMessage.key );
 
+            await whatsapp.sendPresenceUpdate('paused', message.chatId)
+
+        } catch (error) {
+            ERROR_LOG.INTERNAL('Ping')
+            await whatsapp.send.text( 'ping', 'Obtuve un error al calcular la latencia' )
+        }
+        
     }
 }

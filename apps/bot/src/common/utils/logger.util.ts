@@ -6,7 +6,7 @@ import chalk from "chalk";
  * @param message El mensaje principal o la acción (ej: 'Mapped Ping Command')
  * @param ms El tiempo de diferencia (ej: Date.now() )
  */
-export function Logger(context: string, message: string, startTime?: number) {
+export async function Logger(context: string, message: string, startTime?: number, error?: boolean) {
   const appName = chalk.cyanBright("[Sam]");
   
   const pid = chalk.greenBright(process.pid);
@@ -22,9 +22,9 @@ export function Logger(context: string, message: string, startTime?: number) {
     hour12: true,
   }).replace(/\//g, "/");
   
-  const logTag = chalk.cyanBright("LOG");
+  const logTag = error ? chalk.redBright("ERROR") : chalk.cyanBright("LOG");
   
-  const ctx = chalk.yellow(`[${context}]`);
+  const ctx = error ? chalk.magenta(`[${context}]`) : chalk.yellow(`[${context}]`);
   
   const msg = chalk.greenBright(message);
   let timeDiff = "";

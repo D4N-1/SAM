@@ -12,6 +12,7 @@ import { CommandRouter } from "../commands/command.router.js";
 
 
 const commandRouter = new CommandRouter();
+commandRouter.registerCommands();
 const max_age = 60_000;
 
 export async function registerConnectionEvent(sam: WASocket) {
