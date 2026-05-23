@@ -1,7 +1,7 @@
 import { commands } from "./index.js"
 import type { ParsedCommand } from "./command.types.js";
 import type { WAPresence, WASocket } from "@itsukichan/baileys";
-import type { ParsedMessage } from "../modules/messages/msg.types.js";
+import type { ParsedMessage } from "../messages/msg.types.js";
 import { msgERROR_LOG_MESSAGES } from "../common/messages/error.message.js";
 import { handleError } from "../common/errors/handler.error.js";
 
