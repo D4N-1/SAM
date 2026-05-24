@@ -1,8 +1,8 @@
 import * as qrcode from "qrcode"
 import { Boom } from "@hapi/boom";
 import type { WASocket, BaileysEventMap } from "@itsukichan/baileys"
-import { deleteAuth } from "./whatsapp.auth.js"
-import { startWhatsappBot } from "./whatsapp.client.js"
+import { deleteAuth } from "./utils/auth.util.js"
+import { startWhatsappBot } from "./whatsapp-client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
 import { parseMessage } from "./whatsapp.parser.js"
@@ -12,10 +12,9 @@ import { CommandRouter } from "../commands/command.router.js";
 
 
 const commandRouter = new CommandRouter();
-commandRouter.registerCommands();
 const max_age = 60_000;
 
-export async function registerConnectionEvent(sam: WASocket) {
+export async function registerConnectionEvent(uid: string, sam: WASocket) {
     
     sam.ev.on("connection.update", async (data: BaileysEventMap['connection.update']) => {
 
@@ -33,12 +32,10 @@ export async function registerConnectionEvent(sam: WASocket) {
 
             await wait(2_000)
 
-            const number = '573134359055'
-
             console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
 
             const reqCode = undefined;
-            const code = await sam.requestPairingCode(number, reqCode)
+            const code = await sam.requestPairingCode(uid, reqCode)
 
             console.log(`CODIGO DE EMPAREJAMIENTO: ${code}`)
         }
@@ -49,12 +46,12 @@ export async function registerConnectionEvent(sam: WASocket) {
 
 
             if (reason == 401) {
-                await deleteAuth()
+                await deleteAuth(uid)
                 process.exit(0)
             }
 
             await wait(2_500)
-            startWhatsappBot()
+            startWhatsappBot(uid)
         }
 
         if (connection === enumStatusConnection.OPEN) {

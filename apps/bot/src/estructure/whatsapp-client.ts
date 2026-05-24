@@ -1,13 +1,13 @@
 import P from "pino"
 import { makeWASocket } from "@itsukichan/baileys";
-import { createAuthState } from "./whatsapp.auth.js";
-import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp.events.js";
+import { createAuthState } from "./utils/auth.util.js";
+import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp-events.js";
 
 
 
-export async function startWhatsappBot(name?: string) {
+export async function startWhatsappBot(uid: string, code?: string) {
 
-    const { state, saveCreds } = await createAuthState()
+    const { state, saveCreds } = await createAuthState(uid);
     
     const sam:any = makeWASocket({
         version: [2, 3000, 1037076227],
@@ -31,7 +31,7 @@ export async function startWhatsappBot(name?: string) {
 
 
     registerCredsEvents(sam, saveCreds);
-    registerConnectionEvent(sam);
+    registerConnectionEvent(uid, sam);
     registerMessagesEvent(sam);
 
 }
