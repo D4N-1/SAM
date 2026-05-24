@@ -1,6 +1,6 @@
 import { ERROR_LOG } from "../common/utils/error-log.util.js";
-import type { interfaceCommand } from "../common/types/command.type.js";
-import type { interfaceMessage } from "../common/types/parsed-message.type.js";
+import type { interfaceCommand } from "../common/interfaces/command.type.js";
+import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
 import type { WASocket } from "@itsukichan/baileys";
 import { WhatsappService } from "../estructure/whatsapp.service.js";
 import { ALL_COMMANDS } from "./command.module.js";
@@ -35,6 +35,7 @@ export class CommandRouter {
     public async handler(sam: WASocket, message: interfaceMessage) {
 
         if (!message?.captent?.startsWith("!")) return;
+        if (message.isFromMe) return;
         
         const commandName = message.captent.trim().split(" ")[0]?.replace("!", "").toLowerCase();
         if (!commandName) return;

@@ -1,6 +1,6 @@
     import { downloadContentFromMessage, getContentType, getDevice, type WASocket } from "@itsukichan/baileys"
-    import type { interfaceKey } from "../common/types/key-message.type.js";
-    import type { interfaceMessage } from "../common/types/parsed-message.type.js";
+    import type { interfaceKey } from "../common/interfaces/key-message.type.js";
+    import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
     import axios from "axios";
     import { Logger } from "../common/utils/logger.util.js";
     import type { typeDevice } from "../common/types/device.type.js";
@@ -71,7 +71,7 @@
         const botNumber: string | undefined = sam?.user?.id ? parseUid(sam.user.id) : undefined;
         const isGroup: boolean = chatId.endsWith('@g.us');
 
-        const typeMessage: string = getContentType(msg.message) as string;
+        const contentType: string = getContentType(msg.message) as string;
         
         const allMentions: string[] = actualMessage?.extendedTextMessage?.contextInfo?.mentionedJid ||
             actualMessage?.imageMessage?.contextInfo?.mentionedJid || 
@@ -100,7 +100,7 @@
             captent: content ?? caption,
             botNumber,
             isGroup,
-            typeMessage,
+            contentType,
             allMentions,
             mentionedJid,
             isGif,
@@ -111,11 +111,11 @@
             device,
             broadcast,
             newsletter,
-            video: typeMessage === 'imageMessage' ?
-                () => downloadMedia(msg, typeMessage) :
+            video: contentType === 'videoMessage' ?
+                () => downloadMedia(msg, contentType) :
                 async () => undefined,
-            image: typeMessage === 'videoMessage' ?
-                () => downloadMedia(msg, typeMessage) :
+            image: contentType === 'imageMessage' ?
+                () => downloadMedia(msg, contentType) :
                 async () => undefined
         };
     }

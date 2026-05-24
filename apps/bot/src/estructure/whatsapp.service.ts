@@ -1,5 +1,5 @@
 import type { WAPresence, WASocket } from "@itsukichan/baileys";
-import type { interKey } from "../common/types/parsed-message.type.js";
+import type { interfaceKey } from "../common/interfaces/key-message.type.js";
 
 export class WhatsappService {
 
@@ -11,6 +11,14 @@ export class WhatsappService {
 
         text: async(chatId: string, text: string) => {
             return this.sam.sendMessage(chatId, { text })
+        },
+
+        image: async(chatId: string, caption: string, image: Buffer) => {
+            return this.sam.sendMessage(chatId, { image, caption })
+        },
+
+        video: async(chatId: string, caption: string, video: Buffer) => {
+            return this.sam.sendMessage(chatId, { video, caption })
         }
     }
 
@@ -19,7 +27,7 @@ export class WhatsappService {
         return this.sam.sendMessage(chatId, { edit: key, text })
     }
 
-    async readMessage(key: interKey) {
+    async readMessage(key: interfaceKey) {
         return this.sam.readMessages([key])
     }
 

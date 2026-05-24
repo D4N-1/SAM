@@ -1,4 +1,4 @@
-import type { typeDevice } from "./device.type.js";
+import type { typeDevice } from "../types/device.type.js";
 import type { interfaceKey } from "./key-message.type.js";
 
 export interface interfaceMessage {
@@ -11,7 +11,7 @@ export interface interfaceMessage {
     captent: string|undefined,
     botNumber: string|undefined,
     isGroup: boolean,
-    typeMessage: string,
+    contentType: string,
     allMentions: string[]|[],
     mentionedJid: string|undefined,
     video: () => Promise<Buffer|undefined>,

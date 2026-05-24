@@ -5,8 +5,8 @@ import { deleteAuth } from "./whatsapp.auth.js"
 import { startWhatsappBot } from "./whatsapp.client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
-import { parseMessage } from "./message.parser.js"
-import type { interfaceMessage } from "../common/types/parsed-message.type.js";
+import { parseMessage } from "./whatsapp.parser.js"
+import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
 import { wait } from "../common/utils/function.util.js"
 import { CommandRouter } from "../commands/command.router.js";
 
