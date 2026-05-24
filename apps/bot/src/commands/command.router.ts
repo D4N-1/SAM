@@ -1,15 +1,15 @@
-import type { interMessage } from "../messages/msg.types.js";
 import { ERROR_LOG } from "../common/utils/error-log.util.js";
-import type { interCommand } from "./command.interface.js";
-import { WhatsappService } from "../estructure/whatsapp.service.js";
+import type { interfaceCommand } from "../common/types/command.type.js";
+import type { interfaceMessage } from "../common/types/parsed-message.type.js";
 import type { WASocket } from "@itsukichan/baileys";
+import { WhatsappService } from "../estructure/whatsapp.service.js";
 import { ALL_COMMANDS } from "./command.module.js";
 import { Logger } from "../common/utils/logger.util.js";
 import { ERROR_USER } from "../common/utils/error-log.util.js";
 
 
 export class CommandRouter {
-    private commands = new Map<string, interCommand>
+    private commands = new Map<string, interfaceCommand>
 
     constructor() {
         this.registerCommands()
@@ -27,14 +27,16 @@ export class CommandRouter {
         }
     }
 
-    private add(command: interCommand) {
+    private add(command: interfaceCommand) {
         this.commands.set(command.name, command);
         command.aliases?.forEach( alias => this.commands.set(alias, command) )
     }
 
-    public async handler(sam: WASocket,message: interMessage) {
+    public async handler(sam: WASocket, message: interfaceMessage) {
 
-        const commandName = message.content.trim().split(" ")[0]?.replace("!", "").toLowerCase();
+        if (!message?.captent?.startsWith("!")) return;
+        
+        const commandName = message.captent.trim().split(" ")[0]?.replace("!", "").toLowerCase();
         if (!commandName) return;
 
         const command = this.commands.get(commandName)

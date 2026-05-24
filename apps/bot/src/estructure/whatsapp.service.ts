@@ -1,5 +1,5 @@
 import type { WAPresence, WASocket } from "@itsukichan/baileys";
-import type { interKey } from "../messages/msg.types.js";
+import type { interKey } from "../common/types/parsed-message.type.js";
 
 export class WhatsappService {
 

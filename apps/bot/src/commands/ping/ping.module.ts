@@ -1,16 +1,16 @@
 import { ERROR_LOG } from "../../common/utils/error-log.util.js";
 import { wait } from "../../common/utils/function.util.js";
 import type { WhatsappService } from "../../estructure/whatsapp.service.js";
-import type { interMessage } from "../../messages/msg.types.js";
-import type { interCommand } from "../command.interface.js";
+import type { interfaceMessage } from "../../common/types/parsed-message.type.js";
+import type { interfaceCommand } from "../../common/types/command.type.js";
 import { enumPingStates } from "./ping.enums.js";
 import { PingService } from "./ping.service.js";
 
-export class PingCommand implements interCommand {
-    name = "ping";
-    aliases = ["p", "pong"];
+export class PingCommand implements interfaceCommand {
+    name = 'ping';
+    aliases = ['p', 'pong'];
 
-    async execute(message: interMessage, whatsapp: WhatsappService): Promise<void> {
+    async execute(message: interfaceMessage, whatsapp: WhatsappService): Promise<void> {
 
         try {
             const start = Date.now()

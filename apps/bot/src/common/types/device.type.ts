@@ -1,0 +1,1 @@
+export type typeDevice = 'android' | 'unknown' | 'web' | 'ios' | 'desktop'

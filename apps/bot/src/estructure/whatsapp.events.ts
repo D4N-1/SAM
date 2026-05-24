@@ -5,8 +5,8 @@ import { deleteAuth } from "./whatsapp.auth.js"
 import { startWhatsappBot } from "./whatsapp.client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
-import { parseMessage } from "../messages/msg.parser.js"
-import type { interMessage } from "../messages/msg.types.js"
+import { parseMessage } from "./message.parser.js"
+import type { interfaceMessage } from "../common/types/parsed-message.type.js";
 import { wait } from "../common/utils/function.util.js"
 import { CommandRouter } from "../commands/command.router.js";
 
@@ -74,32 +74,26 @@ export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 
 export function registerMessagesEvent(sam: WASocket) {
 
-    sam.ev.on("chats.update", async (data: BaileysEventMap['chats.update']) => {
+    sam.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
+        
+        if (!data.messages || data.messages.length === 0) return;
 
-        for (const msg of data) {
+        for (const msg of data.messages) {
+            if (!msg.key) continue;
 
-            console.log("\nDATA")
-            console.log(JSON.stringify(msg,null,2))
-
-            const timestamp = ( Number( msg.conversationTimestamp) ?? 0) * 1_000;
+            const timestamp = (Number(msg.messageTimestamp) ?? 0) * 1_000;
             const now = Date.now();
 
             if (now - timestamp > max_age) {
-                console.log('MENSAJE VIEJO')
-                return
+                console.log('MENSAJE VIEJO IGNORADO');
+                continue;
             }
 
-            
-            let message: interMessage = parseMessage(sam, data)
-            if (!message) return;
+            let parsedMessage: interfaceMessage | null = parseMessage(sam, msg);
+            if (!parsedMessage) continue;
 
-            //if (message.chatId == "159893176774698@lid") {
-                console.log("\nMESSAGE")
-                console.log(message)
-            //}
-
-            await commandRouter.handler(sam, message)
-
+            console.log(parsedMessage)
+            await commandRouter.handler(sam, parsedMessage);
         }
-    })
+    });
 }
