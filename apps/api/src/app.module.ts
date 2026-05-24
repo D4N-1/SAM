@@ -1,4 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus'
+import { HttpModule } from '@nestjs/axios'
 import { ConfigModule } from '@nestjs/config'
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,6 +21,7 @@ import { BotModule } from './modules/bots/bot.module';
       isGlobal: true,
       envFilePath: '.env'
     }),
+    TerminusModule, HttpModule,
 
     DatabaseModule, RoleModule, ContactModule,
     UserModule, AuthModule, CommunityModule,

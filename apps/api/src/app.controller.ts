@@ -1,17 +1,19 @@
 import { Controller, Get, HttpCode, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiBody, ApiExcludeController } from '@nestjs/swagger';
-import type { interfaceHealth } from './common/types/health.type';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import type { HealthResponse } from './common/types/health.type';
 import { pipeValidateNumber } from './pipes/app.pipe';
 
-@ApiExcludeController()
+@ApiTags('Main')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @ApiOperation({ summary: 'Obtiene el estado de la API' })
+  @ApiOkResponse({ description: 'Recibe el estado del servicio' })
   @Get('/health')
   @HttpCode(200)
-  getHealth(): interfaceHealth {
+  getHealth() {
     return this.appService.getHealth();
   }
 

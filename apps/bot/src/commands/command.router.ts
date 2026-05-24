@@ -11,7 +11,9 @@ import { ERROR_USER } from "../common/utils/error-log.util.js";
 export class CommandRouter {
     private commands = new Map<string, interCommand>
 
-    constructor() {}
+    constructor() {
+        this.registerCommands()
+    }
 
     public registerCommands() {
 

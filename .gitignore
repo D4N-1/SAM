@@ -5,3 +5,4 @@ package-lock.json
 **/temp/
 **.env
 apps/bot/src/auth/
+.vscode/

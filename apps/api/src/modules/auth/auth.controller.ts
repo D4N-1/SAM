@@ -36,7 +36,7 @@ export class AuthController {
   @ApiOkResponse({ description: 'Ingreso al sistema correcto', example: { message: 'si', access_token: '12345' } })
   @Post('bot/login')
   botLogin(@Body() signInDto: SignInBotDto) {
-    return this.authService
+    return this.authService.signIn.bot(signInDto)
   }
 
 }

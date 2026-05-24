@@ -26,9 +26,11 @@
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^11.0.5",
+    "@nestjs/terminus": "^11.1.1",
     "@nestjs/typeorm": "^11.0.1",
     "@types/bcrypt": "^6.0.0",
     "@whiskeysockets/baileys": "^7.0.0-rc11",

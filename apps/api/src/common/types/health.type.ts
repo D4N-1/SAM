@@ -1,4 +1,4 @@
-export interface interfaceHealth {
+export interface HealthResponse {
     status: string,
     version: string,
     latency: string,

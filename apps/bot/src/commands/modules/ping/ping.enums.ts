@@ -1,4 +1,4 @@
 export enum enumPingStates {
-    CALCULANDO = 'calculando',
-    CALCULADO = 'calculado'
+    CALCULANDO = 'CALCULANDO',
+    CALCULADO = 'CALCULADO'
 }

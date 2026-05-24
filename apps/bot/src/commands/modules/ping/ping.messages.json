@@ -1,5 +1,5 @@
 {
-    "calculando": 
+    "CALCULANDO": 
     [
         "Estableciendo conexión...",
         "Calculando conexión...",
@@ -18,7 +18,7 @@
         "Tranquilo viajero, estoy calculando la velocidad del viento por ti..."
         ],
 
-    "calculado":
+    "CALCULADO":
     [
         "Pong!\n\n> Latencia: *{latency} ms*",
         "Me tomó *{latency} ms* en responder\n\n> ¿Crees que soy veloz?",
