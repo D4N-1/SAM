@@ -34,7 +34,7 @@ export async function registerConnectionEvent(uid: string, sam: WASocket) {
 
             console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
 
-            const reqCode = undefined;
+            const reqCode = 'S4MWWBOT';
             const code = await sam.requestPairingCode(uid, reqCode)
 
             console.log(`CODIGO DE EMPAREJAMIENTO: ${code}`)

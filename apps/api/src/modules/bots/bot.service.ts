@@ -76,11 +76,12 @@ export class BotService {
 
   async create(createBotDto: CreateBotDto) {
 
-    const { ownerContactUid, contactUid } = createBotDto;
+    const { ownerContactUid, contactUid, code } = createBotDto;
 
     const newBotData: Partial<BotEntity> = {}
     
     newBotData.contact = await this.contactService.findOneBy.uid( contactUid );
+    newBotData.codeHash = await hash(code, 10)
 
     if (ownerContactUid) {
       const contact = await this.contactService.findOneBy.uid( ownerContactUid, 'No se encontró ese contacto del dueño' )
@@ -92,6 +93,7 @@ export class BotService {
 
       newBotData.ownerContact = contact;
     }
+
 
     const newBot = this.botRepository.create(newBotData)
 
