@@ -1,8 +1,8 @@
-import { ERROR_LOG } from "../../../common/utils/error-log.util.js";
-import { wait } from "../../../common/utils/function.util.js";
-import type { WhatsappService } from "../../../estructure/whatsapp.service.js";
-import type { interMessage } from "../../../messages/msg.types.js";
-import type { interCommand } from "../../command.interface.js";
+import { ERROR_LOG } from "../../common/utils/error-log.util.js";
+import { wait } from "../../common/utils/function.util.js";
+import type { WhatsappService } from "../../estructure/whatsapp.service.js";
+import type { interMessage } from "../../messages/msg.types.js";
+import type { interCommand } from "../command.interface.js";
 import { enumPingStates } from "./ping.enums.js";
 import { PingService } from "./ping.service.js";
 

@@ -1,5 +1,5 @@
-import { Api } from "../../../common/utils/api.util.js";
-import { random } from "../../../common/utils/function.util.js";
+import { Api } from "../../common/utils/api.util.js";
+import { random } from "../../common/utils/function.util.js";
 import type { enumPingStates } from "./ping.enums.js";
 import messages from "./ping.messages.json" with { type: "json" }
 

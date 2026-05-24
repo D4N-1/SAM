@@ -1,4 +1,4 @@
-import { PingCommand } from "./modules/ping/ping.js";
+import { PingCommand } from "./ping/ping.module.js";
 
 
 export const ALL_COMMANDS = [
