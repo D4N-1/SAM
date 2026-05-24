@@ -9,7 +9,7 @@ import bcrypt from 'bcrypt'
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { ContactService } from "../contacts/contact.service";
 import { RoleService } from "../roles/role.service";
-import { AllResponse } from "src/common/types/response.type";
+import { AllResponse } from "src/common/interfaces/response.type";
 import { enumRole } from "src/common/enums/role.enum";
 import { GetAllUserQueryDto } from "./dto/get-user.dto";
 

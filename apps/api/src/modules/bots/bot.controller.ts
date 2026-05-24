@@ -6,7 +6,7 @@ import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { BotEntity } from './entities/bot.entity';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { GetAllBotQueryDto } from './dto/get-bot.dto';
-import { AllResponse } from 'src/common/types/response.type';
+import { AllResponse } from 'src/common/interfaces/response.type';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import { API_PARAM } from 'src/common/constants/api-param';

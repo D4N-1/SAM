@@ -1,7 +1,6 @@
 import { Controller, Get, HttpCode, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { HealthResponse } from './common/types/health.type';
 import { pipeValidateNumber } from './pipes/app.pipe';
 
 @ApiTags('Main')

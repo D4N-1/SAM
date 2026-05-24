@@ -8,7 +8,7 @@ import { ContactService } from '../contacts/contact.service';
 import { hash } from 'bcrypt';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import { GetAllBotQueryDto } from './dto/get-bot.dto';
-import { AllResponse } from 'src/common/types/response.type';
+import { AllResponse } from 'src/common/interfaces/response.type';
 
 
 @Injectable()

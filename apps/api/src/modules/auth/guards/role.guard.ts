@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { AuthenticatedRequest } from "src/common/types/req-user.type";
+import { AuthenticatedRequest } from "src/common/interfaces/req-user.type";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { Roles } from "src/decorators/roles-user.decorator";
 

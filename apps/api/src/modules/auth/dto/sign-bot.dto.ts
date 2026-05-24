@@ -6,7 +6,7 @@ export class SignInBotDto {
 
     @ApiProperty({
         description: 'El UID del contacto del BOT',
-        example: '320987654321@s.whatsapp.net'
+        example: '57320987654321'
     })
     @IsString()
     @IsNotEmpty()

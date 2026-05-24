@@ -7,7 +7,7 @@ import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { msgWRONG_PASSWORD } from 'src/common/messages/error.message';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
-import type { AuthenticatedRequest } from 'src/common/types/req-user.type';
+import type { AuthenticatedRequest } from 'src/common/interfaces/req-user.type';
 import { SignInBotDto } from './dto/sign-bot.dto';
 
 @ApiTags('Auth')

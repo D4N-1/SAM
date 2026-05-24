@@ -5,7 +5,7 @@ import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 export class CreateContactDto {
 
     @ApiProperty({
-        example: '310123456789@s.whatsapp.net'
+        example: '57310123456789'
     })
     @IsString()
     @IsNotEmpty()

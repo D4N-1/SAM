@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CommunityService } from '../communities/community.service';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { GetAllGroupQueryDto } from './dto/get-group.dto';
-import { AllResponse } from 'src/common/types/response.type';
+import { AllResponse } from 'src/common/interfaces/response.type';
 import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Injectable()

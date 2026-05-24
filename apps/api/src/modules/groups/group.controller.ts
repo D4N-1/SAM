@@ -8,7 +8,7 @@ import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { API_PARAM } from 'src/common/constants/api-param';
 import { GetAllGroupQueryDto } from './dto/get-group.dto';
-import { AllResponse } from 'src/common/types/response.type';
+import { AllResponse } from 'src/common/interfaces/response.type';
 
 @Controller('groups')
 export class GroupController {

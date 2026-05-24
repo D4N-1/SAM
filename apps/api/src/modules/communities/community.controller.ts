@@ -9,7 +9,7 @@ import { ERROR_CODE } from "src/common/utils/error.utils";
 import { CreateCommunityDto } from "./dto/create-community.dto";
 import { UpdateCommunityDto } from "./dto/update-community.dto";
 import { GetAllQueryDto } from "src/common/dto/get.dto";
-import { AllResponse } from "src/common/types/response.type";
+import { AllResponse } from "src/common/interfaces/response.type";
 
 @ApiTags('Communities')
 @Controller('communities')

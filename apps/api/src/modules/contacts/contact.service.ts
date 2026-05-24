@@ -6,7 +6,7 @@ import { CreateContactDto } from "./dto/create-contact.dto";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { UpdateContactDto } from "./dto/update-contact.dto";
 import { totalmem } from "os";
-import { AllResponse } from "src/common/types/response.type";
+import { AllResponse } from "src/common/interfaces/response.type";
 
 @Injectable()
 export class ContactService {
