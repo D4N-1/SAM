@@ -1,121 +1,206 @@
-    import { downloadContentFromMessage, getContentType, getDevice, type WASocket } from "@itsukichan/baileys"
-    import type { interfaceKey } from "../common/interfaces/key-message.type.js";
-    import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
-    import axios from "axios";
-    import { Logger } from "../common/utils/logger.util.js";
-    import type { typeDevice } from "../common/types/device.type.js";
+import { downloadContentFromMessage, getContentType, getDevice, type WASocket } from "@itsukichan/baileys"
+import type { interfaceKey } from "../common/interfaces/key-message.type.js";
+import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
+import axios from "axios";
+import { Logger } from "../common/utils/logger.util.js";
+import type { typeDevice } from "../common/types/device.type.js";
+import { enumMessage } from "../common/enums/type-mesage.enum.js";
 
-    const parseUid = (uid: string|undefined) => {
+const parseUid = (uid: string|undefined) => {
 
-        if (!uid) return undefined;
-        if (!uid.includes(':')) return uid
-        const arrUid = uid.split(':');
+    if (!uid) return undefined;
+    if (!uid.includes(':')) return uid
+    const arrUid = uid.split(':');
 
-        return arrUid[0] + ( uid.endsWith('lid') ? '@lid' : '@s.whatsapp.net' )
-    }
-
-
-    const downloadMedia = async(msg: any, type: 'videoMessage'|'imageMessage') => {
+    return arrUid[0] + ( uid.endsWith('lid') ? '@lid' : '@s.whatsapp.net' )
+}
 
 
-        try {
+const downloadMedia = async(msg: any, type: 'videoMessage'|'imageMessage') => {
 
-            const mediaType = type === 'imageMessage' ? 'image' : 'video';
-            const mediaMessage = msg?.message?.[`${mediaType}Message`] || msg?.message?.ephemeralMessage?.msg?.[`${mediaType}Message`];
+    try {
 
-            if (mediaMessage?.mediaKey) {
+        const mediaType = type === 'imageMessage' ? 'image' : 'video';
+        const mediaMessage = msg?.message?.[`${mediaType}Message`] || msg?.message?.ephemeralMessage?.msg?.[`${mediaType}Message`];
 
-                const stream = await downloadContentFromMessage(mediaMessage, mediaType);
-                let chunks = [];
+        if (mediaMessage?.mediaKey) {
 
-                for await (const chunk of stream) {
+            const stream = await downloadContentFromMessage(mediaMessage, mediaType);
+            let chunks = [];
+
+            for await (const chunk of stream) {
                 chunks.push(chunk);
-                }
-
-                return Buffer.concat(chunks);
-
-            } else {
-
-                const url = mediaMessage?.url ?
-                    mediaMessage?.url :
-                    "https://mmg.whatsapp.net" + mediaMessage?.directPath;
-
-                const res = await axios.get(url, { responseType: "arraybuffer" });
-                return Buffer.from(res.data);
             }
 
-        } catch (error) {
-            Logger('MessageParser', 'Descargar la media del mensaje', null, true)
+            return Buffer.concat(chunks);
+
+        } else {
+
+            const baseUrl = 'https://mmg.whatsapp.net';
+
+            const directPath = mediaMessage?.directPath?.startsWith('/') ?
+                mediaMessage.directPath :
+                `/${mediaMessage.directPath}`;
+
+            const url = mediaMessage?.url ? mediaMessage?.url : `${baseUrl}${directPath}`;
+
+            const res = await axios.get(url, {
+                responseType: "arraybuffer",
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                }
+            });
+
+            return Buffer.from(res.data);
         }
+
+    } catch (error) {
+        console.error(error)
+        Logger('MessageParser', 'Descargar la media del mensaje', null, true)
     }
+}
 
 
-    export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
-        if (!msg || !msg.message) return null;
+const downloadQmedia = async(msg: any, type: 'videoMessage'|'imageMessage') => {
 
-        const chatId: string = msg.key?.remoteJid || '';
-        let sender: string | undefined = parseUid(msg.key?.participant || msg.key?.remoteJid);
-        let senderAlt: string | undefined = parseUid(msg.key?.participantAlt || msg.key?.remoteJidAlt);
+    const quotedMessage = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage;
 
-        const isFromMe: boolean = !!msg.key?.fromMe;
-        const pushName: string = isFromMe ? (sam?.user?.name || 'Bot') : msg.pushName;
+    /*
+    if (quotedMessage?.imageMessage){
+              const fakeMsg = {
+                key: {
+                  remoteJid: msg.key.remoteJid,
+                  fromMe: false,
+                  id: msg.message?.extendedTextMessage?.contextInfo?.stanzaId,
+                  participant: msg.message?.extendedTextMessage?.contextInfo?.participant,
+                },
+                message: { imageMessage: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage },
+              };
+            quotedBuffer = await downloadMediaMessage(fakeMsg, "buffer", {}, { logger: sock.logger });
+            quotedCaption = msg.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage.caption
+    
+          } else if (msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage){
+              const fakeMsg = {
+                key: {
+                  remoteJid: msg.key.remoteJid,
+                  fromMe: false,
+                  id: msg.message?.extendedTextMessage?.contextInfo?.stanzaId,
+                  participant: msg.message?.extendedTextMessage?.contextInfo?.participant,
+                },
+                message: { videoMessage: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage },
+              };
+            quotedBuffervid = await downloadMediaMessage(fakeMsg, "buffer", {}, { logger: sock.logger });
+            quotedCaption = msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.caption
+            quotedisGif = msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.gifPlayback
+    */
+}
 
-        const actualMessage = msg.message?.ephemeralMessage?.msg || msg.message;
 
-        const content: string | undefined = actualMessage?.conversation ||
-            actualMessage?.extendedTextMessage?.text;
+export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
+    if (!msg || !msg.message) return null;
+
+    const chatId: string = msg.key?.remoteJid || '';
+    let sender: string | undefined = parseUid(msg.key?.participant || msg.key?.remoteJid);
+    let senderAlt: string | undefined = parseUid(msg.key?.participantAlt || msg.key?.remoteJidAlt);
+
+    const isFromMe: boolean = !!msg.key?.fromMe;
+    const pushName: string = isFromMe ? (sam?.user?.name || 'Bot') : msg.pushName;
+
+    const actualMessage = msg.message?.ephemeralMessage?.msg || msg.message;
+
+    const content: string | undefined = actualMessage?.conversation ||
+        actualMessage?.extendedTextMessage?.text;
             
-        const caption: string | undefined = actualMessage?.imageMessage?.caption || 
-            actualMessage?.videoMessage?.caption;
+    const caption: string | undefined = actualMessage?.imageMessage?.caption || 
+        actualMessage?.videoMessage?.caption;
 
-        const botNumber: string | undefined = sam?.user?.id ? parseUid(sam.user.id) : undefined;
-        const isGroup: boolean = chatId.endsWith('@g.us');
+    const botNumber: string | undefined = sam?.user?.id ? parseUid(sam.user.id) : undefined;
+    const isGroup: boolean = chatId.endsWith('@g.us');
 
-        const contentType: string = getContentType(msg.message) as string;
+    const contentType: enumMessage = getContentType(msg.message) as enumMessage;
         
-        const allMentions: string[] = actualMessage?.extendedTextMessage?.contextInfo?.mentionedJid ||
-            actualMessage?.imageMessage?.contextInfo?.mentionedJid || 
-            actualMessage?.videoMessage?.contextInfo?.mentionedJid || [];
+    const allMentions: string[] = actualMessage?.extendedTextMessage?.contextInfo?.mentionedJid ||
+        actualMessage?.imageMessage?.contextInfo?.mentionedJid || 
+        actualMessage?.videoMessage?.contextInfo?.mentionedJid || [];
             
-        const mentionedJid: string | undefined = allMentions[0];
+    const mentionedJid: string | undefined = allMentions[0];
 
-        const isGif: boolean | undefined = actualMessage?.videoMessage?.gifPlayback;
+    const isGif: boolean | undefined = actualMessage?.videoMessage?.gifPlayback;
 
-        if (isFromMe && botNumber) sender = botNumber;
+    if (isFromMe && botNumber) sender = botNumber;
 
-        const key: interfaceKey = msg.key;
-        const timestamp: number = msg.messageTimestamp;
-        const platform: string = msg.platform;
-        const device: typeDevice = getDevice(key.id || '');
-        const broadcast: boolean = !!msg.broadcast;
-        const newsletter: boolean = isGroup ? false : chatId.endsWith('@newsletter');
+    const key: interfaceKey = msg.key;
+    const timestamp: number = msg.messageTimestamp;
+    const platform: string = msg.platform;
+    const device: typeDevice = getDevice(key.id || '');
+    const broadcast: boolean = !!msg.broadcast;
+    const newsletter: boolean = isGroup ? false : chatId.endsWith('@newsletter');
 
-        return {
-            chatId,
-            sender,
-            senderAlt,
-            pushName,
-            content,
-            caption,
-            captent: content ?? caption,
-            botNumber,
-            isGroup,
-            contentType,
-            allMentions,
-            mentionedJid,
-            isGif,
-            isFromMe,
-            key,
-            timestamp,
-            platform,
-            device,
-            broadcast,
-            newsletter,
-            video: contentType === 'videoMessage' ?
-                () => downloadMedia(msg, contentType) :
+    const quotedMessage = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+    
+    const qContent: string|undefined = quotedMessage?.extendedTextMessage?.text ||
+        msg.message?.videoMessage?.contextInfo?.quotedMessage?.conversation ||
+        msg.message?.imageMessage?.contextInfo?.quotedMessage?.conversation ||
+        quotedMessage?.ephemeralMessage?.message?.extendedTextMessage?.text ||
+        msg.message?.videoMessage?.contextInfo?.quotedMessage?.conversation ||
+        quotedMessage?.conversation ||
+        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text?.conversation ||
+        msg.message?.imageMessage?.contextInfo?.quotedMessage?.conversation;
+
+    const qCaption: string|undefined = quotedMessage?.videoMessage?.caption ||
+        msg?.message?.extendedTextMessage?.contextInfo?.imageMessage?.caption;
+        
+    const qSender: string|undefined = parseUid( msg.message?.videoMessage?.contextInfo?.participant ||
+        msg.message?.imageMessage?.contextInfo?.participant ||
+        msg.message?.extendedTextMessage?.contextInfo?.participant ||
+        msg.message?.imageMessage?.contextInfo?.participants || 
+        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.contextInfo?.participant );
+
+    const qContentType: enumMessage = getContentType(quotedMessage) as enumMessage;
+    const qIsGif = quotedMessage?.videoMessage?.gifPlayback;
+
+    const fakeQuotedMessage = quotedMessage ? { message: quotedMessage } : null;
+
+    return {
+        chatId,
+        sender,
+        senderAlt,
+        pushName,
+        content,
+        caption,
+        captent: content ?? caption,
+        botNumber,
+        isGroup,
+        contentType,
+        allMentions,
+        mentionedJid,
+        isGif,
+        isFromMe,
+        quoted: {
+            qContent,
+            qCaption,
+            qCaptent: qContent ?? qCaption,
+            qSender,
+            qContentType,
+            qIsGif,
+            qVideo: qContentType === enumMessage.videoMessage ?
+                () => downloadMedia(fakeQuotedMessage, qContentType) :
                 async () => undefined,
-            image: contentType === 'imageMessage' ?
-                () => downloadMedia(msg, contentType) :
-                async () => undefined
-        };
-    }
+            qImage: qContentType === enumMessage.imageMessage ?
+                () => downloadMedia(fakeQuotedMessage, qContentType) :
+                async () => undefined,
+        },
+        key,
+        timestamp,
+        platform,
+        device,
+        broadcast,
+        newsletter,
+        video: contentType === enumMessage.videoMessage ?
+            () => downloadMedia(msg, contentType) :
+            async () => undefined,
+        image: contentType === enumMessage.imageMessage ?
+            () => downloadMedia(msg, contentType) :
+            async () => undefined
+    };
+}

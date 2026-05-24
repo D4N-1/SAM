@@ -17,8 +17,8 @@ export class WhatsappService {
             return this.sam.sendMessage(chatId, { image, caption })
         },
 
-        video: async(chatId: string, caption: string, video: Buffer) => {
-            return this.sam.sendMessage(chatId, { video, caption })
+        video: async(chatId: string, caption: string, video: Buffer, gifPlayback?: boolean) => {
+            return this.sam.sendMessage(chatId, { video, caption, gifPlayback: gifPlayback || false })
         }
     }
 
