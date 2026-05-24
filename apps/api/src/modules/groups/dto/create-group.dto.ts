@@ -1,17 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import { DTO } from "src/common/constants/generic.dto";
 
 export class CreateGroupDto {
 
     @ApiProperty({
-        example: '310987654321@g'
+        example: DTO.GROUP_UID
     })
     @IsString()
     @IsNotEmpty()
     communityUid: string;
 
     @ApiProperty({
-        example: '320987654321@g'
+        example: DTO.GROUP_UID
     })
     @IsString()
     @IsNotEmpty()

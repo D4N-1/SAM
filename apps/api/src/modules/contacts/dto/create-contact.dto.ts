@@ -1,11 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import { DTO } from "src/common/constants/generic.dto";
 
 
 export class CreateContactDto {
 
     @ApiProperty({
-        example: '57310123456789'
+        example: DTO.UID
     })
     @IsString()
     @IsNotEmpty()
@@ -13,7 +14,7 @@ export class CreateContactDto {
     uid: string;
 
     @ApiProperty({
-        example: '123456789@lid (opcional)'
+        example: DTO.LID
     })
     @IsString()
     @IsOptional()
@@ -21,7 +22,7 @@ export class CreateContactDto {
     lid?: string;
     
     @ApiProperty({
-        example: 'Dani (opcional)'
+        example: DTO.OPCIONAL_NAME
     })
     @IsString()
     @IsOptional()

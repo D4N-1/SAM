@@ -1,16 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
+import { DTO } from "src/common/constants/generic.dto";
 
 export class SignInUserDto {
 
     @ApiProperty({
-        example: '57310123456789'
+        example: DTO.UID
     })
     @IsString()
     contactUid: string;
 
     @ApiProperty({
-        example: 'dani123'
+        example: DTO.PASSWORD
     })
     @IsString()
     password: string;

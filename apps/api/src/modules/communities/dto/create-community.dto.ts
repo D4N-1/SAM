@@ -1,11 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import { DTO } from "src/common/constants/generic.dto";
 
 
 export class CreateCommunityDto {
 
     @ApiProperty({
-        example: '320987654321@g'
+        example: DTO.GROUP_UID
     })
     @IsNotEmpty()
     @IsString()
@@ -13,7 +14,7 @@ export class CreateCommunityDto {
     uid: string
 
     @ApiProperty({
-        example: '320987654321@s.whatsapp.net'
+        example: DTO.UID
     })
     @IsOptional()
     @IsString()

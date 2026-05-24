@@ -1,19 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { DTO } from "src/common/constants/generic.dto";
 import { enumRole } from "src/common/enums/role.enum";
 
 
 export class CreateUserDto {
 
     @ApiProperty({
-        example: '310123456789@s.whatsapp.net'
+        example: DTO.UID
     })
     @IsNotEmpty()
     @IsString()
     contactUid: string;
 
     @ApiProperty({
-        example: 'Dani'
+        example: DTO.NAME
     })
     @IsNotEmpty()
     @IsString()
@@ -21,7 +22,7 @@ export class CreateUserDto {
     name: string;
 
     @ApiProperty({
-        example: 'Hola, soy Dani (opcional)'
+        example: DTO.DESCRIPTION
     })
     @IsOptional()
     @IsString()
@@ -29,7 +30,7 @@ export class CreateUserDto {
     description?: string;
 
     @ApiProperty({
-        example: 'JuanPhoto (opcional)'
+        example: DTO.PHOTO
     })
     @IsOptional()
     @IsString()
@@ -37,7 +38,7 @@ export class CreateUserDto {
     imageUrl?: string;
 
     @ApiProperty({
-        example: 'dani@gmail.com (opcional)'
+        example: DTO.EMAIL
     })
     @IsString()
     @IsOptional()
@@ -45,7 +46,7 @@ export class CreateUserDto {
     email?: string;
 
     @ApiProperty({
-        example: 'Dani1234'
+        example: DTO.PASSWORD
     })
     @IsString()
     @MinLength(8)
