@@ -48,30 +48,43 @@ export class BotService {
         }
     }
 
-  findOneBy = {
+    findOneBy = {
 
-    uuid: async(uuid: string) => {
+      uuid: async(uuid: string): Promise<BotEntity> => {
 
-      const bot = await this.botRepository.findOne({
-        where: { uuid },
-        relations: { contact: true, ownerContact: true }
-      })
+        const bot = await this.botRepository.findOne({
+          where: { uuid },
+          relations: { contact: true, ownerContact: true }
+        })
 
-      if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
-        return bot
-    },
+        if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
+          return bot
+      },
 
-    contactUid: async(uid: string) => {
+      contactUid: async(uid: string): Promise<BotEntity> => {
 
-      const bot = await this.botRepository.findOne({
-        where: { contact: { uid } },
-        relations: { contact: true, ownerContact: true }
-      })
+        const bot = await this.botRepository.findOne({
+          where: { contact: { uid } },
+          relations: { contact: true, ownerContact: true }
+        })
 
-      if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
-        return bot
+        if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
+          return bot
+      }
+    };
+
+    findOrNull = {
+    
+      uuid: async(uuid: string): Promise<BotEntity|null> => {
+      
+        return await this.botRepository.findOne({
+          where: { uuid },
+          relations: { contact: true, ownerContact: true }
+        })
+      
+      }
+    
     }
-  }
 
 
   async create(createBotDto: CreateBotDto) {

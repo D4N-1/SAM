@@ -7,6 +7,8 @@ import { msgWRONG_PASSWORD } from 'src/common/messages/error.message';
 import { SignInUserDto } from './dto/sign-user.dto';
 import { SignInBotDto } from './dto/sign-bot.dto';
 import { BotService } from '../bots/bot.service';
+import { ClientRequest } from 'src/common/interfaces/req-client.type';
+import { enumClients } from 'src/common/enums/role.enum';
 
 
 @Injectable()
@@ -29,7 +31,8 @@ export class AuthService {
       const match = await compare(password, user.passwordHash!)
       if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) )
 
-      const payload = {
+      const payload: ClientRequest = {
+        type: enumClients.USER,
         uuid: user.uuid,
         role: user.role.name
       }
@@ -52,7 +55,8 @@ export class AuthService {
       const match = await compare(code, bot.codeHash)
       if (!match) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED('El CODIGO es incorrecto') )
 
-      const payload = {
+      const payload: ClientRequest = {
+        type: enumClients.BOT,
         uuid: bot.uuid,
         contactUid: bot.contact.uid,
         ownerContactUid: bot.ownerContact?.uid

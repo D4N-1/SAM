@@ -29,6 +29,8 @@ import { BotModule } from '../bots/bot.module';
   providers: [
     AuthService,
     JwtStrategy,
+    UserModule,
+    BotModule,
     {
       provide: APP_GUARD,
       useClass: JwtGuard

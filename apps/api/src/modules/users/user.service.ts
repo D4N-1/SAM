@@ -60,7 +60,7 @@ export class UserService {
                 relations: { contact: true, role: true }
             })
 
-            if (!user) throw new NotFoundException( SWAGGER.NOT_FOUND('usuario') )
+            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
             return user
         },
         
@@ -73,6 +73,15 @@ export class UserService {
             if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
             return user
         }
+    };
+
+    findOrNull = {
+        uuid: async (uuid: string): Promise <UserEntity|null> => {
+            return await this.userRepository.findOne({
+                where: { uuid },
+                relations: { contact: true, role: true }
+            })
+        },
     }
 
     async create(createUserDto: CreateUserDto): Promise<UserEntity> {

@@ -3,3 +3,8 @@ export enum enumRole {
     MODERATOR = 'moderator',
     ADMIN = 'admin'
 }
+
+export enum enumClients {
+    USER = 'user',
+    BOT = 'bot'
+}

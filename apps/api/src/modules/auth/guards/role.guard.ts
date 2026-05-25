@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { AuthenticatedRequest } from "src/common/interfaces/req-user.type";
+import { enumClients } from "src/common/enums/role.enum";
+import { ClientRequest } from "src/common/interfaces/req-client.type";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { Roles } from "src/decorators/roles-user.decorator";
 
@@ -12,17 +13,17 @@ export class RolesGuard implements CanActivate {
         
         const requiredRoles = this.reflector.get(Roles, context.getHandler() )
 
-        if (!requiredRoles) return true
+        if (!requiredRoles) return true;
 
+        console.log(requiredRoles)
         const request = context.switchToHttp().getRequest();
-
-        console.log(request)
         
-        const user: AuthenticatedRequest = request.user;
+        const client: ClientRequest = request.user;
 
-        if (!user || !user.role) throw new ForbiddenException( ERROR_CODE.FORBIDDEN('No tienes un rol asignado para validar tu permiso') )
+        if (client.type === enumClients.BOT) return true;
+        if (!client || !client.role) throw new ForbiddenException( ERROR_CODE.FORBIDDEN('No tienes un rol asignado para validar tu permiso') )
 
-        const hasRole = requiredRoles.includes( user.role );
+        const hasRole = requiredRoles.includes( client?.role );
 
         if (!hasRole) throw new ForbiddenException( ERROR_CODE.FORBIDDEN('No tienes permiso suficiente con tu rol actual para esta acción') )
 

@@ -21,7 +21,6 @@ export class AppController {
     return this.appService.getHello();
   }
 
-
   @ApiBody({})
   @Post('/pipe')
   postApp(@Body(pipeValidateNumber) body: { name: string, age: number }) {

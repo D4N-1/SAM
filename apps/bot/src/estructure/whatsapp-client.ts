@@ -1,11 +1,13 @@
 import P from "pino"
 import { makeWASocket } from "@itsukichan/baileys";
-import { createAuthState } from "./utils/auth.util.js";
+import { createAuthState } from "./utils/whatsapp-auth.util.js";
 import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp-events.js";
+import { WhatsappService } from "./whatsapp.service.js";
+import { ApiLogin } from "./whatsapp-login.service.js";
 
 
 
-export async function startWhatsappBot(uid: string, code?: string) {
+export async function startWhatsappBot(uid: string, code: string) {
 
     const { state, saveCreds } = await createAuthState(uid);
     
@@ -30,8 +32,9 @@ export async function startWhatsappBot(uid: string, code?: string) {
     });
 
 
+    if ( !await ApiLogin.signIn(uid, code) ) return console.log('No se pudo iniciar sesion')
+    registerConnectionEvent(uid, code, sam);
     registerCredsEvents(sam, saveCreds);
-    registerConnectionEvent(uid, sam);
     registerMessagesEvent(sam);
 
 }

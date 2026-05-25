@@ -43,12 +43,12 @@ export const ApiLogin = {
             if ( !isOnline ) return false;
 
             const token = await ApiLogin.get.authToken(uid, code);
-            console.log(token)
             if (!token) return false;
 
             const HEADERS = await editHeaders(uid);
             HEADERS.token = token;
 
+            console.log(HEADERS)
             await saveHeaders(uid, HEADERS);
             return true;
 
