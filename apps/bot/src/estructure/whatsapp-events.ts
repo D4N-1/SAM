@@ -9,6 +9,7 @@ import { parseMessage } from "./whatsapp.parser.js"
 import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
 import { wait } from "../common/utils/function.util.js"
 import { CommandRouter } from "../commands/command.router.js";
+import { enumMessage } from "../common/enums/type-mesage.enum.js";
 
 
 const commandRouter = new CommandRouter();
@@ -21,6 +22,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
         let { connection, qr, lastDisconnect } = data
 
 
+        console.log(data)
         if (qr) return console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
 
         if (connection) {
@@ -30,7 +32,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
 
         if (!sam.authState.creds.registered && connection === enumStatusConnection.CONNECTING) {
 
-            await wait(2_000)
+            await wait(4_000)
 
             console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
 
@@ -75,7 +77,6 @@ export function registerMessagesEvent(sam: WASocket) {
         for (const msg of data.messages) {
             if (!msg.key) continue;
 
-            console.log(JSON.stringify(msg,null,2))
             const timestamp = (Number(msg.messageTimestamp) ?? 0) * 1_000;
             const now = Date.now();
 
@@ -87,7 +88,9 @@ export function registerMessagesEvent(sam: WASocket) {
             let parsedMessage: interfaceMessage | null = parseMessage(sam, msg);
             if (!parsedMessage) continue;
 
+            if (parsedMessage.contentType === enumMessage.protocolMessage) continue;
             console.log(parsedMessage)
+
             await commandRouter.handler(sam, parsedMessage);
         }
     });

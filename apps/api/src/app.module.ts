@@ -14,6 +14,9 @@ import { UserModule } from './modules/users/user.module';
 import { CommunityModule } from './modules/communities/community.module';
 import { GroupModule } from './modules/groups/group.module';
 import { BotModule } from './modules/bots/bot.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './modules/auth/guards/jwt.guard';
+import { RolesGuard } from './modules/auth/guards/role.guard';
 
 @Module({
   imports: [
@@ -29,7 +32,18 @@ import { BotModule } from './modules/bots/bot.module';
     QuotesModule,
      ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
+    }
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

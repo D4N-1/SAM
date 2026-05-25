@@ -1,9 +1,9 @@
 import { downloadContentFromMessage, getContentType, getDevice, type WASocket } from "@itsukichan/baileys"
-import type { interfaceKey } from "../common/interfaces/key-message.type.js";
-import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
+import type interfaceKey from "../common/interfaces/key-message.type.js";
+import type interfaceMessage from "../common/interfaces/parsed-message.type.js";
 import axios from "axios";
-import { Logger } from "../common/utils/logger.util.js";
-import type { typeDevice } from "../common/types/device.type.js";
+import Logger from "../common/utils/logger.util.js";
+import type typeDevice from "../common/types/device.type.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
 
 const parseUid = (uid: string|undefined) => {
@@ -16,11 +16,17 @@ const parseUid = (uid: string|undefined) => {
 }
 
 
-const downloadMedia = async(msg: any, type: 'videoMessage'|'imageMessage') => {
+type Type = enumMessage.videoMessage | enumMessage.imageMessage | enumMessage.stickerMessage
+const downloadMedia = async(msg: any, type: Type) => {
 
     try {
 
-        const mediaType = type === 'imageMessage' ? 'image' : 'video';
+        const mediaType = type === enumMessage.imageMessage ? 'image' :
+            type === enumMessage.stickerMessage ? 'sticker' :
+            type === enumMessage.videoMessage ? 'video' :
+            undefined;
+
+        if (!mediaType) return;
         const mediaMessage = msg?.message?.[`${mediaType}Message`] || msg?.message?.ephemeralMessage?.msg?.[`${mediaType}Message`];
 
         if (mediaMessage?.mediaKey) {
@@ -61,40 +67,6 @@ const downloadMedia = async(msg: any, type: 'videoMessage'|'imageMessage') => {
 }
 
 
-const downloadQmedia = async(msg: any, type: 'videoMessage'|'imageMessage') => {
-
-    const quotedMessage = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-
-    /*
-    if (quotedMessage?.imageMessage){
-              const fakeMsg = {
-                key: {
-                  remoteJid: msg.key.remoteJid,
-                  fromMe: false,
-                  id: msg.message?.extendedTextMessage?.contextInfo?.stanzaId,
-                  participant: msg.message?.extendedTextMessage?.contextInfo?.participant,
-                },
-                message: { imageMessage: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage },
-              };
-            quotedBuffer = await downloadMediaMessage(fakeMsg, "buffer", {}, { logger: sock.logger });
-            quotedCaption = msg.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage.caption
-    
-          } else if (msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage){
-              const fakeMsg = {
-                key: {
-                  remoteJid: msg.key.remoteJid,
-                  fromMe: false,
-                  id: msg.message?.extendedTextMessage?.contextInfo?.stanzaId,
-                  participant: msg.message?.extendedTextMessage?.contextInfo?.participant,
-                },
-                message: { videoMessage: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage },
-              };
-            quotedBuffervid = await downloadMediaMessage(fakeMsg, "buffer", {}, { logger: sock.logger });
-            quotedCaption = msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.caption
-            quotedisGif = msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.gifPlayback
-    */
-}
-
 
 export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
     if (!msg || !msg.message) return null;
@@ -126,6 +98,7 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
     const mentionedJid: string | undefined = allMentions[0];
 
     const isGif: boolean | undefined = actualMessage?.videoMessage?.gifPlayback;
+    const isAnimated: boolean | undefined = actualMessage?.stickerMessage?.isAnimated;
 
     if (isFromMe && botNumber) sender = botNumber;
 
@@ -157,7 +130,8 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
         msg.message?.ephemeralMessage?.message?.extendedTextMessage?.contextInfo?.participant );
 
     const qContentType: enumMessage = getContentType(quotedMessage) as enumMessage;
-    const qIsGif = quotedMessage?.videoMessage?.gifPlayback;
+    const qIsGif: boolean | undefined = quotedMessage?.videoMessage?.gifPlayback;
+    const qIsAnimated: boolean | undefined = quotedMessage?.stickerMessage?.isAnimated;
 
     const fakeQuotedMessage = quotedMessage ? { message: quotedMessage } : null;
 
@@ -183,12 +157,13 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
             qSender,
             qContentType,
             qIsGif,
-            qVideo: qContentType === enumMessage.videoMessage ?
-                () => downloadMedia(fakeQuotedMessage, qContentType) :
+            qVideo: qContentType === enumMessage.videoMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
                 async () => undefined,
-            qImage: qContentType === enumMessage.imageMessage ?
-                () => downloadMedia(fakeQuotedMessage, qContentType) :
+            qImage: qContentType === enumMessage.imageMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
                 async () => undefined,
+            qSticker: qContentType === enumMessage.stickerMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+                async () => undefined,
+            qIsAnimated
         },
         key,
         timestamp,
@@ -196,11 +171,12 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
         device,
         broadcast,
         newsletter,
-        video: contentType === enumMessage.videoMessage ?
-            () => downloadMedia(msg, contentType) :
+        video: contentType === enumMessage.videoMessage ? () => downloadMedia(msg, contentType) :
             async () => undefined,
-        image: contentType === enumMessage.imageMessage ?
-            () => downloadMedia(msg, contentType) :
-            async () => undefined
+        image: contentType === enumMessage.imageMessage ? () => downloadMedia(msg, contentType) :
+            async () => undefined,
+        sticker: contentType === enumMessage.stickerMessage ? () => downloadMedia(msg, contentType) :
+            async () => undefined,
+        isAnimated
     };
 }

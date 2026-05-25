@@ -7,7 +7,7 @@ export class GetAllUserQueryDto extends GetAllQueryDto {
 
     @ApiProperty({
         description: 'Relaciones extensibles a usuario',
-        example: 'contact, role'
+        example: 'contact,role'
     })
     @IsOptional()
     @IsString()

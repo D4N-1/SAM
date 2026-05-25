@@ -1,11 +1,10 @@
-import { ERROR_LOG } from "../common/utils/error-log.util.js";
-import type { interfaceCommand } from "../common/interfaces/command.type.js";
-import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
+import type interfaceCommand from "../common/interfaces/command.type.js";
+import type interfaceMessage from "../common/interfaces/parsed-message.type.js";
 import type { WASocket } from "@itsukichan/baileys";
-import { WhatsappService } from "../estructure/whatsapp.service.js";
+import WhatsappService from "../estructure/whatsapp.service.js";
 import { ALL_COMMANDS } from "./command.module.js";
-import { Logger } from "../common/utils/logger.util.js";
-import { ERROR_USER } from "../common/utils/error-log.util.js";
+import Logger from "../common/utils/logger.util.js";
+import { msgFOOTER_ERROR, msgHEADER_ERROR } from "../common/messages/error-status.message.js";
 
 
 export class CommandRouter {
@@ -50,8 +49,8 @@ export class CommandRouter {
             await command.execute(message, whatsappService);
             
         } catch (error) {
-            ERROR_LOG.INTERNAL('CommandRouter')
-            await whatsappService.send.text(message.chatId, ERROR_USER.INTERNAL('el comando') )
+            Logger('CommandRouter', 'Internal', null, true)
+            whatsappService.send.text(message.chatId, `${msgHEADER_ERROR()}\n\n${msgFOOTER_ERROR()}`)
         }
     }
 }

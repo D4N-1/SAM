@@ -1,37 +1,44 @@
-import type { WhatsappService } from "../../estructure/whatsapp.service.js";
-import type { interfaceMessage } from "../../common/interfaces/parsed-message.type.js";
-import type { interfaceCommand } from "../../common/interfaces/command.type.js";
-import { enumMessage } from "../../common/enums/type-mesage.enum.js";
-import { Logger } from "../../common/utils/logger.util.js";
+import type WhatsappService from "../../estructure/whatsapp.service.js";
+import type interfaceMessage from "../../common/interfaces/parsed-message.type.js";
+import type interfaceCommand from "../../common/interfaces/command.type.js";
+import Logger from "../../common/utils/logger.util.js";
+import { msgERROR } from "./utils/error.messag.js";
+import getHint from "./utils/say.messages.js";
 
-
-
-export class SayCommand implements interfaceCommand {
+export default class SayCommand implements interfaceCommand {
     name = 'say';
-    aliases = [];
+    aliases = [ 'decir' ];
 
-    async execute(message: interfaceMessage, whatsapp: WhatsappService): Promise<void> {
+    async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
         
+        const { key, chatId, quoted, captent } = message;
         try {
 
-            await whatsapp.readMessage( message.key );
-            await whatsapp.sendPresenceUpdate('composing', message?.chatId);
+            await sam.readMessage( key );
+            await sam.sendPresenceUpdate('composing', message?.chatId);
 
-            const text = message.quoted.qCaptent || message.captent?.split(' ').slice(1).join(' ');
+            if (captent?.split(' ')[1] === '-error') throw new Error('INTENCIONAL')
 
-            const image = await message.quoted.qImage() || await message.image();
-            const video = await message.quoted.qVideo() || await message.video();
+            const text = quoted.qCaptent || captent?.split(' ').slice(1).join(' ');
 
-            if (!text && !image && !video) return await whatsapp.send.text(message.chatId, '⭕ Te falta el \`texto\` o \`contenido\` que deseas que diga');
+            const image = await quoted.qImage() || await message.image();
+            const video = await quoted.qVideo() || await message.video();
+            const sticker = await quoted.qSticker();
 
-            if (image) return await whatsapp.send.image(message.chatId, text!, image!)
-            if (video) return await whatsapp.send.video(message.chatId, text!, video!, message.quoted.qIsGif)
+            if (!text && !image && !video && !sticker) return await sam.send.text(chatId, getHint());
+
+            if (image) return await sam.send.image(chatId, text!, image!)
+                if (video) return await sam.send.video(chatId, text!, video!, quoted.qIsGif)
+                    if (sticker) return await sam.send.sticker(chatId, sticker)
             
-                return await whatsapp.send.text(message.chatId, text!)
+            return await sam.send.text(chatId, text!)
 
-        } catch (error) {
-            Logger('sayModule', 'Error interno', null, true)
-            console.error(error)
+        } catch (error:any) {
+            if (error.message !== 'INTENCIONAL') {
+                Logger('sayModule', 'Error interno', null, true)
+                console.error(error)
+            }
+            sam.send.text(chatId, msgERROR())
         }
     }
 }

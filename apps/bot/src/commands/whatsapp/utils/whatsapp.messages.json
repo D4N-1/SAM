@@ -1,0 +1,30 @@
+[
+  {
+    "title": "📌 *Cuenta de WhatsApp*\n\n",
+    "name": "• *{name}*\n",
+    "number": "• *Número:* {number}\n",
+    "info": "• *Info:* _{info}_\n",
+    "updated": "• *Actualizado:* {updated}"
+  },
+  {
+    "title": "🤖 *[ SYSTEM STATUS - WHATSAPP ]*\n```\n",
+    "name": "NAME : {name}\n",
+    "number": "ID/PHONE : {number}\n",
+    "info": "BIO/DESC : {info}\n",
+    "updated": "UPDATED  : {updated}\n```"
+  },
+  {
+    "title": "❇️ *CONEXIÓN WHATSAPP*\n",
+    "name": "> *Nombre:* {name}\n",
+    "number": "> *Número:* {number}\n",
+    "info": "> *Estado:* {info}\n",
+    "updated": "> *Sincronizado:* _{updated}_"
+  },
+  {
+    "title": "📱 *PERFIL DE LA INSTANCIA*\n=========================\n\n",
+    "name": "🔖 *Nombre:* {name}\n",
+    "number": "📞 *Número:* {number}\n",
+    "info": "💬 *Descripción:* {info}\n\n",
+    "updated": "⏳ _Última actualización: {updated}_"
+  }
+]

@@ -1,4 +1,4 @@
-export interface interfaceKey {
+export default interface interfaceKey {
 
   remoteJid: string,
   remoteJidAlt: string,

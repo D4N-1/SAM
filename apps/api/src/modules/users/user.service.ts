@@ -29,7 +29,7 @@ export class UserService {
     async findAll(query: GetAllUserQueryDto): Promise<AllResponse> {
         const { include, page = 1, limit = 10 } = query
 
-        const relations = include ? include.split(' ') : [];
+        const relations = include ? include.split(',') : [];
         const skip = (page - 1) * limit;
 
         const [ data, total ] = await this.userRepository.findAndCount({

@@ -1,5 +1,5 @@
 import { Api } from "../common/utils/api.util.js";
-import { Logger } from "../common/utils/logger.util.js";
+import Logger from "../common/utils/logger.util.js";
 import { editHeaders, saveHeaders } from "./utils/api-headers.util.js";
 
 export const ApiLogin = {
@@ -48,7 +48,6 @@ export const ApiLogin = {
             const HEADERS = await editHeaders(uid);
             HEADERS.token = token;
 
-            console.log(HEADERS)
             await saveHeaders(uid, HEADERS);
             return true;
 

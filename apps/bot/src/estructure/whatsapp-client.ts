@@ -2,7 +2,6 @@ import P from "pino"
 import { makeWASocket } from "@itsukichan/baileys";
 import { createAuthState } from "./utils/whatsapp-auth.util.js";
 import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp-events.js";
-import { WhatsappService } from "./whatsapp.service.js";
 import { ApiLogin } from "./whatsapp-login.service.js";
 
 

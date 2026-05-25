@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';
 import { RoleSeederService } from '../../seeders/role-seeder.service';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtGuard } from '../auth/guards/auth.guard';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 import { RolesGuard } from '../auth/guards/role.guard';
 
 

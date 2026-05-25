@@ -12,8 +12,7 @@
  * const vacio: string[] = [];
  * const resultado = random(vacio); // Devuelve undefined
  */
-export function random <T> (arr: T[]): T | undefined {
-    if (!arr.length) return undefined;
+export function random(arr: any[]) {
     return arr[Math.floor( Math.random() * arr.length)];
 }
 

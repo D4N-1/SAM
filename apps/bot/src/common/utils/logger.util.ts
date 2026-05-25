@@ -6,7 +6,7 @@ import chalk from "chalk";
  * @param message El mensaje principal o la acción (ej: 'Mapped Ping Command')
  * @param ms El tiempo de diferencia (ej: Date.now() )
  */
-export async function Logger(context: string, message: string, startTime?: number|null, error?: boolean) {
+export default async function Logger(context: string, message: string, startTime?: number|null, error?: boolean) {
   const appName = chalk.cyanBright("[Sam]");
   
   const pid = chalk.greenBright(process.pid);

@@ -1,44 +1,52 @@
-import { ERROR_LOG } from "../../common/utils/error-log.util.js";
 import { wait } from "../../common/utils/function.util.js";
-import type { WhatsappService } from "../../estructure/whatsapp.service.js";
-import type { interfaceMessage } from "../../common/interfaces/parsed-message.type.js";
-import type { interfaceCommand } from "../../common/interfaces/command.type.js";
-import { enumPingStates } from "./ping.enums.js";
-import { PingService } from "./ping.service.js";
+import type WhatsappService from "../../estructure/whatsapp.service.js";
+import type interfaceMessage from "../../common/interfaces/parsed-message.type.js";
+import type interfaceCommand from "../../common/interfaces/command.type.js";
+import { enumPingStates } from "./utils/ping.enums.js";
+import { PingService } from "./utils/ping.message.js";
+import Logger from "../../common/utils/logger.util.js";
+import GetError from "./utils/error.message.js";
 
-export class PingCommand implements interfaceCommand {
+export default class PingCommand implements interfaceCommand {
     name = 'ping';
     aliases = ['p', 'pong'];
 
-    async execute(message: interfaceMessage, whatsapp: WhatsappService): Promise<void> {
+    async execute(message: interfaceMessage,sam: WhatsappService): Promise<void> {
 
+        const { key, chatId, captent } = message;
         try {
+            
             const start = Date.now()
 
-            await whatsapp.readMessage( message.key )
-            await whatsapp.sendPresenceUpdate('composing', message.chatId)
-;
+            await sam.readMessage( key );
+            await sam.sendPresenceUpdate('composing', chatId);
+
+            if ( captent?.split(' ')[1] === '-error' ) throw new Error('INTENCIONAL')
+
             const start_text = await PingService.get.message( enumPingStates.CALCULANDO );
 
-            const sentMessage = await whatsapp.send.text( message.chatId, start_text );
+            const sentMessage = await sam.send.text( chatId, start_text );
             const end = Date.now();
 
             const diff = end - start;
 
 
             await wait(300)
-            await whatsapp.sendPresenceUpdate('composing', message.chatId)
+            await sam.sendPresenceUpdate('composing', chatId)
             await wait(3_000);
 
 
             const end_message = await PingService.get.message(enumPingStates.CALCULADO, diff);
-            await whatsapp.editMessage(message.chatId, end_message, sentMessage.key );
+            await sam.editMessage(chatId, end_message, sentMessage.key );
 
-            await whatsapp.sendPresenceUpdate('paused', message.chatId)
+            await sam.sendPresenceUpdate('paused', chatId)
 
-        } catch (error) {
-            ERROR_LOG.INTERNAL('Ping')
-            await whatsapp.send.text( message.chatId, 'Obtuve un error al calcular la latencia' )
+        } catch (error:any) {
+            if (error.message !== 'INTENCIONAL') {
+                Logger('PingModule', 'Internal', null, true)
+                console.error(error)
+            }
+            sam.send.text(chatId, GetError())
         }
         
     }

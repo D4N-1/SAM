@@ -1,4 +1,4 @@
-import { Logger } from "./common/utils/logger.util.js";
+import Logger from "./common/utils/logger.util.js";
 import './common/utils/env.util.js'
 import { startWhatsappBot } from "./estructure/whatsapp-client.js";
 

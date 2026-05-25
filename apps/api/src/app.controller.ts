@@ -1,7 +1,10 @@
 import { Controller, Get, HttpCode, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { pipeValidateNumber } from './pipes/app.pipe';
+import { Private } from './decorators/private.decorator';
+import { Roles } from './decorators/roles-user.decorator';
+import { enumRole } from './common/enums/role.enum';
 
 @ApiTags('Main')
 @Controller()
@@ -21,6 +24,9 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @ApiBearerAuth()
+  @Private()
+  @Roles([ enumRole.ADMIN, enumRole.MODERATOR ])
   @ApiBody({})
   @Post('/pipe')
   postApp(@Body(pipeValidateNumber) body: { name: string, age: number }) {
