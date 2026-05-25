@@ -1,11 +1,7 @@
 import { useMultiFileAuthState } from "@itsukichan/baileys";
-import path from "node:path";
 import fsAsync from "node:fs/promises";
 import fs from "node:fs";
-import { BOT_PATH } from "../../common/utils/bot-path.util.js";
-
-const AUTH_PATH: string = path.resolve( BOT_PATH, "src", "auth" )
-const BOT_AUTH_PATH = (uid: string): string => path.resolve( AUTH_PATH, uid )
+import { AUTH_PATH, BOT_AUTH_PATH } from "../../common/constants/path.constant.js";
 
 export async function createAuthState(uid: string): Promise<{ state: any, saveCreds: any }> {
 

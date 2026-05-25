@@ -1,6 +1,6 @@
 import dontenv from 'dotenv';
-import { BOT_PATH } from './bot-path.util.js';
 import path from 'node:path';
+import { ROOT_PATH } from '../constants/path.constant.js';
 
 
-dontenv.config({ path: path.resolve( BOT_PATH, '.env') })
+dontenv.config({ path: path.resolve( ROOT_PATH, '.env') })

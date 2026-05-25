@@ -10,9 +10,11 @@ async function bootstrap() {
         Logger('MainApplication', 'Starting Sam application...')
     
         const BOT_NUMBER = process.env.BOT_NUMBER
-        if (!BOT_NUMBER) throw new Error('Se requiere numero del BOT')
+        if (!BOT_NUMBER) throw new Error('Se requiere UID del BOT')
+        const BOT_CODE = process.env.BOT_CODE
+        if (!BOT_CODE) throw new Error('Se requiere el CODE del BOT')
 
-        await startWhatsappBot(BOT_NUMBER)
+        await startWhatsappBot(BOT_NUMBER, BOT_CODE)
 
     } catch(error) {
 
