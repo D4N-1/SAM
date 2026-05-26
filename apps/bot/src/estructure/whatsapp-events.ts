@@ -76,11 +76,11 @@ export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 }
 
 
-export function registerMessagesEvent(sam: WASocket) {
+export function registerMessagesEvent(samSocket: WASocket) {
 
     try {
 
-        sam.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
+        samSocket.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
 
             if (!data.messages || data.messages.length === 0) return;
 
@@ -96,13 +96,13 @@ export function registerMessagesEvent(sam: WASocket) {
                     continue;
                 }
 
-                let parsedMessage: interfaceMessage|null|undefined = parseMessage(sam, msg);
+                let parsedMessage: interfaceMessage|null|undefined = parseMessage(samSocket, msg);
                 if (!parsedMessage) continue;
 
                 if (parsedMessage.contentType === enumMessage.protocolMessage) continue;
                 console.log(parsedMessage)
 
-                await commandRouter.handler(sam, parsedMessage);
+                await commandRouter.handler(samSocket, parsedMessage);
             }
         });
 

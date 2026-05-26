@@ -6,13 +6,21 @@ import { ALL_COMMANDS } from "./command.module.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 import GetErrorMessage from "../common/messages/error-status.message.js";
+import { MiddlewarePipeline } from "../common/utils/middleware-pipeline.util.js";
+import { LogMiddleware } from "../common/middlewares/log.middleware.js";
 
 
 export default class CommandRouter {
     private commands = new Map<string, interfaceCommand>
+    private globalMiddlewares: any[] = [];
 
     constructor() {
+        this.registerGlobalMiddlewares()
         this.registerCommands()
+    }
+
+    private registerGlobalMiddlewares() {
+        this.globalMiddlewares.push(new LogMiddleware())
     }
 
     public registerCommands() {
@@ -32,7 +40,7 @@ export default class CommandRouter {
         command.aliases?.forEach( alias => this.commands.set(alias, command) )
     }
 
-    public async handler(sam: WASocket, message: interfaceMessage) {
+    public async handler(samSocket: WASocket, message: interfaceMessage) {
 
         if (!message?.captent?.startsWith("!")) return;
         if (message.isFromMe) return;
@@ -43,11 +51,19 @@ export default class CommandRouter {
         const command = this.commands.get(commandName)
         if (!command) return;
 
-        const whatsappService = new WhatsappService(sam);
+        const sam = new WhatsappService(samSocket);
 
         try {
 
-            await command.execute(message, whatsappService);
+            const pipeline = new MiddlewarePipeline();
+
+            for (const globalMiddleware of this.globalMiddlewares) {
+                pipeline.use(globalMiddleware);
+            }
+
+
+            await pipeline.execute({ message, sam }, async() => await command.execute(message, sam) )
+            
             
         } catch (error: any) {
             const name = command.name;
@@ -56,7 +72,7 @@ export default class CommandRouter {
                 Logger.error(`${name.toUpperCase()}Module`, 'Internal')
                 console.error(error)
             }
-            whatsappService.send.text(message.chatId, await GetErrorMessage(name))
+            sam.send.text(message.chatId, await GetErrorMessage(name))
         }
         
     }

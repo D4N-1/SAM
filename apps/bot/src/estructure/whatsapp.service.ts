@@ -59,13 +59,11 @@ export default class WhatsappService {
           }
         }
 
-
         sent.contextInfo = contextInfo;
 
         return Object.keys(sent).length ? sent
             : {}
           
-
     }
 
 
@@ -83,7 +81,7 @@ export default class WhatsappService {
     }
 
     async onWhatsApp(uid: string) {
-        return this.sam.onWhatsApp(uid)
+        return this.sam?.onWhatsApp(uid)
     }
 
     async fetchStatus(uid: string) {

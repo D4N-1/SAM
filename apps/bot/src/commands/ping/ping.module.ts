@@ -7,6 +7,12 @@ import { PingService } from "./utils/ping.message.js";
 
 
 export default class PingCommand implements interfaceCommand {
+    pingService: PingService;
+
+    constructor() {
+        this.pingService = new PingService()
+    }
+
     name = 'ping';
     aliases = ['p', 'pong'];
 
@@ -21,7 +27,7 @@ export default class PingCommand implements interfaceCommand {
 
         if ( captent?.split(' ')[1] === '-error' ) throw new Error('INTENCIONAL')
 
-        const start_text = await PingService.get.message( enumPingStates.CALCULANDO );
+        const start_text = await this.pingService.getMessage( enumPingStates.CALCULANDO );
 
         const sentMessage = await sam.send.text( chatId, start_text );
         const end = Date.now();
@@ -34,7 +40,7 @@ export default class PingCommand implements interfaceCommand {
         await wait(3_000);
 
 
-        const end_message = await PingService.get.message(enumPingStates.CALCULADO, diff);
+        const end_message = await this.pingService.getMessage(enumPingStates.CALCULADO, diff);
         await sam.editMessage(chatId, end_message, sentMessage.key );
 
         await sam.sendPresenceUpdate('paused', chatId)
