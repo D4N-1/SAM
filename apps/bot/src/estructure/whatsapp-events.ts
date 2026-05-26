@@ -25,16 +25,14 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
 
             let { connection, qr, lastDisconnect } = data
 
-
-            console.log(data)
-            if (qr) return console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
+            if (qr) console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
 
             if (connection) {
                 console.log("\n" + msgSTATUS_TITLE)
                 console.log(msgSTATUS_CONNECTION[connection] + '\n')
             }
 
-            if (!sam.authState.creds.registered && connection === enumStatusConnection.CONNECTING) {
+            if (!sam.authState.creds.registered || connection === enumStatusConnection.CONNECTING) {
 
                 await wait(4_000)
 
@@ -87,6 +85,7 @@ export function registerMessagesEvent(samSocket: WASocket) {
             for (const msg of data.messages) {
                 if (!msg.key) continue;
 
+                console.log('[] - NEW MESSAGE')
                 //console.log(JSON.stringify(msg,null,2))
                 const timestamp = (Number(msg.messageTimestamp) ?? 0) * 1_000;
                 const now = Date.now();

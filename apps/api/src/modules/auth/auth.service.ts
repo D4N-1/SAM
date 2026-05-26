@@ -72,6 +72,9 @@ export class AuthService {
 
     async profile(uuid: string) {
 
-      return this.userService.findOneBy.uuid(uuid)
+      const user = await this.userService.findOrNull.uuid(uuid)
+      const bot = await this.botService.findOrNull.uuid(uuid)
+
+      return user || bot;
     }
 }
