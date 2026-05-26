@@ -1,13 +1,14 @@
-import type interfaceCommand from "../common/interfaces/command.type.js";
-import type interfaceMessage from "../common/interfaces/parsed-message.type.js";
+import type interfaceCommand from "../common/interfaces/command.interface.js";
+import type interfaceMessage from "../common/interfaces/parsed-message.interface.js";
 import type { WASocket } from "@itsukichan/baileys";
 import WhatsappService from "../estructure/whatsapp.service.js";
 import { ALL_COMMANDS } from "./command.module.js";
 import Logger from "../common/utils/logger.util.js";
-import { msgFOOTER_ERROR, msgHEADER_ERROR } from "../common/messages/error-status.message.js";
+import enumContext from "../common/enums/context.enum.js";
+import GetErrorMessage from "../common/messages/error-status.message.js";
 
 
-export class CommandRouter {
+export default class CommandRouter {
     private commands = new Map<string, interfaceCommand>
 
     constructor() {
@@ -22,7 +23,7 @@ export class CommandRouter {
             const commandInstance = new commandClass();
             this.add(commandInstance);
 
-            Logger('CommandRouter', `Mapped ${commandInstance.name}`, start)
+            Logger.log(enumContext.CommandRouter, `Mapped ${commandInstance.name}`, start)
         }
     }
 
@@ -48,9 +49,15 @@ export class CommandRouter {
 
             await command.execute(message, whatsappService);
             
-        } catch (error) {
-            Logger('CommandRouter', 'Internal', null, true)
-            whatsappService.send.text(message.chatId, `${msgHEADER_ERROR()}\n\n${msgFOOTER_ERROR()}`)
+        } catch (error: any) {
+            const name = command.name;
+
+            if (error.message !== 'INTENCIONAL') {
+                Logger.error(`${name.toUpperCase()}Module`, 'Internal')
+                console.error(error)
+            }
+            whatsappService.send.text(message.chatId, await GetErrorMessage(name))
         }
+        
     }
 }

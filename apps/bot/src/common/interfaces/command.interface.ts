@@ -1,5 +1,5 @@
 import type WhatsappService from "../../estructure/whatsapp.service.js";
-import type interfaceMessage from "./parsed-message.type.js";
+import type interfaceMessage from "./parsed-message.interface.js";
 
 
 export default interface interfaceCommand {

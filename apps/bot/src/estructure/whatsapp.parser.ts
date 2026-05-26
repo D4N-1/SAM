@@ -1,10 +1,11 @@
 import { downloadContentFromMessage, getContentType, getDevice, type WASocket } from "@itsukichan/baileys"
-import type interfaceKey from "../common/interfaces/key-message.type.js";
-import type interfaceMessage from "../common/interfaces/parsed-message.type.js";
+import type interfaceKey from "../common/interfaces/key-message.interface.js";
+import type interfaceMessage from "../common/interfaces/parsed-message.interface.js";
 import axios from "axios";
 import Logger from "../common/utils/logger.util.js";
 import type typeDevice from "../common/types/device.type.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
+import enumContext from "../common/enums/context.enum.js";
 
 const parseUid = (uid: string|undefined) => {
 
@@ -62,121 +63,129 @@ const downloadMedia = async(msg: any, type: Type) => {
 
     } catch (error) {
         console.error(error)
-        Logger('MessageParser', 'Descargar la media del mensaje', null, true)
+        Logger.log(enumContext.MessageParser, 'Descargar la media del mensaje')
     }
 }
 
 
 
-export function parseMessage(sam: WASocket, msg: any): interfaceMessage | null {
-    if (!msg || !msg.message) return null;
+export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|undefined {
+    try {
+        if (!msg || !msg.message) return null;
 
-    const chatId: string = msg.key?.remoteJid || '';
-    let sender: string | undefined = parseUid(msg.key?.participant || msg.key?.remoteJid);
-    let senderAlt: string | undefined = parseUid(msg.key?.participantAlt || msg.key?.remoteJidAlt);
+        const chatId: string = msg.key?.remoteJid || '';
+        let sender: string | undefined = parseUid(msg.key?.participant || msg.key?.remoteJid);
+        let senderAlt: string | undefined = parseUid(msg.key?.participantAlt || msg.key?.remoteJidAlt);
 
-    const isFromMe: boolean = !!msg.key?.fromMe;
-    const pushName: string = isFromMe ? (sam?.user?.name || 'Bot') : msg.pushName;
+        const isFromMe: boolean = !!msg.key?.fromMe;
+        const pushName: string = isFromMe ? (sam?.user?.name || 'Bot') : msg.pushName;
 
-    const actualMessage = msg.message?.ephemeralMessage?.msg || msg.message;
+        const actualMessage = msg.message?.ephemeralMessage?.msg || msg.message;
 
-    const content: string | undefined = actualMessage?.conversation ||
-        actualMessage?.extendedTextMessage?.text;
-            
-    const caption: string | undefined = actualMessage?.imageMessage?.caption || 
-        actualMessage?.videoMessage?.caption;
+        const content: string | undefined = actualMessage?.conversation ||
+            actualMessage?.extendedTextMessage?.text;
 
-    const botNumber: string | undefined = sam?.user?.id ? parseUid(sam.user.id) : undefined;
-    const isGroup: boolean = chatId.endsWith('@g.us');
+        const caption: string | undefined = actualMessage?.imageMessage?.caption || 
+            actualMessage?.videoMessage?.caption;
 
-    const contentType: enumMessage = getContentType(msg.message) as enumMessage;
+        const botNumber: string|undefined = parseUid(sam.user!.id);
+        const botName: string = sam.user?.name
+
+        const isGroup: boolean = chatId.endsWith('@g.us');
+
+        const contentType: enumMessage = getContentType(msg.message) as enumMessage;
+
+        const allMentions: string[] = actualMessage?.extendedTextMessage?.contextInfo?.mentionedJid ||
+            actualMessage?.imageMessage?.contextInfo?.mentionedJid || 
+            actualMessage?.videoMessage?.contextInfo?.mentionedJid || [];
+
+        const mentionedJid: string | undefined = allMentions[0];
+
+        const isGif: boolean | undefined = actualMessage?.videoMessage?.gifPlayback;
+        const isAnimated: boolean | undefined = actualMessage?.stickerMessage?.isAnimated;
+
+        if (isFromMe && botNumber) sender = botNumber;
+
+        const key: interfaceKey = msg.key;
+        const timestamp: number = msg.messageTimestamp;
+        const platform: string = msg.platform;
+        const device: typeDevice = getDevice(key.id || '');
+        const broadcast: boolean = !!msg.broadcast;
+        const newsletter: boolean = isGroup ? false : chatId.endsWith('@newsletter');
+
+        const quotedMessage = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage;
         
-    const allMentions: string[] = actualMessage?.extendedTextMessage?.contextInfo?.mentionedJid ||
-        actualMessage?.imageMessage?.contextInfo?.mentionedJid || 
-        actualMessage?.videoMessage?.contextInfo?.mentionedJid || [];
-            
-    const mentionedJid: string | undefined = allMentions[0];
+        const qContent: string|undefined = quotedMessage?.extendedTextMessage?.text ||
+            msg.message?.videoMessage?.contextInfo?.quotedMessage?.conversation ||
+            msg.message?.imageMessage?.contextInfo?.quotedMessage?.conversation ||
+            quotedMessage?.ephemeralMessage?.message?.extendedTextMessage?.text ||
+            msg.message?.videoMessage?.contextInfo?.quotedMessage?.conversation ||
+            quotedMessage?.conversation ||
+            msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text?.conversation ||
+            msg.message?.imageMessage?.contextInfo?.quotedMessage?.conversation;
 
-    const isGif: boolean | undefined = actualMessage?.videoMessage?.gifPlayback;
-    const isAnimated: boolean | undefined = actualMessage?.stickerMessage?.isAnimated;
+        const qCaption: string|undefined = quotedMessage?.videoMessage?.caption ||
+            quotedMessage?.imageMessage?.caption;
 
-    if (isFromMe && botNumber) sender = botNumber;
+        const qSender: string|undefined = parseUid( msg.message?.videoMessage?.contextInfo?.participant ||
+            msg.message?.imageMessage?.contextInfo?.participant ||
+            msg.message?.extendedTextMessage?.contextInfo?.participant ||
+            msg.message?.imageMessage?.contextInfo?.participants || 
+            msg.message?.ephemeralMessage?.message?.extendedTextMessage?.contextInfo?.participant );
 
-    const key: interfaceKey = msg.key;
-    const timestamp: number = msg.messageTimestamp;
-    const platform: string = msg.platform;
-    const device: typeDevice = getDevice(key.id || '');
-    const broadcast: boolean = !!msg.broadcast;
-    const newsletter: boolean = isGroup ? false : chatId.endsWith('@newsletter');
+        const qContentType: enumMessage = getContentType(quotedMessage) as enumMessage;
+        const qIsGif: boolean | undefined = quotedMessage?.videoMessage?.gifPlayback;
+        const qIsAnimated: boolean | undefined = quotedMessage?.stickerMessage?.isAnimated;
 
-    const quotedMessage = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-    
-    const qContent: string|undefined = quotedMessage?.extendedTextMessage?.text ||
-        msg.message?.videoMessage?.contextInfo?.quotedMessage?.conversation ||
-        msg.message?.imageMessage?.contextInfo?.quotedMessage?.conversation ||
-        quotedMessage?.ephemeralMessage?.message?.extendedTextMessage?.text ||
-        msg.message?.videoMessage?.contextInfo?.quotedMessage?.conversation ||
-        quotedMessage?.conversation ||
-        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.text?.conversation ||
-        msg.message?.imageMessage?.contextInfo?.quotedMessage?.conversation;
+        const fakeQuotedMessage = quotedMessage ? { message: quotedMessage } : null;
 
-    const qCaption: string|undefined = quotedMessage?.videoMessage?.caption ||
-        msg?.message?.extendedTextMessage?.contextInfo?.imageMessage?.caption;
-        
-    const qSender: string|undefined = parseUid( msg.message?.videoMessage?.contextInfo?.participant ||
-        msg.message?.imageMessage?.contextInfo?.participant ||
-        msg.message?.extendedTextMessage?.contextInfo?.participant ||
-        msg.message?.imageMessage?.contextInfo?.participants || 
-        msg.message?.ephemeralMessage?.message?.extendedTextMessage?.contextInfo?.participant );
-
-    const qContentType: enumMessage = getContentType(quotedMessage) as enumMessage;
-    const qIsGif: boolean | undefined = quotedMessage?.videoMessage?.gifPlayback;
-    const qIsAnimated: boolean | undefined = quotedMessage?.stickerMessage?.isAnimated;
-
-    const fakeQuotedMessage = quotedMessage ? { message: quotedMessage } : null;
-
-    return {
-        chatId,
-        sender,
-        senderAlt,
-        pushName,
-        content,
-        caption,
-        captent: content ?? caption,
-        botNumber,
-        isGroup,
-        contentType,
-        allMentions,
-        mentionedJid,
-        isGif,
-        isFromMe,
-        quoted: {
-            qContent,
-            qCaption,
-            qCaptent: qContent ?? qCaption,
-            qSender,
-            qContentType,
-            qIsGif,
-            qVideo: qContentType === enumMessage.videoMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+        return {
+            chatId,
+            sender,
+            senderAlt,
+            pushName,
+            content,
+            caption,
+            captent: content ?? caption,
+            botNumber,
+            botName,
+            isGroup,
+            contentType,
+            allMentions,
+            mentionedJid,
+            isGif,
+            isFromMe,
+            quoted: {
+                qContent,
+                qCaption,
+                qCaptent: qContent ?? qCaption,
+                qSender,
+                qContentType,
+                qIsGif,
+                qVideo: qContentType === enumMessage.videoMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+                    async () => undefined,
+                qImage: qContentType === enumMessage.imageMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+                    async () => undefined,
+                qSticker: qContentType === enumMessage.stickerMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+                    async () => undefined,
+                qIsAnimated
+            },
+            key,
+            timestamp,
+            platform,
+            device,
+            broadcast,
+            newsletter,
+            video: contentType === enumMessage.videoMessage ? () => downloadMedia(msg, contentType) :
                 async () => undefined,
-            qImage: qContentType === enumMessage.imageMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+            image: contentType === enumMessage.imageMessage ? () => downloadMedia(msg, contentType) :
                 async () => undefined,
-            qSticker: qContentType === enumMessage.stickerMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+            sticker: contentType === enumMessage.stickerMessage ? () => downloadMedia(msg, contentType) :
                 async () => undefined,
-            qIsAnimated
-        },
-        key,
-        timestamp,
-        platform,
-        device,
-        broadcast,
-        newsletter,
-        video: contentType === enumMessage.videoMessage ? () => downloadMedia(msg, contentType) :
-            async () => undefined,
-        image: contentType === enumMessage.imageMessage ? () => downloadMedia(msg, contentType) :
-            async () => undefined,
-        sticker: contentType === enumMessage.stickerMessage ? () => downloadMedia(msg, contentType) :
-            async () => undefined,
-        isAnimated
-    };
+            isAnimated,
+            msg
+        };
+    } catch (error) {
+        Logger.error(enumContext.MessageParser, 'Crear ParsedMessage')
+    }
 }

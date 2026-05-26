@@ -1,11 +1,10 @@
 import { wait } from "../../common/utils/function.util.js";
 import type WhatsappService from "../../estructure/whatsapp.service.js";
-import type interfaceMessage from "../../common/interfaces/parsed-message.type.js";
-import type interfaceCommand from "../../common/interfaces/command.type.js";
+import type interfaceMessage from "../../common/interfaces/parsed-message.interface.js";
+import type interfaceCommand from "../../common/interfaces/command.interface.js";
 import { enumPingStates } from "./utils/ping.enums.js";
 import { PingService } from "./utils/ping.message.js";
-import Logger from "../../common/utils/logger.util.js";
-import GetError from "./utils/error.message.js";
+
 
 export default class PingCommand implements interfaceCommand {
     name = 'ping';
@@ -14,40 +13,31 @@ export default class PingCommand implements interfaceCommand {
     async execute(message: interfaceMessage,sam: WhatsappService): Promise<void> {
 
         const { key, chatId, captent } = message;
-        try {
-            
-            const start = Date.now()
 
-            await sam.readMessage( key );
-            await sam.sendPresenceUpdate('composing', chatId);
+        const start = Date.now()
 
-            if ( captent?.split(' ')[1] === '-error' ) throw new Error('INTENCIONAL')
+        await sam.readMessage( key );
+        await sam.sendPresenceUpdate('composing', chatId);
 
-            const start_text = await PingService.get.message( enumPingStates.CALCULANDO );
+        if ( captent?.split(' ')[1] === '-error' ) throw new Error('INTENCIONAL')
 
-            const sentMessage = await sam.send.text( chatId, start_text );
-            const end = Date.now();
+        const start_text = await PingService.get.message( enumPingStates.CALCULANDO );
 
-            const diff = end - start;
+        const sentMessage = await sam.send.text( chatId, start_text );
+        const end = Date.now();
 
-
-            await wait(300)
-            await sam.sendPresenceUpdate('composing', chatId)
-            await wait(3_000);
+        const diff = end - start;
 
 
-            const end_message = await PingService.get.message(enumPingStates.CALCULADO, diff);
-            await sam.editMessage(chatId, end_message, sentMessage.key );
+        await wait(300)
+        await sam.sendPresenceUpdate('composing', chatId)
+        await wait(3_000);
 
-            await sam.sendPresenceUpdate('paused', chatId)
 
-        } catch (error:any) {
-            if (error.message !== 'INTENCIONAL') {
-                Logger('PingModule', 'Internal', null, true)
-                console.error(error)
-            }
-            sam.send.text(chatId, GetError())
-        }
-        
+        const end_message = await PingService.get.message(enumPingStates.CALCULADO, diff);
+        await sam.editMessage(chatId, end_message, sentMessage.key );
+
+        await sam.sendPresenceUpdate('paused', chatId)
+
     }
 }

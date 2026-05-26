@@ -1,0 +1,14 @@
+{
+    "header": [
+        "🔖 Ese contacto de Whatsapp no existe",
+        "🔖 Mmmmm.. nop, ese contacto no existe",
+        "🔖 ¿Seguro de que ese contacto existe?",
+        "🔖 Ese numero no existe, y creo que lo sabes"
+    ],
+
+    "footer": [
+        "> ☉ Escribe `!whatsapp` y automaticamente obtendré tu propio contacto",
+        "> ☉ Escribe `!whatsapp` mientras respondes a otro mensaje y buscare ese contacto",
+        "> ☉ Envia el comando junto a *-error* y no te alarmes"
+    ]
+}

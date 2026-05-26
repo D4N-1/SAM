@@ -1,5 +1,5 @@
 import type typeDevice from "../types/device.type.js";
-import type interfaceKey from "./key-message.type.js";
+import type interfaceKey from "./key-message.interface.js";
 
 export default interface interfaceMessage {
     chatId: string,
@@ -10,6 +10,7 @@ export default interface interfaceMessage {
     caption: string|undefined,
     captent: string|undefined,
     botNumber: string|undefined,
+    botName: string,
     isGroup: boolean,
     contentType: string,
     allMentions: string[]|[],
@@ -37,7 +38,8 @@ export default interface interfaceMessage {
     platform: string,
     device: typeDevice,
     broadcast: boolean,
-    newsletter: boolean
+    newsletter: boolean,
+    msg: any
 }
 
 

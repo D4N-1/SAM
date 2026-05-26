@@ -1,13 +1,14 @@
 import Logger from "./common/utils/logger.util.js";
 import './common/utils/env.util.js'
 import { startWhatsappBot } from "./estructure/whatsapp-client.js";
+import enumContext from "./common/enums/context.enum.js";
 
 
 async function bootstrap() {
 
     try {
 
-        Logger('MainApplication', 'Starting Sam application...')
+        Logger.log(enumContext.MainApplication, 'Starting Sam application...')
     
         const BOT_NUMBER = process.env.BOT_NUMBER
         if (!BOT_NUMBER) throw new Error('Se requiere UID del BOT')
@@ -18,11 +19,9 @@ async function bootstrap() {
 
     } catch(error) {
 
-        if (error instanceof Error) {
-            Logger('MainApplication', error?.message, null, true)
-        } else {
-            console.error(error)
-        }
+        if (error instanceof Error) Logger.error(enumContext.MainApplication, error?.message)
+        else console.error(error)
+    
     }
 }
 

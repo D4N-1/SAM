@@ -1,6 +1,13 @@
+import path from "node:path"
 import { random } from "../utils/function.util.js"
+import fs from 'node:fs'
+import fsAsync from 'node:fs/promises'
+import { ROOT_PATH } from "../constants/path.constant.js"
 
-export const msgHEADER_ERROR = (): string => {
+
+const msgHEADER_ERROR = (arr?: any[]|undefined): string => {
+
+    if (arr) return random(arr)
 
     return random([
         '💔 𝗢𝗽𝘀𝘀, 𝗼𝗯𝘁𝘂𝘃𝗲 𝘂𝗻 𝗲𝗿𝗿𝗼𝗿 𝗱𝗲𝘀𝗰𝗼𝗻𝗼𝗰𝗶𝗱𝗼',
@@ -11,7 +18,9 @@ export const msgHEADER_ERROR = (): string => {
 
 }
 
-export const msgFOOTER_ERROR = (): string => {
+const msgFOOTER_ERROR = (arr?: any[]|undefined): string => {
+
+    if (arr) return random(arr);
 
     return random([
         '> Obtuve un error que me impide seguir, intenta de nuevo',
@@ -20,3 +29,27 @@ export const msgFOOTER_ERROR = (): string => {
         '> Calma, no creo que sea algo grave, vamos de nuevo, ¿va?'
     ])
 }
+
+export async function GetErrorMessage(command?: string|undefined): Promise<string> {
+
+    try {
+
+        if (!command) return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR();
+
+        const COMMANDS_PATH = path.resolve( ROOT_PATH, 'src', 'commands')
+        const JSON_PATH = path.resolve(COMMANDS_PATH, command, 'utils', 'error.messages.json')
+        console.log(JSON_PATH)
+        const exits = fs.existsSync( JSON_PATH )
+
+        if (!exits) return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR()
+
+        const rawJson = await fsAsync.readFile(JSON_PATH, 'utf-8')
+        const Error = JSON.parse(rawJson)
+
+        return msgHEADER_ERROR(Error.header) + '\n\n' + msgFOOTER_ERROR(Error.footer)
+
+    } catch {
+        return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR()
+    }
+}
+export default GetErrorMessage

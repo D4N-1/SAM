@@ -3,6 +3,8 @@ import { makeWASocket } from "@itsukichan/baileys";
 import { createAuthState } from "./utils/whatsapp-auth.util.js";
 import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp-events.js";
 import { ApiLogin } from "./whatsapp-login.service.js";
+import Logger from "../common/utils/logger.util.js";
+import enumContext from "../common/enums/context.enum.js";
 
 
 
@@ -31,7 +33,12 @@ export async function startWhatsappBot(uid: string, code: string) {
     });
 
 
-    if ( !await ApiLogin.signIn(uid, code) ) return console.log('No se pudo iniciar sesion')
+    if ( !await ApiLogin.signIn(uid, code) ) {
+
+        Logger.error(enumContext.WhatsappClient, 'No se pudo iniciar sesion')
+        process.exit(0)
+    }
+
     registerConnectionEvent(uid, code, sam);
     registerCredsEvents(sam, saveCreds);
     registerMessagesEvent(sam);

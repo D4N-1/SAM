@@ -1,4 +1,6 @@
+import enumContext from "../common/enums/context.enum.js";
 import { Api } from "../common/utils/api.util.js";
+import { wait } from "../common/utils/function.util.js";
 import Logger from "../common/utils/logger.util.js";
 import { editHeaders, saveHeaders } from "./utils/api-headers.util.js";
 
@@ -11,7 +13,8 @@ export const ApiLogin = {
                 await Api.get('/health');
                 return true;
             } catch (error) {
-                console.error('Error al obtener el estado de la API:', error);
+                Logger.error(enumContext.WhatsappLoginService, 'API offline')
+                //console.error('Error al obtener el estado de la API');
                 return false;
             }
         },
@@ -28,7 +31,8 @@ export const ApiLogin = {
                 return res.data?.access_token || null;
 
             } catch (error) {
-                console.error('Error al obtener el token de autenticación:', error);
+                Logger.error(enumContext.WhatsappLoginService, 'Obtener token auth')
+                //console.error('Error al obtener el token de autenticación');
                 return null;
             }
         }
@@ -39,8 +43,27 @@ export const ApiLogin = {
 
         try {
 
-            const isOnline = await ApiLogin.get.apiStatus()
-            if ( !isOnline ) return false;
+            const MAX_RETRIES: number = 5;
+            const DELAY: number = 10_000;
+            let isOnline: boolean = false;
+            let ATTEMPTS: number = 0;
+
+            while(!isOnline) {
+                ATTEMPTS++;
+
+                isOnline = await ApiLogin.get.apiStatus()
+
+                if (!isOnline) {
+                    if (ATTEMPTS >= MAX_RETRIES) {
+                        Logger.error(enumContext.WhatsappLoginService, 'API sin respuesta definitiva')
+                        return false;
+                    } else {
+                        Logger.error(enumContext.WhatsappLoginService, 'API sin respuesta, reintentando...')
+                        await wait(DELAY)
+                    }
+                }
+                
+            }
 
             const token = await ApiLogin.get.authToken(uid, code);
             if (!token) return false;
@@ -52,8 +75,8 @@ export const ApiLogin = {
             return true;
 
         } catch (error) {
-            Logger('signIn Service', 'Error', null, true)
-            console.error(error)
+            Logger.error(enumContext.WhatsappLoginService, 'SignIn')
+            //console.error(error)
         }
     }
 };

@@ -6,58 +6,66 @@ import { startWhatsappBot } from "./whatsapp-client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
 import { parseMessage } from "./whatsapp.parser.js"
-import type { interfaceMessage } from "../common/interfaces/parsed-message.type.js";
+import type interfaceMessage from "../common/interfaces/parsed-message.interface.js";
 import { wait } from "../common/utils/function.util.js"
-import { CommandRouter } from "../commands/command.router.js";
+import CommandRouter from "../commands/command.router.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
+import Logger from "../common/utils/logger.util.js";
+import enumContext from "../common/enums/context.enum.js";
 
 
 const commandRouter = new CommandRouter();
 const max_age = 60_000;
 
 export async function registerConnectionEvent(uid: string, code: string, sam: WASocket) {
+
+    try {
     
-    sam.ev.on("connection.update", async (data: BaileysEventMap['connection.update']) => {
+        sam.ev.on("connection.update", async (data: BaileysEventMap['connection.update']) => {
 
-        let { connection, qr, lastDisconnect } = data
-
-
-        console.log(data)
-        if (qr) return console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
-
-        if (connection) {
-            console.log("\n" + msgSTATUS_TITLE)
-            console.log(msgSTATUS_CONNECTION[connection] + '\n')
-        }
-
-        if (!sam.authState.creds.registered && connection === enumStatusConnection.CONNECTING) {
-
-            await wait(4_000)
-
-            console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
+            let { connection, qr, lastDisconnect } = data
 
 
-            await sam.requestPairingCode(uid, code)
+            console.log(data)
+            if (qr) return console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
 
-            console.log(`CODIGO DE EMPAREJAMIENTO: ${code}`)
-        }
+            if (connection) {
+                console.log("\n" + msgSTATUS_TITLE)
+                console.log(msgSTATUS_CONNECTION[connection] + '\n')
+            }
 
-        if (connection === enumStatusConnection.CLOSE) {
+            if (!sam.authState.creds.registered && connection === enumStatusConnection.CONNECTING) {
 
-            const reason = (lastDisconnect?.error as Boom)?.output?.statusCode;
-            console.log(reason)
+                await wait(4_000)
 
-            if (reason == 401) await deleteAuth(uid)
+                console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
 
-            await wait(2_500)
-            startWhatsappBot(uid, code)
-        }
 
-        if (connection === enumStatusConnection.OPEN) {
+                await sam.requestPairingCode(uid, code)
 
-            
-        }
-    })
+                console.log(`CODIGO DE EMPAREJAMIENTO: ${code}`)
+            }
+
+            if (connection === enumStatusConnection.CLOSE) {
+
+                const reason = (lastDisconnect?.error as Boom)?.output?.statusCode;
+                console.log(reason)
+
+                if (reason == 401) await deleteAuth(uid)
+
+                await wait(2_500)
+                startWhatsappBot(uid, code)
+            }
+
+            if (connection === enumStatusConnection.OPEN) {
+
+
+            }
+        })
+
+    } catch (error) {
+        Logger.error(enumContext.WhatsappEvents, 'Connection Update')
+    }
 
 }
 
@@ -70,28 +78,35 @@ export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 
 export function registerMessagesEvent(sam: WASocket) {
 
-    sam.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
-        
-        if (!data.messages || data.messages.length === 0) return;
+    try {
 
-        for (const msg of data.messages) {
-            if (!msg.key) continue;
+        sam.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
 
-            const timestamp = (Number(msg.messageTimestamp) ?? 0) * 1_000;
-            const now = Date.now();
+            if (!data.messages || data.messages.length === 0) return;
 
-            if (now - timestamp > max_age) {
-                console.log('MENSAJE VIEJO IGNORADO');
-                continue;
+            for (const msg of data.messages) {
+                if (!msg.key) continue;
+
+                //console.log(JSON.stringify(msg,null,2))
+                const timestamp = (Number(msg.messageTimestamp) ?? 0) * 1_000;
+                const now = Date.now();
+
+                if (now - timestamp > max_age) {
+                    console.log('MENSAJE VIEJO IGNORADO');
+                    continue;
+                }
+
+                let parsedMessage: interfaceMessage|null|undefined = parseMessage(sam, msg);
+                if (!parsedMessage) continue;
+
+                if (parsedMessage.contentType === enumMessage.protocolMessage) continue;
+                console.log(parsedMessage)
+
+                await commandRouter.handler(sam, parsedMessage);
             }
+        });
 
-            let parsedMessage: interfaceMessage | null = parseMessage(sam, msg);
-            if (!parsedMessage) continue;
-
-            if (parsedMessage.contentType === enumMessage.protocolMessage) continue;
-            console.log(parsedMessage)
-
-            await commandRouter.handler(sam, parsedMessage);
-        }
-    });
+    } catch (error) {
+        Logger.error(enumContext.WhatsappEvents, 'Messages Upsert')
+    }
 }
