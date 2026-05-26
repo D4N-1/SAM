@@ -10,7 +10,7 @@ import { MiddlewarePipeline } from "../common/utils/middleware-pipeline.util.js"
 import { LogMiddleware } from "../common/middlewares/log.middleware.js";
 
 
-export default class CommandRouter {
+export class CommandRouter {
     private commands = new Map<string, interfaceCommand>
     private globalMiddlewares: any[] = [];
 
@@ -77,3 +77,6 @@ export default class CommandRouter {
         
     }
 }
+
+const commandRouter = new CommandRouter()
+export default commandRouter;

@@ -8,13 +8,12 @@ import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-st
 import { parseMessage } from "./whatsapp.parser.js"
 import type interfaceMessage from "../common/interfaces/parsed-message.interface.js";
 import { wait } from "../common/utils/function.util.js"
-import CommandRouter from "../commands/command.router.js";
+import commandRouter from "../commands/command.router.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 
 
-const commandRouter = new CommandRouter();
 const max_age = 60_000;
 
 export async function registerConnectionEvent(uid: string, code: string, sam: WASocket) {
