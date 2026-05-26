@@ -2,12 +2,11 @@ import type interfaceCommand from "../common/interfaces/command.interface.js";
 import type interfaceMessage from "../common/interfaces/parsed-message.interface.js";
 import type { WASocket } from "@itsukichan/baileys";
 import WhatsappService from "../estructure/whatsapp.service.js";
-import { ALL_COMMANDS } from "./command.module.js";
+import { ALL_COMMANDS, GLOBAL_MIDDLEWARES } from "./command.module.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 import GetErrorMessage from "../common/messages/error-status.message.js";
 import { MiddlewarePipeline } from "../common/utils/middleware-pipeline.util.js";
-import { LogMiddleware } from "../common/middlewares/log.middleware.js";
 
 
 export class CommandRouter {
@@ -20,7 +19,10 @@ export class CommandRouter {
     }
 
     private registerGlobalMiddlewares() {
-        this.globalMiddlewares.push(new LogMiddleware())
+
+        for (const midleware of GLOBAL_MIDDLEWARES) {
+            this.globalMiddlewares.push(new midleware())
+        }
     }
 
     public registerCommands() {
@@ -42,37 +44,43 @@ export class CommandRouter {
 
     public async handler(samSocket: WASocket, message: interfaceMessage) {
 
-        if (!message?.captent?.startsWith("!")) return;
         if (message.isFromMe) return;
-        
-        const commandName = message.captent.trim().split(" ")[0]?.replace("!", "").toLowerCase();
-        if (!commandName) return;
-
-        const command = this.commands.get(commandName)
-        if (!command) return;
-
         const sam = new WhatsappService(samSocket);
 
         try {
 
             const pipeline = new MiddlewarePipeline();
 
-            for (const globalMiddleware of this.globalMiddlewares) {
-                pipeline.use(globalMiddleware);
-            }
+            for (const globalMiddleware of this.globalMiddlewares) pipeline.use(globalMiddleware);
 
+            await pipeline.execute({ message, sam }, async() => {
 
-            await pipeline.execute({ message, sam }, async() => await command.execute(message, sam) )
-            
-            
+                if (!message?.captent?.startsWith("!")) return;
+        
+                const commandName = message.captent.trim().split(" ")[0]?.replace("!", "").toLowerCase();
+                if (!commandName) return;
+
+                const command = this.commands.get(commandName)
+                if (!command) return;
+
+                try {
+                    await command.execute(message, sam)
+
+                } catch (error:any) {
+
+                    const name = command.name;
+
+                    if (error.message !== 'INTENCIONAL') {
+                        Logger.error(`${name.toUpperCase()}Module`, 'Internal')
+                        console.error(error)
+                    }
+                    sam.send.text(message.chatId, await GetErrorMessage(name))
+                }
+            })
+
         } catch (error: any) {
-            const name = command.name;
-
-            if (error.message !== 'INTENCIONAL') {
-                Logger.error(`${name.toUpperCase()}Module`, 'Internal')
-                console.error(error)
-            }
-            sam.send.text(message.chatId, await GetErrorMessage(name))
+            Logger.error('CommandRouter', 'Error detectado en el flujo del pipeline');
+            console.error(error);
         }
         
     }

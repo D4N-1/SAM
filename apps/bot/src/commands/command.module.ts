@@ -1,3 +1,5 @@
+import { ContactMiddleware } from "../common/middlewares/contact.middleware.js";
+import { LogMiddleware } from "../common/middlewares/log.middleware.js";
 import BotCommand from "./bot/bot.module.js";
 import PingCommand from "./ping/ping.module.js";
 import SayCommand from "./say/say.module.js";
@@ -11,4 +13,10 @@ export const ALL_COMMANDS = [
     TraductorCommand,
     WhatsappCommand,
     BotCommand
+]
+
+
+export const GLOBAL_MIDDLEWARES = [
+    LogMiddleware,
+    ContactMiddleware
 ]

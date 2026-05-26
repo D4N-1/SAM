@@ -98,7 +98,7 @@ export function registerMessagesEvent(samSocket: WASocket) {
                 if (!parsedMessage) continue;
 
                 if (parsedMessage.contentType === enumMessage.protocolMessage) continue;
-                console.log(parsedMessage)
+                //console.log(parsedMessage)
 
                 await commandRouter.handler(samSocket, parsedMessage);
             }
