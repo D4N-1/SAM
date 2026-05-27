@@ -1,4 +1,5 @@
 import { ContactMiddleware } from "../common/middlewares/contact.middleware.js";
+import { GroupMiddleware } from "../common/middlewares/group.middleware.js";
 import { LogMiddleware } from "../common/middlewares/log.middleware.js";
 import BotCommand from "./bot/bot.module.js";
 import PingCommand from "./ping/ping.module.js";
@@ -19,4 +20,5 @@ export const ALL_COMMANDS = [
 export const GLOBAL_MIDDLEWARES = [
     LogMiddleware,
     ContactMiddleware
+    //GroupMiddleware
 ]

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { CommunityEntity } from "./entities/community.entity";
 import { CommunityService } from "./community.service";
 import { SWAGGER } from "src/common/utils/swagger.utils";
@@ -10,7 +10,10 @@ import { CreateCommunityDto } from "./dto/create-community.dto";
 import { UpdateCommunityDto } from "./dto/update-community.dto";
 import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { AllResponse } from "src/common/interfaces/response.type";
+import { Private } from "src/decorators/private.decorator";
 
+
+@Private() @ApiBearerAuth()
 @ApiTags('Communities')
 @Controller('communities')
 export class CommunityController {

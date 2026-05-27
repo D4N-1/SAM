@@ -1,5 +1,6 @@
 import type { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface.js";
 import { Api } from "../utils/api.util.js";
+import Logger from "../utils/logger.util.js";
 
 
 export class ContactMiddleware implements SamMiddleware {
@@ -9,22 +10,28 @@ export class ContactMiddleware implements SamMiddleware {
         const { message } = context;
         const { sender, senderAlt, pushName, botUid } = message;
 
-        if (!senderAlt) return next();
+        try {
+            
+            if (!senderAlt) return next();
 
-        const uid = senderAlt.split('@')[0];
-        const lid = sender?.split('@')[0];
+            const uid = senderAlt.split('@')[0];
+            const lid = sender?.split('@')[0];
 
-        const res = await Api.get(`/contacts/uid/${uid}`, { uid: botUid! })
+            const res = await Api.get(`/contacts/uid/${uid}`, { uid: botUid! }).catch()
 
-        if (res?.status === 200) return next()
+            if (res?.status === 200) return next()
 
-        const post = await Api.post(`/contacts`, {
-            uid,
-            lid,
-            name: pushName
-        })
+            const post = await Api.post(`/contacts`, {
+                uid,
+                lid,
+                name: pushName
+            }).catch()
 
-        console.log(post.data)
-        next()
+            console.log(post.data)
+            next()
+
+        } catch (error) {
+            Logger.error('ContactMiddleware', 'Error al obtener /contacts/uid')
+        }
     }
 }

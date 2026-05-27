@@ -1,5 +1,6 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
+import { DTO } from "src/common/constants/generic.dto";
 import { enumRole } from "src/common/enums/role.enum";
 import { UserEntity } from "src/modules/users/entities/user.entity";
 import { Entity, PrimaryGeneratedColumn, Column, Generated, OneToMany } from "typeorm";
@@ -14,7 +15,7 @@ export class RoleEntity {
 
     @ApiProperty({
         description: 'El identificador unico público',
-        example: '550e8400-e29b-41d4-a716-446655440000',
+        example: DTO.UUID,
         type: String,
         format: 'uuid'
     })

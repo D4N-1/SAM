@@ -83,7 +83,7 @@ export function registerMessagesEvent(samSocket: WASocket) {
             for (const msg of data.messages) {
                 if (!msg.key) continue;
 
-                console.log('[] - NEW MESSAGE')
+                //console.log('[] - NEW MESSAGE')
                 //console.log(JSON.stringify(msg,null,2))
                 const timestamp = (Number(msg.messageTimestamp) ?? 0) * 1_000;
                 const now = Date.now();

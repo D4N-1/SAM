@@ -1,9 +1,11 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
+import { DTO } from "src/common/constants/generic.dto";
 import { BotEntity } from "src/modules/bots/entities/bot.entity";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
+import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { UserEntity } from "src/modules/users/entities/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity('contacts')
@@ -14,9 +16,10 @@ export class ContactEntity {
     @Exclude()
     index: number;
 
+
     @ApiProperty({
         description: 'El identificador unico público',
-        example: '550e8400-e29b-41d4-a716-446655440000',
+        example: DTO.UUID,
         type: String,
         format: 'uuid'
     })
@@ -24,33 +27,45 @@ export class ContactEntity {
     @Generated('uuid')
     uuid: string;
 
+
     @ApiProperty({
         description: 'El identificador único del contacto (formato @s/numero telefonico)',
-        example: '3107654321@s.whatsapp.net',
+        example: DTO.UID,
         type: String
     })
     @Column({ type: 'varchar', length: 35, unique: true })
     uid: string;
 
+
     @ApiProperty({
         description: 'El identificador único del contacto (formato @lid/whatsapp lid)',
-        example: '3107654321@lid',
+        example: DTO.LID,
         type: String
     })
     @Column({ type: 'varchar', length: 35, unique: true, nullable: true })
     lid?: string;
 
+
     @ApiProperty({
         description: 'Nombre del contacto',
-        example: 'Dani',
+        example: DTO.OPCIONAL_NAME,
         type: String
     })
-    @Column({
-        type: 'varchar',
-        length: 25,
-        nullable: true
-    })
+    @Column({ type: 'varchar', length: 25, nullable: true })
     name?: string;
+
+
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+    createdAt: Date;
+
+
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+    updatedAt: Date;
+
+
+    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
+    deletedAt: Date;
+
 
     @ApiHideProperty()
     @OneToOne( () => UserEntity, (user) => user.contact)
@@ -68,23 +83,18 @@ export class ContactEntity {
     @OneToOne( () => BotEntity, (bot) => bot.ownerContact)
     botOwner: BotEntity;
 
-    @CreateDateColumn({
-        type: 'timestamp',
-        name: 'created_at'
-    })
-    createdAt: Date;
+    @ApiHideProperty()
+    @OneToMany( () => GroupEntity, (group) => group.nameOwner)
+    groupNameOwner: GroupEntity[];
 
-    @UpdateDateColumn({
-        type: 'timestamp',
-        name: 'updated_at'
+    @ApiHideProperty()
+    @OneToMany( () => GroupEntity, (group) => group.owner)
+    groupOwner: GroupEntity[];
 
-    })
-    updatedAt: Date;
 
-    @DeleteDateColumn({
-        type: 'timestamp',
-        name: 'deleted_at'
-    })
-    deletedAt: Date;
+    @ApiHideProperty()
+    @OneToMany( () => GroupEntity, (group) => group.descriptionOwner)
+    groupDescriptionOwner: GroupEntity[];
+
 
 }

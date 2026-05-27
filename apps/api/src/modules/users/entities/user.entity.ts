@@ -1,5 +1,6 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
+import { DTO } from "src/common/constants/generic.dto";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RoleEntity } from "src/modules/roles/entities/role.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -14,7 +15,7 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'El identificador unico público',
-        example: '550e8400-e29b-41d4-a716-446655440000',
+        example: DTO.UUID,
         type: String,
         format: 'uuid'
     })
@@ -32,7 +33,7 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'Nombre del usuario (Debe ser único)',
-        example: 'Dani',
+        example: DTO.OPCIONAL_NAME,
         type: String
     })
     @Column({ type: 'varchar', length: 25, nullable: true, unique: true })
@@ -40,7 +41,7 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'Descripción del usuario',
-        example: 'Hola, soy Dani',
+        example: DTO.DESCRIPTION,
         type: String
     })
     @Column({ type: 'varchar', length: 255, nullable: true })
@@ -48,7 +49,7 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'URL de la imagen de perfil',
-        example: 'Dani.png',
+        example: DTO.PHOTO,
         type: String
     })
     @Column({ name: 'image_url', type: 'varchar', length: 255, nullable: true })
@@ -56,7 +57,7 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'Email único del usuario',
-        example: 'dani@email.com',
+        example: DTO.EMAIL,
         type: String
     })
     @Column({
@@ -68,7 +69,7 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'Contraseña del usuario',
-        example: 'Dani123',
+        example: DTO.PASSWORD,
         type: String
     })
     @Column({ name: 'password_hash', type: 'varchar', length: 255, nullable: true })

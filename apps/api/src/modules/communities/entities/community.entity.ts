@@ -1,5 +1,6 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
+import { DTO } from "src/common/constants/generic.dto";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -14,7 +15,7 @@ export class CommunityEntity {
 
     @ApiProperty({
         description: 'El identificador único público',
-        example: '550e8400-e29b-41d4-a716-446655440000',
+        example: DTO.UUID,
         type: String,
         format: 'uuid'
     })
@@ -24,7 +25,7 @@ export class CommunityEntity {
 
     @ApiProperty({
         description: 'El identificador único de la comunidad',
-        example: '320987654321@g',
+        example: DTO.GROUP_UID,
         type: String
     })
     @Column({ type: 'varchar', length: 35, unique: true })

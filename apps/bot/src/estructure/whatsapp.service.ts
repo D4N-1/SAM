@@ -68,7 +68,7 @@ export default class WhatsappService {
 
 
 
-    async editMessage(chatId: string, text: string, key: any) {
+    async editMessage(chatId: string, text: string, key: interfaceKey) {
         return this.sam.sendMessage(chatId, { edit: key, text })
     }
 
@@ -90,5 +90,9 @@ export default class WhatsappService {
 
     async profilePictureUrl(uid: string) {
         return this.sam.profilePictureUrl(uid)
+    }
+
+    async groupMetadata(chatId: string) {
+        return this.sam.groupMetadata(chatId)
     }
 }

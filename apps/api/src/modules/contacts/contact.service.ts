@@ -57,6 +57,20 @@ export class ContactService {
         }
     }
 
+    async findIn(uids: string[]): Promise<ContactEntity[]> {
+        
+        if (!uids || uids.length === 0) return [];
+
+        const contacts = await this.contactRepository.createQueryBuilder('contact')
+            .where('contact.uid IN (:...uids)', { uids })
+            .getMany()
+
+        const uniqueUidContactCount = new Set(uids).size;
+
+        if (contacts.length !== uniqueUidContactCount) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contactos', 'Uno o mas contactos no existen') )
+            return contacts
+    }
+
 
     async create(createContactDto: CreateContactDto): Promise<ContactEntity|null> {
 
