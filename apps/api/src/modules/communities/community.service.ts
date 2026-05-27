@@ -80,11 +80,13 @@ export class CommunityService {
 
         const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
 
-        if (contactUidToValidate.length > 0) await this.contactService.findIn(contactUidToValidate)
+        let validContacts: any;
+        if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
         
-        if (ownerUid) newCommunityData.ownerUid = ownerUid;
-        if (descriptionOwnerUid) newCommunityData.descriptionOwnerUid = descriptionOwnerUid;
-        if (nameOwnerUid) newCommunityData.nameOwnerUid = nameOwnerUid;
+        if (ownerUid && validContacts.some( c => c.uid === ownerUid)) newCommunityData.ownerUid = ownerUid;
+        if (descriptionOwnerUid && validContacts.some( c => c.uid === descriptionOwnerUid)) newCommunityData.descriptionOwnerUid = descriptionOwnerUid;
+        if (nameOwnerUid && validContacts.some( c => c.uid === nameOwnerUid)) newCommunityData.nameOwnerUid = nameOwnerUid;
+
         if (nameTime) newCommunityData.nameTime = new Date(nameTime * 1_000);
 
         newCommunityData.creation = new Date(creation * 1_000);
@@ -103,11 +105,13 @@ export class CommunityService {
 
         const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
 
-        if (contactUidToValidate.length > 0) await this.contactService.findIn(contactUidToValidate)
+        let validContacts: any;
+        if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
         
-        if (ownerUid) updateCommunityData.ownerUid = ownerUid;
-        if (descriptionOwnerUid) updateCommunityData.descriptionOwnerUid = descriptionOwnerUid;
-        if (nameOwnerUid) updateCommunityData.nameOwnerUid = nameOwnerUid;
+        if (ownerUid && validContacts.some( c => c.uid === ownerUid)) updateCommunityData.ownerUid = ownerUid;
+        if (descriptionOwnerUid && validContacts.some( c => c.uid === descriptionOwnerUid)) updateCommunityData.descriptionOwnerUid = descriptionOwnerUid;
+        if (nameOwnerUid && validContacts.some( c => c.uid === nameOwnerUid)) updateCommunityData.nameOwnerUid = nameOwnerUid;
+
         if (nameTime) updateCommunityData.nameTime = new Date(nameTime * 1_000);
         if (creation) updateCommunityData.creation = new Date(creation * 1_000);
 

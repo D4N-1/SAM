@@ -9,7 +9,7 @@ import type enumContext from "../enums/context.enum.js";
  */
 const Logger = {
   
-  log: (context: enumContext, message: string, startTime?: number|null) => {
+  log: (context: enumContext|string, message: string, startTime?: number|null) => {
     const appName = chalk.cyanBright("[Sam]");
 
     const pid = chalk.greenBright(process.pid);

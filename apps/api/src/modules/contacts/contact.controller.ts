@@ -32,6 +32,13 @@ export class ContactController {
         return this.contactService.create(createContactDto)
     }
 
+    @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('contacto') })
+    @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('contacto'), type: ContactEntity })
+    @Post('/bulk')
+    async createBulk(@Body() createContactDto: CreateContactDto[]) {
+        return this.contactService.bulk(createContactDto)
+    }
+
     @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('contacto') })
     @ApiOkResponse({ description: SWAGGER.OK.FIND('contacto'), type: ContactEntity })
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })

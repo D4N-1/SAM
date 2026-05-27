@@ -1,6 +1,7 @@
 import type { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface.js";
 import { Api } from "../utils/api.util.js";
 import Logger from "../utils/logger.util.js";
+import { SyncManager } from "../utils/sync-manager.util.js";
 
 
 export class GroupMiddleware implements SamMiddleware {
@@ -12,24 +13,16 @@ export class GroupMiddleware implements SamMiddleware {
 
         try {
 
-            if (!chatId || !chatId.endsWith('@g.us')) return next();
+          if (!chatId || !chatId.endsWith('@g.us')) return next();
 
-            const res = await Api.get(`/groups/uid/${chatId}`, { uid: botUid! })
+          const res = await Api.get(`/groups/uid/${chatId}`, { uid: botUid! });
+          if (res.status === 200) return next();
 
-            if (res?.status === 200) return next();
 
-            const group = await sam.groupMetadata(chatId);
+          Logger.log('GroupMiddleware', `Sincronizando grupo detectado: ${chatId}`);
+          await SyncManager.syncGroups(sam, chatId, botUid!);
 
-            console.log(group)
-
-            const community = await sam.groupMetadata(group?.linkedParent!)
-
-            console.log(community)
-            
-            const post = await Api.post(`/groups`, {
-                uid: chatId
-            })
-
+          next()
 
             /*
 {
@@ -159,7 +152,7 @@ export class GroupMiddleware implements SamMiddleware {
             */
 
         } catch (error) {
-            Logger.error('GroupMiddleware', 'Error al obtener /groups/uid')
+          console.error(error)
         }
 
         return next();

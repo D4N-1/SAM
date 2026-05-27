@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ContactEntity } from "./entities/contact.entity";
 import { Repository } from "typeorm";
@@ -57,7 +57,7 @@ export class ContactService {
         }
     }
 
-    async findIn(uids: string[]): Promise<ContactEntity[]> {
+    async findIn(uids: string[]) {
         
         if (!uids || uids.length === 0) return [];
 
@@ -65,12 +65,39 @@ export class ContactService {
             .where('contact.uid IN (:...uids)', { uids })
             .getMany()
 
-        const uniqueUidContactCount = new Set(uids).size;
-
-        if (contacts.length !== uniqueUidContactCount) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contactos', 'Uno o mas contactos no existen') )
-            return contacts
+        return contacts
     }
 
+
+    async bulk(createContactsDto: CreateContactDto[]) {
+
+        if (createContactsDto?.length === 0) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos') );
+        
+        const rawEntities = createContactsDto.map(c => ({
+                uid: String(c.uid),
+                lid: c.lid ? String(c.lid) : undefined,
+        }));
+
+        await this.contactRepository.createQueryBuilder()
+            .insert()
+            .into(ContactEntity)
+            .values(rawEntities)
+            .orUpdate(['lid'])
+            .execute()
+
+        return { status: 'OK', inserted: rawEntities.length }
+        
+
+        /*
+        [
+  { uid: '584162603720', lid: '79719089315854' },
+  { uid: '5217224312585', lid: '100777800511609' },
+  { uid: '34622189105', lid: '213258212475052' },
+  { uid: '18299597912', lid: '128819306434759' }
+]
+  */
+
+    }
 
     async create(createContactDto: CreateContactDto): Promise<ContactEntity|null> {
 

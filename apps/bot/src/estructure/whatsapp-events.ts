@@ -32,7 +32,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
                 console.log(msgSTATUS_CONNECTION[connection] + '\n')
             }
 
-            if (!sam.authState.creds.registered && connection === enumStatusConnection.CONNECTING) {
+            if (!sam.authState.creds.registered && qr) {
 
                 await wait(4_000)
 
@@ -45,6 +45,10 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
             }
 
             if (connection === enumStatusConnection.CLOSE) {
+
+                sam.ev.removeAllListeners('connection.update');
+                sam.ev.removeAllListeners('messages.update');
+                sam.ev.removeAllListeners('creds.update');
 
                 const reason = (lastDisconnect?.error as Boom)?.output?.statusCode;
                 console.log(reason)
@@ -78,10 +82,11 @@ export function registerMessagesEvent(samSocket: WASocket) {
 
         samSocket.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
 
+
             if (!data.messages || data.messages.length === 0) return;
 
-            for (const msg of data.messages) {
-                if (!msg.key) continue;
+            data.messages.forEach( (msg) => {
+                if (!msg.key) return;
 
                 //console.log('[] - NEW MESSAGE')
                 //console.log(JSON.stringify(msg,null,2))
@@ -90,17 +95,18 @@ export function registerMessagesEvent(samSocket: WASocket) {
 
                 if (now - timestamp > max_age) {
                     console.log('MENSAJE VIEJO IGNORADO');
-                    continue;
+                    return;
                 }
 
                 let parsedMessage: interfaceMessage|null|undefined = parseMessage(samSocket, msg);
-                if (!parsedMessage) continue;
+                if (!parsedMessage) return;
 
-                if (parsedMessage.contentType === enumMessage.protocolMessage) continue;
+                if (parsedMessage.contentType === enumMessage.protocolMessage) return;
                 //console.log(parsedMessage)
 
                 commandRouter.handler(samSocket, parsedMessage);
-            }
+                
+            })
         });
 
     } catch (error) {
