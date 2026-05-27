@@ -10,6 +10,7 @@ export default interface interfaceMessage {
     caption: string|undefined,
     captent: string|undefined,
     botNumber: string|undefined,
+    botUid: string|undefined,
     botName: string,
     isGroup: boolean,
     contentType: string,

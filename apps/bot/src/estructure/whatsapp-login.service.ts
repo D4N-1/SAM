@@ -5,14 +5,14 @@ import Logger from "../common/utils/logger.util.js";
 import { editHeaders, saveHeaders } from "./utils/api-headers.util.js";
 
 export class ApiLoginService {
-    private readonly MAX_RETRIES = 5;
+    private readonly MAX_RETRIES = 15;
     private readonly DELAY = 10_000;
 
 
     public async getApiStatus(): Promise<boolean> {
         try {
-            await Api.get('/health');
-            return true;
+            const res = await Api.get('/health');
+            return res.status >= 200 && res.status <= 300;
         } catch (error) {
             Logger.error(enumContext.WhatsappLoginService, 'API offline')
             //console.error('Error al obtener el estado de la API');
@@ -30,6 +30,7 @@ export class ApiLoginService {
         });
 
         if ([200, 201].includes( res.status )) return res.data?.access_token;
+        Logger.error(enumContext.WhatsappLoginService, `Bot no registrado: ${number}`)
         return null;
 
         } catch (error) {
@@ -39,15 +40,11 @@ export class ApiLoginService {
         }
     }
 
-    async getMe(token: string|undefined): Promise<boolean|null> {
+    async getMe(uid: string): Promise<boolean|null> {
         try {
-            if (!token) return null;
+            if (!uid) return null;
 
-            const res = await Api.get('/auth/me', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const res = await Api.get('/auth/me', { uid });
 
             if ([200, 201].includes( res.status )) return true;
             return null;
@@ -83,10 +80,11 @@ export class ApiLoginService {
             }
 
             const HEADERS = await editHeaders(uid);
-            const token = HEADERS.token;
 
-            if ( await this.getMe(token) ) return true;
+            const me = await this.getMe(uid)
+            if (me) return true;
 
+            Logger.log(enumContext.WhatsappLoginService, 'Generando un nuevo TOKEN')
             const newToken = await this.getAuthToken(uid, code);
             if (!newToken) return false;
 

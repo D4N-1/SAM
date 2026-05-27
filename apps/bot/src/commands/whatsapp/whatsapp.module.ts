@@ -34,7 +34,8 @@ export default class WhatsappCommand implements interfaceCommand {
         const info = status?.[0]?.status?.status;
         const updated = status?.[0]?.status?.setAt
             
-        const imageUrl: string = ( await sam.profilePictureUrl(user!) ) || imageBackUrl()
+        let imageUrl: string;
+        try { ( imageUrl = await sam.profilePictureUrl(user!) )  } catch { imageUrl = imageBackUrl() }
 
         const image = await downloadImage(imageUrl)
 

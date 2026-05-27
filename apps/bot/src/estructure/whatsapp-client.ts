@@ -20,16 +20,20 @@ export async function startWhatsappBot(uid: string, code: string) {
         // Chrome / Safari / Firefox / Edge / Opera
         logger: P({ level: "silent" }),
         // silent / fatal / error / warn / info / debug / trace
+
         syncFullHistory: false,
+        shouldSyncHistoryMessage: () => false,
+        shouldIgnoreJid: (jid) => {
+            return jid.includes("broadcast") || jid.includes('@newsletter')
+        },
+
         printQRInTerminal: false,
         //qrTimeout: 20_000,
         markOnlineOnConnect: true,
-        keepAliveIntervalMs: 60_000,
-        generateHighQualityLinkPreview: true,
-        shouldIgnoreJid: (jid) => {
-            return jid.includes("broadcast")
-        },
-        shouldSyncHistoryMessage: () => false
+
+        connectTimeoutMs: 60_000,
+        keepAliveIntervalMs: 30_000,
+        generateHighQualityLinkPreview: true
     });
 
 

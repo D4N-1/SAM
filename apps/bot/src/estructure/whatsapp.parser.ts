@@ -89,6 +89,7 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
             actualMessage?.videoMessage?.caption;
 
         const botNumber: string|undefined = parseUid(sam.user!.id);
+        const botUid: string|undefined = botNumber?.split('@')[0]
         const botName: string = sam.user?.name!
 
         const isGroup: boolean = chatId.endsWith('@g.us');
@@ -148,6 +149,7 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
             caption,
             captent: content ?? caption,
             botNumber,
+            botUid,
             botName,
             isGroup,
             contentType,

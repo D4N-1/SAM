@@ -1,6 +1,6 @@
 import * as qrcode from "qrcode"
 import { Boom } from "@hapi/boom";
-import type { WASocket, BaileysEventMap } from "@itsukichan/baileys"
+import { type WASocket, type BaileysEventMap } from "@itsukichan/baileys"
 import { deleteAuth } from "./utils/whatsapp-auth.util.js"
 import { startWhatsappBot } from "./whatsapp-client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
@@ -24,6 +24,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
 
             let { connection, qr, lastDisconnect } = data
 
+            console.log(data)
             if (qr) console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
 
             if (connection) {
@@ -31,7 +32,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
                 console.log(msgSTATUS_CONNECTION[connection] + '\n')
             }
 
-            if (!sam.authState.creds.registered || connection === enumStatusConnection.CONNECTING) {
+            if (!sam.authState.creds.registered && connection === enumStatusConnection.CONNECTING) {
 
                 await wait(4_000)
 
@@ -50,14 +51,12 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
 
                 if (reason == 401) await deleteAuth(uid)
 
-                await wait(2_500)
-                startWhatsappBot(uid, code)
+                Logger.error('WhatsappEvents', `Reintentando conexión en 5 segundos...`)
+                await wait(5_000);
+                startWhatsappBot(uid, code);
             }
 
-            if (connection === enumStatusConnection.OPEN) {
-
-
-            }
+            if (connection === enumStatusConnection.OPEN) Logger.log(enumContext.WhatsappEvents, 'SAM en ACTIVO')
         })
 
     } catch (error) {
@@ -100,7 +99,7 @@ export function registerMessagesEvent(samSocket: WASocket) {
                 if (parsedMessage.contentType === enumMessage.protocolMessage) continue;
                 //console.log(parsedMessage)
 
-                await commandRouter.handler(samSocket, parsedMessage);
+                commandRouter.handler(samSocket, parsedMessage);
             }
         });
 
