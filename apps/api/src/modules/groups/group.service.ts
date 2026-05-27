@@ -9,6 +9,7 @@ import { AllResponse } from 'src/common/interfaces/response.type';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { CommunityService } from '../communities/community.service';
 import { ContactService } from '../contacts/contact.service';
+import { CommunityRelations } from '../communities/entities/community.entity';
 
 @Injectable()
 export class GroupService {
@@ -29,7 +30,7 @@ export class GroupService {
     const skip = (page - 1) * limit;
 
     const [ data, total ] = await this.groupRepository.findAndCount({
-      relations: relations.filter( rel => [ 'community', 'owner', 'nameOwner', 'descriptionOwner' ].includes(rel) ),
+      relations: relations.filter( rel => CommunityRelations.includes(rel) ),
       skip,
       take: limit,
       order: { index: 'ASC' }

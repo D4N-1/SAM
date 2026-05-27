@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BotEntity } from './entities/bot.entity';
+import { BotEntity, enumBotRole } from './entities/bot.entity';
 import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { ContactService } from '../contacts/contact.service';
@@ -89,12 +89,13 @@ export class BotService {
 
   async create(createBotDto: CreateBotDto) {
 
-    const { ownerContactUid, contactUid, code } = createBotDto;
+    const { ownerContactUid, contactUid, code, role } = createBotDto;
 
     const newBotData: Partial<BotEntity> = {}
     
     newBotData.contact = await this.contactService.findOneBy.uid( contactUid );
     newBotData.codeHash = await hash(code, 10)
+    newBotData.role = enumBotRole[role] || 'BEEBOT'
 
     if (ownerContactUid) {
       const contact = await this.contactService.findOneBy.uid( ownerContactUid, 'No se encontró ese contacto del dueño' )

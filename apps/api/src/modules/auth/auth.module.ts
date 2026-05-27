@@ -19,8 +19,8 @@ import { BotModule } from '../bots/bot.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         global: true,
-        secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '8h' }
+        secret: config.getOrThrow<string>('JWT_SECRET'),
+        signOptions: { expiresIn: config.getOrThrow<'string'|number|any>('EXPIRES_IN') }
       })
     }),
     UserModule, BotModule

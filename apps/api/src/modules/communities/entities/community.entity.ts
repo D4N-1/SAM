@@ -5,6 +5,9 @@ import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+export const CommunityRelations = [ 'nameOwner', 'owner', 'descriptionOwner' ]
+
+
 @Entity('communities')
 export class CommunityEntity {
 

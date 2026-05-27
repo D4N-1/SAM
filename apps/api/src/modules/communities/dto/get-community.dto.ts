@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString } from "class-validator";
 import { GetAllQueryDto } from "src/common/dto/get.dto";
-import { CommunityRelations } from "src/modules/communities/entities/community.entity";
+import { CommunityRelations } from "../entities/community.entity";
 
 
-export class GetAllGroupQueryDto extends GetAllQueryDto {
+export class GetAllCommunityQueryDto extends GetAllQueryDto {
 
     @ApiProperty({
-        description: 'Relaciones extensibles al grupo',
+        description: 'Relaciones extensibles a la comunidad',
         example: CommunityRelations.join(',')
     })
     @IsOptional()

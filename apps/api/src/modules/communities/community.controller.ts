@@ -11,6 +11,7 @@ import { UpdateCommunityDto } from "./dto/update-community.dto";
 import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { AllResponse } from "src/common/interfaces/response.type";
 import { Private } from "src/decorators/private.decorator";
+import { GetAllCommunityQueryDto } from "./dto/get-community.dto";
 
 
 @Private() @ApiBearerAuth()
@@ -26,7 +27,7 @@ export class CommunityController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('comunidades') })
     @ApiOkResponse({ description: SWAGGER.SUMMARY.ALL('comunidades'), type: [CommunityEntity]})
     @Get()
-    async getAll(@Query() query: GetAllQueryDto): Promise<AllResponse> {
+    async getAll(@Query() query: GetAllCommunityQueryDto): Promise<AllResponse> {
         return this.communityService.findAll(query)
     }
 

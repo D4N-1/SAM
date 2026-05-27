@@ -3,7 +3,9 @@ import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
+export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner' ];
 
 @Entity('groups')
 export class GroupEntity {

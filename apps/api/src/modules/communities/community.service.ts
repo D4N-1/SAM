@@ -1,12 +1,13 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CommunityEntity } from "./entities/community.entity";
+import { CommunityEntity, CommunityRelations } from "./entities/community.entity";
 import { Not, Repository } from "typeorm";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { CreateCommunityDto } from "./dto/create-community.dto";
 import { UpdateCommunityDto } from "./dto/update-community.dto";
 import { ContactService } from "../contacts/contact.service";
 import { AllResponse } from "src/common/interfaces/response.type";
+import { GetAllCommunityQueryDto } from "./dto/get-community.dto";
 
 
 @Injectable()
@@ -20,28 +21,30 @@ export class CommunityService {
     ) {}
 
 
-    async findAll(query): Promise<AllResponse> {
-        const page = Math.max(1, parseInt( query?.page, 10) || 1);
-        const limit = Math.max(1, parseInt( query?.limit, 10) || 10);
+    async findAll(query: GetAllCommunityQueryDto): Promise<AllResponse> {
+        const { include, page = 1, limit = 10 } = query;
+
+        const relations = include ? include.split(',') : []
         const skip = (page - 1) * limit;
 
         const [ data, total ] = await this.communityRepository.findAndCount({
-            skip,
-            take: limit,
-            order: { index: 'ASC' }
+          relations: relations.filter( rel => CommunityRelations.includes(rel) ),
+          skip,
+          take: limit,
+          order: { index: 'ASC' }
         })
 
         return {
-            data,
-            meta: {
-                totalItems: total,
-                itemCount: data.length,
-                itemsPerPage: limit,
-                totalPages: Math.ceil(total / limit),
-                currentPage: page
-            }
+          data,
+          meta: {
+            totalItems: total,
+            itemCount: data.length,
+            itemsPerPage: limit,
+            totalPages: Math.ceil(total / limit),
+            currentPage: page
+          }
         }
-    }
+      }
 
     findOneBy = {
 

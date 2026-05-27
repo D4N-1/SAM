@@ -59,7 +59,8 @@ export class AuthService {
         type: enumClients.BOT,
         uuid: bot.uuid,
         contactUid: bot.contact.uid,
-        ownerContactUid: bot.ownerContact?.uid
+        ownerContactUid: bot.ownerContact?.uid,
+        role: bot.role
       }
 
       return {

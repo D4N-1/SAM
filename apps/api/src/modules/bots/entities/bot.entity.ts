@@ -4,6 +4,11 @@ import { DTO } from "src/common/constants/generic.dto";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+export enum enumBotRole {
+    BOT = 'BOT',
+    BEEBOT = 'BEEBOT'
+}
+
 @Entity('bots')
 export class BotEntity {
 
@@ -49,6 +54,13 @@ export class BotEntity {
     })
     @Column({ type: 'varchar', length: 255, name: 'code_hash', unique: true, nullable: true })
     codeHash?: string;
+
+    @ApiProperty({
+        description: 'El rol del bot ( BOT / BEEBOT )',
+        example: 'BOT - BEEBOT'
+    })
+    @Column({ type: 'enum', enum: enumBotRole, default: enumBotRole.BEEBOT })
+    role: enumBotRole
 
     @CreateDateColumn()
     createdAt: Date;

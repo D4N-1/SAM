@@ -21,6 +21,13 @@ export class CreateBotDto {
     code: string;
 
     @ApiProperty({
+        example: 'BOT | BEEBOT'
+    })
+    @IsString()
+    @IsOptional()
+    role: string;
+
+    @ApiProperty({
         example: DTO.OPCIONAL_UID
     })
     @IsString()
