@@ -79,6 +79,10 @@ export class GroupService {
 
     const newGroupData: Partial<GroupEntity> = { ...newData }
 
+    const contactUidToValidate = [nameOwnerUid, ownerUid, descriptionOwnerUid].filter(Boolean) as string[];
+
+    if (contactUidToValidate.length > 0) await this.contactService.findIn(contactUidToValidate)
+
     if (communityUid) newGroupData.communityUid = communityUid;
     if (nameOwnerUid) newGroupData.nameOwnerUid = nameOwnerUid;
     if (ownerUid) newGroupData.ownerUid = ownerUid;
@@ -115,8 +119,7 @@ export class GroupService {
     if (ownerUid !== undefined) updateGroupData.ownerUid = ownerUid;
     if (descriptionOwnerUid !== undefined) updateGroupData.descriptionOwnerUid = descriptionOwnerUid;
     if (nameTime !== undefined) updateGroupData.nameTime = new Date(nameTime * 1000);
-
-    if (creation) updateGroupData.creation = new Date(creation * 1000)
+    if (creation !== undefined) updateGroupData.creation = new Date(creation * 1000)
 
     const updatedGroup = this.groupRepository.merge(group, updateGroupData);
 

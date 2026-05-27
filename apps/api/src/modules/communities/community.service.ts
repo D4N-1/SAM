@@ -48,7 +48,7 @@ export class CommunityService {
         uuid: async (uuid: string): Promise<CommunityEntity> => {
             const community = await this.communityRepository.findOne({
                 where: { uuid },
-                relations: { ownerContact: true }
+                relations: { owner: true }
              })
 
             if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
@@ -58,7 +58,7 @@ export class CommunityService {
         uid: async (uid: string): Promise<CommunityEntity> => {
             const community = await this.communityRepository.findOne({
                 where: { uid },
-                relations: { ownerContact: true }
+                relations: { owner: true }
             })
 
             if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
@@ -68,59 +68,58 @@ export class CommunityService {
 
     async create(createCommunityDto: CreateCommunityDto): Promise<CommunityEntity | null> {
 
-        const { ownerContactUid, ...newData } = createCommunityDto;
-        const newCommunityData: Partial<CommunityEntity> = { ...newData }
+        const { ownerUid, descriptionOwnerUid, creation, nameOwnerUid, nameTime, ...newData } = createCommunityDto;
 
         const community = await this.communityRepository.findOneBy({ uid: newData.uid });
         if (community) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad') );        
 
-        if (ownerContactUid) {
-            const contact = await this.contactService.findOneBy.uid( ownerContactUid )
+        const newCommunityData: Partial<CommunityEntity> = { ...newData }
 
-            const isContactUsed = await this.communityRepository.findOne({
-                where: { ownerContact: { index: contact.index }}
-            })
-            if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad', 'Ese contacto ya es dueño de otra comunidad') )
+        const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
 
-            newCommunityData.ownerContact = contact
-        }
-    
+        if (contactUidToValidate.length > 0) await this.contactService.findIn(contactUidToValidate)
+        
+        if (ownerUid) newCommunityData.ownerUid = ownerUid;
+        if (descriptionOwnerUid) newCommunityData.descriptionOwnerUid = descriptionOwnerUid;
+        if (nameOwnerUid) newCommunityData.nameOwnerUid = nameOwnerUid;
+        if (nameTime) newCommunityData.nameTime = new Date(nameTime * 1_000);
+
+        newCommunityData.creation = new Date(creation * 1_000);
+
         const newCommunity = this.communityRepository.create(newCommunityData);
 
         return await this.communityRepository.save(newCommunity);
     }
 
-    async update(uuid: string, updateCommunityDto: UpdateCommunityDto): Promise<CommunityEntity|null> {
-        const community = await this.findOneBy.uuid( uuid )
+    async update(uid: string, updateCommunityDto: UpdateCommunityDto): Promise<CommunityEntity|null> {
+        const community = await this.findOneBy.uid( uid )
 
-        const updateData: Partial<CommunityEntity> = {}
-        if (updateCommunityDto.name) updateData.name = updateCommunityDto.name
-        if (updateCommunityDto.description) updateData.description = updateCommunityDto.description
-        if (updateCommunityDto.link) updateData.link = updateCommunityDto.link
-        if (updateCommunityDto.isPublic) updateData.isPublic = updateCommunityDto.isPublic
+        const { ownerUid, descriptionOwnerUid, nameOwnerUid, creation, nameTime, ...newData } = updateCommunityDto;
 
+        const updateCommunityData: Partial<CommunityEntity> = { ...newData };        
 
+        const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
+
+        if (contactUidToValidate.length > 0) await this.contactService.findIn(contactUidToValidate)
+        
+        if (ownerUid) updateCommunityData.ownerUid = ownerUid;
+        if (descriptionOwnerUid) updateCommunityData.descriptionOwnerUid = descriptionOwnerUid;
+        if (nameOwnerUid) updateCommunityData.nameOwnerUid = nameOwnerUid;
+        if (nameTime) updateCommunityData.nameTime = new Date(nameTime * 1_000);
+        if (creation) updateCommunityData.creation = new Date(creation * 1_000);
+
+        
         if (updateCommunityDto.uid) {
+
             const exist = await this.communityRepository.findOne({
-                where: { uid: updateCommunityDto.uid, uuid: Not(uuid) }
+                where: { uid: updateCommunityDto.uid, index: Not(community.index) }
             })
             if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad', 'Ese UID ya le pertenece a otra comunidad') )
-            updateData.uid = updateCommunityDto.uid
+            updateCommunityData.uid = updateCommunityDto.uid
         }
 
-        if (updateCommunityDto.ownerContactUid) {
-            const contact = await this.contactService.findOneBy.uid( updateCommunityDto.ownerContactUid )
 
-            const isContactUsed = await this.communityRepository.findOne( {
-                where: { ownerContact: { index: contact.index }, uuid: Not(uuid) }
-            })
-
-            if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad', 'Este contacto ya es dueño de otra comunidad') )
-
-            updateData.ownerContact = contact
-        }
-
-        const editCommunity = this.communityRepository.merge(community, updateData)
+        const editCommunity = this.communityRepository.merge(community, updateCommunityData)
         return await this.communityRepository.save(editCommunity)
     }
 

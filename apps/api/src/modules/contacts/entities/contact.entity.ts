@@ -71,21 +71,35 @@ export class ContactEntity {
     @OneToOne( () => UserEntity, (user) => user.contact)
     user: UserEntity;
 
-    @ApiHideProperty()
-    @OneToOne( () => CommunityEntity, (community) => community.ownerContact)
-    community?: CommunityEntity | null;
 
+    @ApiHideProperty()
+    @OneToMany( () => CommunityEntity, (community) => community.owner)
+    communityOwner: CommunityEntity[];
+
+    @ApiHideProperty()
+    @OneToMany( () => CommunityEntity, (community) => community.nameOwner)
+    communityNameOwner: CommunityEntity[];
+
+
+    @ApiHideProperty()
+    @OneToMany( () => CommunityEntity, (community) => community.descriptionOwner)
+    communityDescriptionOwner: CommunityEntity[];
+
+    
     @ApiHideProperty()
     @OneToOne( () => BotEntity, (bot) => bot.contact)
     bot: BotEntity;
+
 
     @ApiHideProperty()
     @OneToOne( () => BotEntity, (bot) => bot.ownerContact)
     botOwner: BotEntity;
 
+
     @ApiHideProperty()
     @OneToMany( () => GroupEntity, (group) => group.nameOwner)
     groupNameOwner: GroupEntity[];
+
 
     @ApiHideProperty()
     @OneToMany( () => GroupEntity, (group) => group.owner)

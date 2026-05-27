@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 
 export class CreateGroupDto {
@@ -26,6 +26,8 @@ export class CreateGroupDto {
     })
     @IsNotEmpty()
     @IsString()
+    @MaxLength(256)
+    @MinLength(2)
     name: string;
 
     @ApiProperty({
@@ -76,7 +78,7 @@ export class CreateGroupDto {
     })
     @IsOptional()
     @IsString()
-    @MaxLength(1024)
+    @MaxLength(2048)
     description?: string;
 
     @ApiProperty({

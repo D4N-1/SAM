@@ -25,7 +25,7 @@ export class GroupEntity {
     uuid: string;
 
 
-    @Column({ name: 'community', type: 'varchar', nullable: true })
+    @Column({ name: 'community', type: 'varchar', length: 35, nullable: true })
     communityUid?: string | null;
 
     @ApiProperty({
@@ -55,7 +55,7 @@ export class GroupEntity {
         example: 'SAM x Grupo',
         type: String
     })
-    @Column({ type: 'varchar', length: 25 })
+    @Column({ type: 'varchar', length: 256 })
     name: string;
 
 
@@ -91,7 +91,7 @@ export class GroupEntity {
 
 
     @ApiProperty({
-        description: 'Fecha de la creacion del grupo en UNIX'
+        description: 'Fecha de la creacion del grupo'
     })
     @Column({ type: 'timestamp' })
     creation: Date;
@@ -118,13 +118,12 @@ export class GroupEntity {
         example: 'Bienvenidos al grupo de SAM',
         type: String
     })
-    @Column({ type: 'varchar', length: 1024, nullable: true })
+    @Column({ type: 'varchar', length: 2048, nullable: true })
     description?: string | null;
 
 
     @Column({ name: 'description_owner', type: String, nullable: true })
     descriptionOwnerUid?: string | null;
-
 
     @ApiProperty({
         description: 'El contacto de quien cambió la descripción',

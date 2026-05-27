@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 
 
@@ -13,42 +13,88 @@ export class CreateCommunityDto {
     @MaxLength(35)
     uid: string
 
-    @ApiProperty({
-        example: DTO.UID
-    })
-    @IsOptional()
-    @IsString()
-    ownerContactUid?: string
 
     @ApiProperty({
         example: 'SAM x Comunidad',
     })
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     @MaxLength(255)
-    name?: string;
+    name: string;
+
+
+    @ApiProperty({
+        example: DTO.OPTIONAL_UNIX
+    })
+    @IsNumber()
+    @IsOptional()
+    nameTime?: number;
+
+
+    @ApiProperty({
+        example: DTO.UID
+    })
+    @IsOptional()
+    @IsString()
+    nameOwnerUid?: string
+
+
+    @ApiProperty({
+        example: DTO.SIZE
+    })
+    @IsNotEmpty()
+    @IsNumber()
+    size: number;
+
+
+    @ApiProperty({
+        example: DTO.UNIX
+    })
+    @IsNotEmpty()
+    @IsNumber()
+    creation: number;
+
+
+    @ApiProperty({
+        example: DTO.UID
+    })
+    @IsOptional()
+    @IsString()
+    ownerUid?: string;
+
+
 
     @ApiProperty({
         example: 'Bienvenidos a la comunidad de SAM'
     })
     @IsString()
     @IsOptional()
-    @MaxLength(255)
+    @MaxLength(2048)
     description?: string;
 
-    @ApiProperty({
-        example: 'https://ws.invite/320987654321'
-    })
-    @IsString()
-    @IsOptional()
-    @MaxLength(255)
-    link?: string
 
     @ApiProperty({
-        example: true,
-        type: Boolean
+        example: DTO.UID
     })
-    @IsBoolean()
     @IsOptional()
-    isPublic?: boolean;
+    @IsString()
+    descriptionOwnerUid?: string;
+
+
+    @ApiProperty({
+        example: DTO.LINK
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(256)
+    invitationLink?: string;
+
+
+    @ApiProperty({
+        example: DTO.BOOLEAN
+    })
+    @IsOptional()
+    @IsBoolean()
+    publicLink: boolean;
+
 }

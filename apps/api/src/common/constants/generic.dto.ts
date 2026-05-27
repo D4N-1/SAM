@@ -4,6 +4,7 @@ export const DTO = {
     LID: '1234567@lid (opcional)',
     GROUP_UID: '1234567@g',
     OPTIONAL_GROUP_UID: '1234567@g (optional)',
+    LINK: 'https://chat.whatsapp.com',
     CODE: 'BOTWWS4M',
     OPCIONAL_UID: '573207654321 (optional)',
     NAME: 'Dani',
