@@ -1,5 +1,5 @@
 import { random } from "../../../common/utils/function.util.js";
-import hint from "./traductor-hint.messages.json" with { type: 'json' }
+import hint from "../json/traductor-hint.messages.json" with { type: 'json' }
 
 
 function HeadHint() {

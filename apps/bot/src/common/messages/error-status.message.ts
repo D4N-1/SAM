@@ -37,7 +37,7 @@ export async function GetErrorMessage(command?: string|undefined): Promise<strin
         if (!command) return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR();
 
         const COMMANDS_PATH = path.resolve( ROOT_PATH, 'src', 'commands')
-        const JSON_PATH = path.resolve(COMMANDS_PATH, command, 'utils', 'error.messages.json')
+        const JSON_PATH = path.resolve(COMMANDS_PATH, command, 'json', 'error.messages.json')
         console.log(JSON_PATH)
         const exits = fs.existsSync( JSON_PATH )
 

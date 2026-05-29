@@ -8,26 +8,41 @@ export class ContactMiddleware implements SamMiddleware {
     async use(context: CommandContext, next: NextFunction): Promise<void> {
         
         const { message } = context;
-        const { sender, senderAlt, pushName, botUid } = message;
+        const { sender, senderAlt, pushName } = message;
 
         try {
             
-            if (!senderAlt) return next();
+            if (![ senderAlt, sender ].some( i => i?.endsWith('@s.whatsapp.net') ) ) return next();
 
-            const uid = senderAlt.split('@')[0];
-            const lid = sender?.split('@')[0];
+            const uid = senderAlt?.endsWith('@s.whatsapp.net') ? senderAlt?.split('@')[0] :
+                sender?.split('@')[0];
 
-            const res = await Api.get(`/contacts/uid/${uid}`, { uid: botUid! }).catch()
+            const lid = sender?.endsWith('@') ? sender?.split('@')[0] :
+                senderAlt?.split('@')
 
-            if (res?.status === 200) return next()
+            const res = await Api.get(`/contacts/uid/${uid}`)
 
-            const post = await Api.post(`/contacts`, {
+            if (res?.status === 200) {
+
+                const contact = res.data;
+
+                console.log(contact)
+
+                if (contact.name !== pushName) await Api.patch(`/contacts/${uid}`, {
+                    name: pushName
+                })
+
+                if (!pushName) context.message.pushName = contact.name
+                return next()
+            }
+
+            await Api.post(`/contacts`, {
                 uid,
                 lid,
                 name: pushName
-            }).catch()
+            })
 
-            console.log(post.data)
+            console.log('[] - NUEVO CONTACTO CREADO')
             next()
 
         } catch (error) {

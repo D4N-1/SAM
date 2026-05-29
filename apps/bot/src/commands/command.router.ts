@@ -44,7 +44,6 @@ export class CommandRouter {
 
     public async handler(samSocket: WASocket, message: interfaceMessage) {
 
-        if (message.isFromMe) return;
         const sam = new WhatsappService(samSocket);
 
         try {
@@ -54,6 +53,8 @@ export class CommandRouter {
             for (const globalMiddleware of this.globalMiddlewares) pipeline.use(globalMiddleware);
 
             await pipeline.execute({ message, sam }, async() => {
+
+                if (message.isFromMe) return;
 
                 if (!message?.captent?.startsWith("!")) return;
         

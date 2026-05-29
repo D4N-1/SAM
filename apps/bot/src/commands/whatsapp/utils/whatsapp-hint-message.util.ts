@@ -1,5 +1,5 @@
 import { random } from "../../../common/utils/function.util.js";
-import hint from "./whatsapp-hint.messages.json" with { type: 'json' }
+import hint from "../json/whatsapp-hint.messages.json" with { type: 'json' }
 
 
 function HeadHint() {

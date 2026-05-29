@@ -6,6 +6,7 @@ import Logger from "../common/utils/logger.util.js";
 import type typeDevice from "../common/types/device.type.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import enumContext from "../common/enums/context.enum.js";
+import { time } from "node:console";
 
 const parseUid = (uid: string|undefined) => {
 
@@ -73,12 +74,14 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
     try {
         if (!msg || !msg.message) return null;
 
+        //console.log( JSON.stringify(msg,null,2) )
+        
         const chatId: string = msg.key?.remoteJid || '';
         let sender: string | undefined = parseUid(msg.key?.participant || msg.key?.remoteJid);
         let senderAlt: string | undefined = parseUid(msg.key?.participantAlt || msg.key?.remoteJidAlt);
 
         const isFromMe: boolean = !!msg.key?.fromMe;
-        const pushName: string = isFromMe ? (sam?.user?.name || 'Bot') : msg.pushName;
+        const pushName: string = isFromMe ? sam?.user?.name : msg.pushName;
 
         const actualMessage = msg.message?.ephemeralMessage?.msg || msg.message;
 
@@ -107,8 +110,19 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
 
         if (isFromMe && botNumber) sender = botNumber;
 
+
         const key: interfaceKey = msg.key;
         const timestamp: number = msg.messageTimestamp;
+        const timestampDate: string = new Date(timestamp * 1_000).toLocaleString("es-CO", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: true,
+            }).replace(/\//g, "/");
+
         const platform: string = msg.platform;
         const device: typeDevice = getDevice(key.id || '');
         const broadcast: boolean = !!msg.broadcast;
@@ -174,6 +188,7 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
             },
             key,
             timestamp,
+            timestampDate,
             platform,
             device,
             broadcast,

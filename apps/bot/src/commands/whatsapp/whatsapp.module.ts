@@ -2,9 +2,9 @@ import axios from "axios";
 import type interfaceCommand from "../../common/interfaces/command.interface.js";
 import type interfaceMessage from "../../common/interfaces/parsed-message.interface.js";
 import type WhatsappService from "../../estructure/whatsapp.service.js";
-import imageBackUrl from "./utils/whatsapp-url.js";
+import imageBackUrl from "./utils/whatsapp-random-url.util.js";
 import { getText } from "./utils/whatsapp.messages.js";
-import getHint from "./utils/whatsapp-hint.message.js";
+import getHint from "./utils/whatsapp-hint-message.util.js";
 import { downloadImage } from "../../common/utils/image.util.js";
 
 
@@ -20,32 +20,28 @@ export default class WhatsappCommand implements interfaceCommand {
         sam.sendPresenceUpdate('composing', chatId);
 
         const arg = captent?.split(' ').slice(1).filter(p => !p.startsWith('@')).join('').trim();
-        console.log(arg)
 
         if (arg === '-error') throw new Error('INTENCIONAL')
         let user = arg || quoted.qSender || mentionedJid || senderAlt || sender;
 
+        user = user?.endsWith('@s.whatsapp.net') || user?.endsWith('@lid') ? user : user + '@s.whatsapp.net'
+
         const contact = await sam.onWhatsApp(user!);
         if (!contact || contact?.length === 0) return sam.send.text(chatId, getHint())
 
+        const apiContact = await sam.getContact(user)
         
-        user = user?.endsWith('@s.whatsapp.net') ? user : user + '@s.whatsapp.net'
         const status: any = await sam.fetchStatus(user!);
-        const info = status?.[0]?.status?.status;
-        const updated = status?.[0]?.status?.setAt
-            
-        console.log(user);
-        
+        const info: string | undefined = status?.[0]?.status?.status?.trim();
+        const updated = status?.[0]?.status?.setAt;
+
         let imageUrl: string;
         try { ( imageUrl = await sam.profilePictureUrl(user!) )  } catch { imageUrl = imageBackUrl() }
 
-        console.log(imageUrl);
-
         const image = await downloadImage(imageUrl)
 
-        console.log(image);
-
-        const text = await getText('N/A', user, info, updated)
+        const name = apiContact.name;
+        const text = await getText(name, apiContact.uid, info, updated)
 
         await sam.send.image(chatId, text, image)
             

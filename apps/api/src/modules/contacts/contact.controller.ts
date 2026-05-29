@@ -32,9 +32,9 @@ export class ContactController {
         return this.contactService.create(createContactDto)
     }
 
-    @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('contacto') })
-    @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('contacto'), type: ContactEntity })
-    @Post('/bulk')
+    @ApiOperation({ summary: 'Crea desde un array de contactos' })
+    @ApiCreatedResponse({ description: 'Todos los contactos han sido creados', type: ContactEntity })
+    @Post('/bulk') @Private() @ApiBearerAuth()
     async createBulk(@Body() createContactDto: CreateContactDto[]) {
         return this.contactService.bulk(createContactDto)
     }
@@ -53,19 +53,28 @@ export class ContactController {
     @ApiOkResponse({ description: SWAGGER.OK.FIND('contacto'), type: ContactEntity })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto') , schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UID)
-    @Get('/uid/:uid') //@Private() @ApiBearerAuth()
+    @Get('/uid/:uid')
     async getUid(@Param('uid') uid: string): Promise<ContactEntity|null> {
         return this.contactService.findOneBy.uid(uid)
+    }
+
+    @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('contacto') })
+    @ApiOkResponse({ description: SWAGGER.OK.FIND('contacto'), type: ContactEntity })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto') , schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
+    @ApiParam(API_PARAM.UID)
+    @Get('/lid/:lid')
+    async getLid(@Param('lid') lid: string): Promise<ContactEntity|null> {
+        return this.contactService.findOneBy.lid(lid)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.EDIT('contacto') })
     @ApiOkResponse({ description: SWAGGER.OK.EDIT('contacto'), type: ContactEntity })
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
-    @ApiParam(API_PARAM.UUID)
-    @Patch('/:uuid') @Private() @ApiBearerAuth()
-    async edit(@Param('uuid', pipeValidateUuid) uuid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
-        return this.contactService.update(uuid, updateContactDto)
+    @ApiParam(API_PARAM.UID)
+    @Patch('/:uid') @Private() @ApiBearerAuth()
+    async edit(@Param('uid') uid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
+        return this.contactService.update(uid, updateContactDto)
     }
     
     @ApiOperation({ summary: SWAGGER.SUMMARY.DELETE('contacto') })
@@ -73,8 +82,8 @@ export class ContactController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UUID)
-    @Delete('/:uuid') @Private() @ApiBearerAuth()
-    async delete(@Param('uuid', pipeValidateUuid) uuid: string) {
+    @Delete('/:uid') @Private() @ApiBearerAuth()
+    async delete(@Param('uid') uuid: string) {
         return this.contactService.delete(uuid)
     }
 
@@ -84,7 +93,7 @@ export class ContactController {
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UUID)
     @Patch('/recover/:uuid') @Private() @ApiBearerAuth()
-    async recover(@Param('uuid', pipeValidateUuid) uuid: string): Promise<ContactEntity|null> {
+    async recover(@Param('uuid') uuid: string): Promise<ContactEntity|null> {
         return this.contactService.recover(uuid)
     }
 

@@ -33,7 +33,6 @@ export class BotAuthService {
 
         const { botUid, key, value } = saveAuthDto;
 
-        console.log(saveAuthDto)
 
         const bot = await this.botService.findOneBy.contactUid(botUid)
 

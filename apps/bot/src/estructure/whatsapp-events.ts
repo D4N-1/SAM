@@ -91,10 +91,6 @@ export async function registerMessagesEvent(samSocket: WASocket) {
 
     try {
 
-        Logger.log(enumContext.WhatsappEvents, 'Periodo de arranque...')
-        
-        setTimeout( () => {
-        Logger.log(enumContext.WhatsappEvents, 'Empezando a escuchar mensajes...')
 
         samSocket.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
 
@@ -106,7 +102,7 @@ export async function registerMessagesEvent(samSocket: WASocket) {
             if (!msg.key) return;
 
 
-            console.log('MENSAJE')
+            // console.log('MENSAJE')
             let parsedMessage: interfaceMessage|null|undefined = parseMessage(samSocket, msg);
             if (!parsedMessage) return;
 
@@ -115,7 +111,7 @@ export async function registerMessagesEvent(samSocket: WASocket) {
             commandRouter.handler(samSocket, parsedMessage);
                 
         });
-    }, 10_000)
+
 
     } catch (error) {
         Logger.error(enumContext.WhatsappEvents, 'Internal')

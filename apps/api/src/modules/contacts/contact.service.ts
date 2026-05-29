@@ -54,6 +54,14 @@ export class ContactService {
 
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
             return contact
+        },
+
+        lid: async (lid: string): Promise<ContactEntity> => {
+
+            const contact = await this.contactRepository.findOneBy({ lid })
+
+            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
+                return contact;
         }
     }
 
@@ -88,14 +96,6 @@ export class ContactService {
         return { status: 'OK', inserted: rawEntities.length }
         
 
-        /*
-        [
-  { uid: '584162603720', lid: '79719089315854' },
-  { uid: '5217224312585', lid: '100777800511609' },
-  { uid: '34622189105', lid: '213258212475052' },
-  { uid: '18299597912', lid: '128819306434759' }
-]
-  */
 
     }
 
@@ -118,19 +118,19 @@ export class ContactService {
         return this.contactRepository.save(newContact)
     }
 
-    async update(uuid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
+    async update(uid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
 
-        const contact = await this.findOneBy.uuid(uuid)
+        const contact = await this.findOneBy.uid(uid)
 
         if (updateContactDto.lid) {
             const exist = await this.contactRepository.findOneBy({ lid: updateContactDto.lid })
 
-            if (exist && exist.uuid !== uuid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+            if (exist && exist.uid !== uid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
         } else if (updateContactDto.uid) {
             const exist = await this.contactRepository.findOneBy({ uid: updateContactDto.uid })
 
-            if (exist && exist.uuid !== uuid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+            if (exist && exist.uid !== uid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
         }
 

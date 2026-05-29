@@ -36,6 +36,7 @@ export default interface interfaceMessage {
     },
     key: interfaceKey,
     timestamp: number,
+    timestampDate: string,
     platform: string,
     device: typeDevice,
     broadcast: boolean,

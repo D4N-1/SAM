@@ -1,6 +1,6 @@
 import { random } from "../../../common/utils/function.util.js";
 import type { enumPingStates } from "./ping.enums.js";
-import messages from "./ping.messages.json" with { type: "json" }
+import messages from "../json/ping.messages.json" with { type: "json" }
 
 export class PingService {
 

@@ -1,6 +1,7 @@
 import type { WAPresence, WASocket } from "@itsukichan/baileys";
 import type interfaceKey from "../common/interfaces/key-message.interface.js";
 import type { interfaceMessageOptions } from "../common/interfaces/message-options.interface.js";
+import { Api } from "../common/utils/api.util.js";
 
 export default class WhatsappService {
 
@@ -95,4 +96,21 @@ export default class WhatsappService {
     async groupMetadata(chatId: string) {
         return this.sam.groupMetadata(chatId)
     }
+
+
+    async getContact(id: string) {
+
+        if ( id.endsWith('@lid') ) {
+            const res = await Api.get(`/contacts/lid/${id.split('@')[0]}`)
+
+            return res?.data
+
+        } else {
+            const res = await Api.get(`/contacts/uid/${id.split('@')[0]}`)
+
+            return res?.data
+        }
+    }
+
+
 }
