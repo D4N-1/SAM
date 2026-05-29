@@ -9,6 +9,7 @@ import { hash } from 'bcrypt';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import { GetAllBotQueryDto } from './dto/get-bot.dto';
 import { AllResponse } from 'src/common/interfaces/response.type';
+import { BotAuthEntity } from './entities/bot-auth.entity';
 
 
 @Injectable()
@@ -64,7 +65,7 @@ export class BotService {
       contactUid: async(uid: string): Promise<BotEntity> => {
 
         const bot = await this.botRepository.findOne({
-          where: { contact: { uid } },
+          where: { contactUid: uid  },
           relations: { contact: true, ownerContact: true }
         })
 
@@ -90,6 +91,11 @@ export class BotService {
   async create(createBotDto: CreateBotDto) {
 
     const { ownerContactUid, contactUid, code, role } = createBotDto;
+
+    const bot = await this.botRepository.findOne({
+      where: { contactUid }
+    })
+    if (bot) throw new ConflictException( ERROR_CODE.CONFLICT('bot', 'Ya existe un bot con ese contacto') )
 
     const newBotData: Partial<BotEntity> = {}
     

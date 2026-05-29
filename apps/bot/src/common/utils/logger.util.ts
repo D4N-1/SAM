@@ -36,7 +36,7 @@ const Logger = {
       timeDiff = chalk.yellowBright(`+${diff.toFixed(1)}ms`)
     }
 
-    console.log(`${appName} ${pid}  - ${formattedDate}     ${logTag} ${ctx} ${msg} ${timeDiff}`);
+    console.log(`${appName} ${pid} - ${formattedDate}  ${logTag} ${ctx} ${msg} ${timeDiff}`);
   },
 
   error: (context: enumContext|string, message: string) => {

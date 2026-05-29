@@ -1,16 +1,24 @@
 import P from "pino"
 import { makeWASocket } from "@itsukichan/baileys";
-import { createAuthState } from "./utils/whatsapp-auth.util.js";
-import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent } from "./whatsapp-events.js";
+import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent, sendAliveInterval } from "./whatsapp-events.js";
 import apiLoginService from "./whatsapp-login.service.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
+import { useApiAuthState } from "./utils/whatsapp-auth.util.js";
 
 
 
 export async function startWhatsappBot(uid: string, code: string) {
 
-    const { state, saveCreds } = await createAuthState(uid);
+    
+    if ( !await apiLoginService.signIn(uid, code) ) {
+
+        Logger.error(enumContext.WhatsappClient, 'No se pudo iniciar sesion')
+        process.exit(0)
+    }
+
+    
+    const { state, saveCreds } = await useApiAuthState(uid);
     
     const sam:any = makeWASocket({
         version: [2, 3000, 1037076227],
@@ -33,16 +41,12 @@ export async function startWhatsappBot(uid: string, code: string) {
 
         connectTimeoutMs: 60_000,
         keepAliveIntervalMs: 30_000,
-        generateHighQualityLinkPreview: true
+        generateHighQualityLinkPreview: true,
+        linkPreviewImageThumbnailWidth: 300
     });
 
 
-    if ( !await apiLoginService.signIn(uid, code) ) {
-
-        Logger.error(enumContext.WhatsappClient, 'No se pudo iniciar sesion')
-        process.exit(0)
-    }
-
+    sendAliveInterval(sam);
     registerConnectionEvent(uid, code, sam);
     registerCredsEvents(sam, saveCreds);
     registerMessagesEvent(sam);

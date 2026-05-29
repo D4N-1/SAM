@@ -42,10 +42,11 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document, SwaggerOptions)
   
   const PORT = process.env.PORT ?? 3000;
-  const IP = `http://127.0.0.1:${PORT} https://api.sambot.live`
+  const LOCAL = `http://127.0.0.1:${PORT}`
+  const DNS = 'https://api.sambot.live'
   await app.listen(PORT);
 
-  console.log(`Servicio escuchando en ${IP}`)
-  console.log(`Documentación disponible en ${IP}/docs`)
+  console.log(`Servicio escuchando en ${LOCAL} - ${DNS}`)
+  console.log(`Documentación disponible en ${LOCAL}/docs - ${DNS}/docs`)
 }
 bootstrap();

@@ -4,4 +4,5 @@ export type CREATED_MODULES =
     'usuarios' | 'usuario' |
     'comunidades' | 'comunidad' |
     'grupos' | 'grupo' |
-    'bots' | 'bot'
+    'bots' | 'bot' |
+    'bots auth' | 'bot auth'

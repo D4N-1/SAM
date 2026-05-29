@@ -15,7 +15,7 @@ async function bootstrap() {
         const BOT_CODE = process.env.BOT_CODE
         if (!BOT_CODE) throw new Error('Se requiere el CODE del BOT')
 
-        await startWhatsappBot(BOT_NUMBER, BOT_CODE)
+        startWhatsappBot(BOT_NUMBER, BOT_CODE)
 
     } catch(error) {
 

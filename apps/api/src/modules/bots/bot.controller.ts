@@ -38,4 +38,7 @@ export class BotController {
   edit(@Param('uuid', pipeValidateUuid) uuid: string, @Body() updateBotDto: UpdateBotDto) {
     return this.botsService.update(uuid, updateBotDto)
   }
+
+
+  
 }

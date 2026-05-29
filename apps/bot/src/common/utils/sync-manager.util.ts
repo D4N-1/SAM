@@ -41,7 +41,7 @@ export class SyncManager {
             if (bulkContacts.length > 0) await Api.post(`/contacts/bulk`, bulkContacts, { uid: botUid! }).catch(() => null);
             
 
-            console.log(communityRes.data)
+            console.log(communityRes?.data)
             if (community && communityRes?.status !== 200) {
                 const communityPost = await Api.post(`/communities`, {
                     uid: community.id,
@@ -73,14 +73,14 @@ export class SyncManager {
                 ownerUid: group?.owner?.split('@')[0] || group.subjectOwner?.split('@')[0],
                 descriptionOwnerUid: group.descOwner?.split('@')[0] || group?.owner?.split('@')[0],
                 nameOwnerUid: group?.subjectOwner?.split('@')[0]
-            }, { uid: botUid }).catch(() => null);
+            }).catch(() => null);
 
             if (community) {
                 await Api.patch(`/communities/${community.id}`, {
                     ownerUid: community.owner?.split('@')[0] || community.subjectOwner?.split('@')[0],
                     descriptionOwnerUid: community.descOwner?.split('@')[0] || community.owner?.split('@')[0],
                     nameOwnerUid: community?.subjectOwner?.split('@')[0]
-                }, { uid: botUid }).catch(() => null);
+                }).catch(() => null);
             }
 
             Logger.log('SyncManager', `Sincronización de dos pasos completada para: ${group.subject}`);

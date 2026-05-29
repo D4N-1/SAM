@@ -23,7 +23,7 @@
         "𝗣𝗼𝗻𝗴!\n\n> Latencia: *{latency} ms*",
         "𝗠𝗲 𝘁𝗼𝗺𝗼́ *{latency}* 𝗺𝘀 𝗲𝗻 𝗿𝗲𝘀𝗽𝗼𝗻𝗱𝗲𝗿\n\n> ¿Crees que soy veloz?",
         "𝗘𝗹 𝗰𝗮𝗳𝗲́ 𝗲𝘀𝘁𝗮́ 𝗹𝗶𝘀𝘁𝗼\n\n> Me tomó *{latency} ms* en prepararlo, ¿quieres un poco?",
-        "*{latency}* 𝗺𝘀\n\n> No te alarmes, aun no llegó a mi mejor estado aún",
+        "*{latency}* 𝗺𝘀\n\n> No te alarmes, aun no llego a mi mejor estado aún",
         "𝗩𝗼𝘆 𝗮 *{latency}* 𝗺𝘀\n\n> Y aun puedo superar ese limite",
         "𝗠𝗲 𝗰𝗼𝘀𝘁𝗼́ *{latency}* 𝗺𝘀 𝗲𝗻 𝗿𝗲𝘀𝗼𝗹𝘃𝗲𝗿 𝗲𝗹 𝗖𝗮𝗽𝘁𝗰𝗵𝗮\n\n> Logre probar que no soy un bot",
         "𝗔𝗵𝗼𝗿𝗮 𝘀𝗲́ 𝗱𝗼𝗻𝗱𝗲 𝘃𝗶𝘃𝗲𝘀\n\n> Estas a *{latency} ms* de distancia de mi",

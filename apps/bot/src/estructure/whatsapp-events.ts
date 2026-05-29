@@ -1,7 +1,6 @@
 import * as qrcode from "qrcode"
 import { Boom } from "@hapi/boom";
 import { type WASocket, type BaileysEventMap } from "@itsukichan/baileys"
-import { deleteAuth } from "./utils/whatsapp-auth.util.js"
 import { startWhatsappBot } from "./whatsapp-client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
@@ -13,8 +12,6 @@ import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 
-
-const max_age = 60_000;
 
 export async function registerConnectionEvent(uid: string, code: string, sam: WASocket) {
 
@@ -47,13 +44,13 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
             if (connection === enumStatusConnection.CLOSE) {
 
                 sam.ev.removeAllListeners('connection.update');
-                sam.ev.removeAllListeners('messages.update');
+                sam.ev.removeAllListeners('messages.upsert');
                 sam.ev.removeAllListeners('creds.update');
 
                 const reason = (lastDisconnect?.error as Boom)?.output?.statusCode;
                 console.log(reason)
 
-                if (reason == 401) await deleteAuth(uid)
+                //if (reason == 401)
 
                 Logger.error('WhatsappEvents', `Reintentando conexión en 5 segundos...`)
                 await wait(5_000);
@@ -76,40 +73,51 @@ export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 }
 
 
-export function registerMessagesEvent(samSocket: WASocket) {
+export function sendAliveInterval(sam: WASocket) {
+
+    setInterval(async () => {
+        try {
+          if (sam.ws.isOpen) {
+            Logger.log('Ping', 'Enviando ping...')
+            await sam.sendPresenceUpdate('available')
+          }
+        } catch (error:any) {
+          console.log("❌ Error al enviar ping:", error?.message)
+        }
+    }, 60_000)
+}
+
+export async function registerMessagesEvent(samSocket: WASocket) {
 
     try {
+
+        Logger.log(enumContext.WhatsappEvents, 'Periodo de arranque...')
+        
+        setTimeout( () => {
+        Logger.log(enumContext.WhatsappEvents, 'Empezando a escuchar mensajes...')
 
         samSocket.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
 
 
             if (!data.messages || data.messages.length === 0) return;
 
-            data.messages.forEach( (msg) => {
-                if (!msg.key) return;
+            const msg = data.messages[0];
 
-                //console.log('[] - NEW MESSAGE')
-                //console.log(JSON.stringify(msg,null,2))
-                const timestamp = (Number(msg.messageTimestamp) ?? 0) * 1_000;
-                const now = Date.now();
+            if (!msg.key) return;
 
-                if (now - timestamp > max_age) {
-                    console.log('MENSAJE VIEJO IGNORADO');
-                    return;
-                }
 
-                let parsedMessage: interfaceMessage|null|undefined = parseMessage(samSocket, msg);
-                if (!parsedMessage) return;
+            console.log('MENSAJE')
+            let parsedMessage: interfaceMessage|null|undefined = parseMessage(samSocket, msg);
+            if (!parsedMessage) return;
 
-                if (parsedMessage.contentType === enumMessage.protocolMessage) return;
-                //console.log(parsedMessage)
+            if (parsedMessage.contentType === enumMessage.protocolMessage) return;
 
-                commandRouter.handler(samSocket, parsedMessage);
+            commandRouter.handler(samSocket, parsedMessage);
                 
-            })
         });
+    }, 10_000)
 
     } catch (error) {
-        Logger.error(enumContext.WhatsappEvents, 'Messages Upsert')
+        Logger.error(enumContext.WhatsappEvents, 'Internal')
     }
 }

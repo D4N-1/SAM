@@ -1,6 +1,7 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
+import { enumRole } from "src/common/enums/role.enum";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RoleEntity } from "src/modules/roles/entities/role.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -23,12 +24,15 @@ export class UserEntity {
     @Generated('uuid')
     uuid: string;
 
+    @Column({ name: 'contact', type: 'varchar', nullable: true })
+    contactUid: string | null;
+
     @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.user, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     } )
-    @JoinColumn({ name: 'contact' })
+    @JoinColumn({ name: 'contact', referencedColumnName: 'uid' })
     contact: ContactEntity;
 
     @ApiProperty({
@@ -75,13 +79,16 @@ export class UserEntity {
     @Column({ name: 'password_hash', type: 'varchar', length: 255, nullable: true })
     passwordHash?: string;
 
+    @Column({ name: 'role', type: 'enum', enum: enumRole, nullable: true })
+    roleName: enumRole | null;
+
     @ApiProperty({
         description: 'El rol asignado al usuario',
         type: () => RoleEntity,
         example: () => RoleEntity
     })
     @ManyToOne( () => RoleEntity, (role) => role.users )
-    @JoinColumn({ name: 'role' })
+    @JoinColumn({ name: 'role', referencedColumnName: 'name' })
     role: RoleEntity;
 
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

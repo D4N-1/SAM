@@ -2,7 +2,6 @@ import enumContext from "../common/enums/context.enum.js";
 import { Api } from "../common/utils/api.util.js";
 import { wait } from "../common/utils/function.util.js";
 import Logger from "../common/utils/logger.util.js";
-import { editHeaders, saveHeaders } from "./utils/api-headers.util.js";
 
 export class ApiLoginService {
     private readonly MAX_RETRIES = 15;
@@ -15,7 +14,6 @@ export class ApiLoginService {
             return res.status >= 200 && res.status <= 300;
         } catch (error) {
             Logger.error(enumContext.WhatsappLoginService, 'API offline')
-            //console.error('Error al obtener el estado de la API');
             return false;
         }
     }
@@ -35,7 +33,6 @@ export class ApiLoginService {
 
         } catch (error) {
             Logger.error(enumContext.WhatsappLoginService, 'Obtener token auth')
-            //console.error('Error al obtener el token de autenticación');
             return null;
         }
     }
@@ -44,58 +41,53 @@ export class ApiLoginService {
         try {
             if (!uid) return null;
 
-            const res = await Api.get('/auth/me', { uid });
+            const res = await Api.get('/auth/me', { headers: { 'x-bot-uid': uid } });
 
-            if ([200, 201].includes( res.status )) return true;
+            if ([200, 201].includes(res.status)) return true;
             return null;
 
         } catch (error) {
-            Logger.error(enumContext.WhatsappLoginService, 'Verificación de token')
+            Logger.error(enumContext.WhatsappLoginService, 'Verificación de token expirado o inválido')
             return null;
         }
     }
 
-    async signIn(uid: string, code: string): Promise<true|false> {
+    async signIn(uid: string, code: string): Promise<boolean> {
         try {
-
             let isOnline: boolean = false;
-            let ATTEMPTS: number = 0;
+            let ATTEMPTS = 0;
 
             while(!isOnline) {
                 ATTEMPTS++;
-
                 isOnline = await this.getApiStatus()
 
                 if (!isOnline) {
                     if (ATTEMPTS >= this.MAX_RETRIES) {
                         Logger.error(enumContext.WhatsappLoginService, 'API sin respuesta definitiva')
                         return false;
-
                     } else {
                         Logger.error(enumContext.WhatsappLoginService, 'API sin respuesta, reintentando...')
                         await wait(this.DELAY)
                     }
                 }
-                
             }
-
-            const HEADERS = await editHeaders(uid);
-
-            const me = await this.getMe(uid)
-            if (me) return true;
 
             Logger.log(enumContext.WhatsappLoginService, 'Generando un nuevo TOKEN')
             const newToken = await this.getAuthToken(uid, code);
+            
             if (!newToken) return false;
 
-            HEADERS.token = newToken;
-            await saveHeaders(uid, HEADERS);
+            Api.setToken(newToken);
+            
+            const me = await this.getMe(uid)
+            if (!me) return false;
+
+            Logger.log(enumContext.WhatsappLoginService, 'Token generado con éxito en los Headers');
 
             return true;
 
         } catch (error) {
             Logger.error(enumContext.WhatsappLoginService, 'SignIn')
-            //console.error(error)
             return false;
         }
     }

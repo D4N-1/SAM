@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "@sam/bot-test": "tsx watch apps/bot/src/main.ts",
-    "@sam/bot-start": "tsc -p apps/bot && node apps/bot/dist/main.js",
+    "@sam/bot-test": "cd apps/bot && npm run test",
+    "@sam/bot-start": "cd apps/bot && npm run start",
     "@sam/api-test": "cd apps/api && npm run test",
-    "@sam/api-start": "tsc -p apps/api && npm run start",
+    "@sam/api-start": "cd apps/api && npm run start",
     "@sam/web-test": "cd apps/web && npm run watch",
     "@sam/web-start": "cd apps/web && npm run start"
   },

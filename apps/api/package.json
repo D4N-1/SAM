@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "test": "nest start --watch",
-    "start": "node apps/api/dist/main.js",
+    "start": "nest start",
     "uuid-generator": "cd ./src/common/dev && node uuid-generator.dev.mjs",
     "hash": "cd ./src/common/dev && node hash.dev.mjs"
   },
