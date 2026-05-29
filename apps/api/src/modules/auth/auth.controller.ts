@@ -10,13 +10,13 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 import type { ClientRequest } from 'src/common/interfaces/req-client.type';
 import { SignInBotDto } from './dto/sign-bot.dto';
 
-@ApiTags('Auth')
+@ApiTags('Autenticación')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: 'Inicio de sesión' })
-  @ApiOkResponse({ description: 'Ingreso al sistema correcto', example: { message: 'si', access_token: '12345' } })
+  @ApiOkResponse({ description: 'Ingreso al sistema correcto', example: { message: '', access_token: '12345' } })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
   @ApiUnauthorizedResponse({ description: msgWRONG_PASSWORD, schema: { example: ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) } })
   @Post('user/login')
@@ -24,11 +24,10 @@ export class AuthController {
     return this.authService.signIn.user(signInDto)
   }
 
-  @ApiBearerAuth()
-  @Private()
-  @Get('me')
+  @ApiOperation({ summary: 'Obtienes tu información de contacto o de bot' })
+  @ApiOkResponse({ description: 'Datos encontrados con exito' })
+  @Get('me') @ApiBearerAuth() @Private()
   profile(@CurrentUser() user: ClientRequest) {
-
     return this.authService.profile(user.uuid)
   }
 

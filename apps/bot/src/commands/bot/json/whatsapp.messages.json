@@ -1,0 +1,24 @@
+[
+  [
+    "✰ *{botName}* ✰",
+    "> ━━◇◆ {role} ◆◇━━",
+    "",
+    "+{uid}",
+    "> Numero",
+    "",
+    "━━━[ *{groups}* ]━━━",
+    "> Grupos en activo",
+    "",
+    "{uptime}",
+    "> Tiempo en linea",
+    "",
+    "{prefix}",
+    "> Prefijo usado",
+    "",
+    "{date}",
+    "> Fecha del sistema",
+    "",
+    "{mode}",
+    "> A quién responde el bot"
+  ]
+]

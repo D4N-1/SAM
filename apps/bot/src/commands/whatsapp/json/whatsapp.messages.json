@@ -11,7 +11,7 @@
     "name": "NAME : {name}\n",
     "number": "ID/PHONE : {number}\n",
     "info": "BIO/DESC : {info}\n",
-    "updated": "UPDATED  : {updated}\n```"
+    "updated": "UPDATED  : {updated}"
   },
   {
     "title": "*CONTACTO DE WHATSAPP*\n",

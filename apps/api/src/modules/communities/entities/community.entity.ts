@@ -39,7 +39,7 @@ export class CommunityEntity {
 
     @ApiProperty({
         description: 'El nombre de la comunidad',
-        example: 'SAM x Comunidad',
+        example: DTO.COMMUNITY_NAME,
         type: String
     })
     @Column({ type: 'varchar', length: 256 })
@@ -56,10 +56,7 @@ export class CommunityEntity {
     @Column({ name: 'name_owner', type: String, nullable: true })
     nameOwnerUid?: string | null;
 
-    @ApiProperty({
-        description: 'El contacto quien cambió el nombre de la comunidad',
-        type: () => ContactEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.communityNameOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -87,10 +84,7 @@ export class CommunityEntity {
     @Column({ name: 'owner', type: String, nullable: true })
     ownerUid?: string | null;
 
-    @ApiProperty({
-        description: 'El contacto del creador de la comunidad',
-        type: () => ContactEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.communityOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -112,10 +106,7 @@ export class CommunityEntity {
     @Column({ name: 'description_owner', type: String, nullable: true })
     descriptionOwnerUid?: string | null;
 
-    @ApiProperty({
-        description: 'El contacto de quien cambió la descripción',
-        type: () => ContactEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.communityDescriptionOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -140,15 +131,20 @@ export class CommunityEntity {
     @Column({ name: 'public_link', nullable: true, default: false })
     publicLink?: boolean;
 
+
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt: Date;
+
 
     @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
     updatedAt: Date;
 
+
     @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
     deletedAt: Date;
 
+
+    @ApiHideProperty()
     @OneToMany( () => GroupEntity, (group) => group.community)
     groups: GroupEntity[];
 

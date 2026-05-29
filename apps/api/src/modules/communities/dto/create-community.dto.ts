@@ -15,7 +15,7 @@ export class CreateCommunityDto {
 
 
     @ApiProperty({
-        example: 'SAM x Comunidad',
+        example: DTO.COMMUNITY_NAME,
     })
     @IsString()
     @IsNotEmpty()
@@ -24,7 +24,7 @@ export class CreateCommunityDto {
 
 
     @ApiProperty({
-        example: DTO.OPTIONAL_UNIX
+        example: DTO.UNIX + DTO.OPTIONAL
     })
     @IsNumber()
     @IsOptional()

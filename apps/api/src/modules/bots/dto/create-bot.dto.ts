@@ -28,7 +28,7 @@ export class CreateBotDto {
     role: string;
 
     @ApiProperty({
-        example: DTO.OPCIONAL_UID
+        example: DTO.UID + DTO.OPTIONAL
     })
     @IsString()
     @IsOptional()

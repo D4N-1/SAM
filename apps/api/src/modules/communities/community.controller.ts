@@ -15,7 +15,7 @@ import { GetAllCommunityQueryDto } from "./dto/get-community.dto";
 
 
 @Private() @ApiBearerAuth()
-@ApiTags('Communities')
+@ApiTags('Comunidades')
 @Controller('communities')
 export class CommunityController {
 

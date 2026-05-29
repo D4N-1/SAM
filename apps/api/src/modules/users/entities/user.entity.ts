@@ -6,6 +6,7 @@ import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RoleEntity } from "src/modules/roles/entities/role.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+export const UserRelations = [ 'contact', 'role' ]
 @Entity('users')
 export class UserEntity {
 
@@ -37,7 +38,7 @@ export class UserEntity {
 
     @ApiProperty({
         description: 'Nombre del usuario (Debe ser único)',
-        example: DTO.OPCIONAL_NAME,
+        example: DTO.NAME + DTO.OPTIONAL,
         type: String
     })
     @Column({ type: 'varchar', length: 25, nullable: true, unique: true })
@@ -82,11 +83,7 @@ export class UserEntity {
     @Column({ name: 'role', type: 'enum', enum: enumRole, nullable: true })
     roleName: enumRole | null;
 
-    @ApiProperty({
-        description: 'El rol asignado al usuario',
-        type: () => RoleEntity,
-        example: () => RoleEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => RoleEntity, (role) => role.users )
     @JoinColumn({ name: 'role', referencedColumnName: 'name' })
     role: RoleEntity;

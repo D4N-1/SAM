@@ -11,7 +11,7 @@ export default interface interfaceMessage {
     captent: string|undefined,
     botNumber: string|undefined,
     botUid: string|undefined,
-    botName: string,
+    botName: () => Promise<string>,
     isGroup: boolean,
     contentType: string,
     allMentions: string[]|[],

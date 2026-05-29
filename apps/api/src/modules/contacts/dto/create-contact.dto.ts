@@ -22,7 +22,7 @@ export class CreateContactDto {
     lid?: string;
     
     @ApiProperty({
-        example: DTO.OPCIONAL_NAME
+        example: DTO.NAME + DTO.OPTIONAL
     })
     @IsString()
     @IsOptional()

@@ -5,4 +5,5 @@ export type CREATED_MODULES =
     'comunidades' | 'comunidad' |
     'grupos' | 'grupo' |
     'bots' | 'bot' |
-    'bots auth' | 'bot auth'
+    'bots auth' | 'bot auth' |
+    'reinos' | 'reino'

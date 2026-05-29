@@ -17,6 +17,7 @@ import { BotModule } from './modules/bots/bot.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from './modules/auth/guards/jwt.guard';
 import { RolesGuard } from './modules/auth/guards/role.guard';
+import { RealmModule } from './modules/realms/realm.module';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { RolesGuard } from './modules/auth/guards/role.guard';
 
     DatabaseModule, RoleModule, ContactModule,
     UserModule, AuthModule, CommunityModule,
-    GroupModule, BotModule,
+    GroupModule, BotModule, RealmModule,
     QuotesModule,
      ],
   controllers: [AppController],

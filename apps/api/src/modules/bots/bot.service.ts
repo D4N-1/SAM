@@ -1,7 +1,8 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BotEntity, enumBotRole } from './entities/bot.entity';
+import { BotEntity } from './entities/bot.entity';
+import { enumBotRole } from 'src/common/enums/bot-role.enum';
 import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { ContactService } from '../contacts/contact.service';
@@ -9,7 +10,6 @@ import { hash } from 'bcrypt';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import { GetAllBotQueryDto } from './dto/get-bot.dto';
 import { AllResponse } from 'src/common/interfaces/response.type';
-import { BotAuthEntity } from './entities/bot-auth.entity';
 
 
 @Injectable()
@@ -121,8 +121,8 @@ export class BotService {
   }
 
 
-  async update(uuid: string, updateBotDto: UpdateBotDto) {
-    const bot = await this.findOneBy.uuid(uuid)
+  async update(uid: string, updateBotDto: UpdateBotDto) {
+    const bot = await this.findOneBy.contactUid(uid)
 
     const { ownerContactUid, code, contactUid } = updateBotDto;
     const editBotData: Partial<BotEntity> = {}

@@ -11,7 +11,9 @@ import { SWAGGER } from "src/common/utils/swagger.utils";
 import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { Private } from "src/decorators/private.decorator";
 
-@ApiTags('Contacts')
+
+@Private() @ApiBearerAuth()
+@ApiTags('Contactos')
 @Controller('contacts')
 export class ContactController {
 
@@ -19,7 +21,7 @@ export class ContactController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('contactos') })
     @ApiOkResponse({ description: SWAGGER.OK.ALL('contactos'), type: [ContactEntity] })
-    @Get() @Private() @ApiBearerAuth()
+    @Get()
     async getAll(@Query() query: GetAllQueryDto) {
         return this.contactService.findAll(query)
     }
@@ -34,7 +36,7 @@ export class ContactController {
 
     @ApiOperation({ summary: 'Crea desde un array de contactos' })
     @ApiCreatedResponse({ description: 'Todos los contactos han sido creados', type: ContactEntity })
-    @Post('/bulk') @Private() @ApiBearerAuth()
+    @Post('/bulk')
     async createBulk(@Body() createContactDto: CreateContactDto[]) {
         return this.contactService.bulk(createContactDto)
     }
@@ -72,7 +74,7 @@ export class ContactController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UID)
-    @Patch('/:uid') @Private() @ApiBearerAuth()
+    @Patch('/:uid')
     async edit(@Param('uid') uid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
         return this.contactService.update(uid, updateContactDto)
     }
@@ -82,7 +84,7 @@ export class ContactController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UUID)
-    @Delete('/:uid') @Private() @ApiBearerAuth()
+    @Delete('/:uid')
     async delete(@Param('uid') uuid: string) {
         return this.contactService.delete(uuid)
     }
@@ -92,7 +94,7 @@ export class ContactController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UUID)
-    @Patch('/recover/:uuid') @Private() @ApiBearerAuth()
+    @Patch('/recover/:uuid')
     async recover(@Param('uuid') uuid: string): Promise<ContactEntity|null> {
         return this.contactService.recover(uuid)
     }

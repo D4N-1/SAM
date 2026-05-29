@@ -17,9 +17,7 @@ export class BotAuthEntity {
     @Column({ name: 'bot', type: 'varchar', nullable: true, length: 35 })
     botUid: string | null;
     
-    @ApiProperty({
-        description: 'El UID del bot que tiene esta sesión'
-    })
+    @ApiHideProperty()
     @ManyToOne( () => BotEntity, (bot) => bot.auth, {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'

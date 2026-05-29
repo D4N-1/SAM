@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Query, Patch, Delete } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { GroupEntity } from './entities/group.entity';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
@@ -13,6 +13,7 @@ import { Private } from 'src/decorators/private.decorator';
 import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Private() @ApiBearerAuth()
+@ApiTags('Grupos')
 @Controller('groups')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}

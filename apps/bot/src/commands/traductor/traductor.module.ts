@@ -4,6 +4,7 @@ import Logger from "../../common/utils/logger.util.js";
 import type WhatsappService from "../../estructure/whatsapp.service.js";
 import { translate } from "google-translate-api-x";
 import getHint from "./utils/traductor-hint.message.js";
+import { enumError } from "../../common/enums/error.enum.js";
 
 
 
@@ -21,7 +22,7 @@ export default class TraductorCommand implements interfaceCommand {
         await sam.readMessage(key);
         await sam.sendPresenceUpdate('composing', chatId);
 
-        if (captent?.split(' ')[1] === '-error') throw new Error('INTENCIONAL')
+        if (captent?.split(' ')[1] === enumError.ERROR ) throw new Error( enumError.INTENTIONAL )
 
         if ( captent?.startsWith('!traducir') || captent?.startsWith('!traductor') ) return await sam.send.text(chatId, '🌐 𝗨𝘀𝗮 𝗲𝘀𝘁𝗲 𝗰𝗼𝗺𝗮𝗻𝗱𝗼 𝗰𝗼𝗻 𝗲𝗹 𝗶𝗱𝗶𝗼𝗺𝗮 𝗮𝗹 𝗰𝘂𝗮𝗹 𝗱𝗲𝘀𝗲𝗮𝘀 𝘁𝗿𝗮𝗱𝘂𝗰𝗶𝗿\n\n> ☉ \`!english\` hola')
 

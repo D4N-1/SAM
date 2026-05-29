@@ -75,7 +75,7 @@ export class CommandRouter {
                         Logger.error(`${name.toUpperCase()}Module`, 'Internal')
                         console.error(error)
                     }
-                    sam.send.text(message.chatId, await GetErrorMessage(name))
+                    sam.send.text(message.chatId, await GetErrorMessage(name), { canal: true, reply: { msg: message, sender: message.sender }})
                 }
             })
 

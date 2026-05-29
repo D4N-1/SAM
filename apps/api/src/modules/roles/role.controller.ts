@@ -10,6 +10,8 @@ import { Private } from 'src/decorators/private.decorator';
 import { Roles } from 'src/decorators/roles-user.decorator';
 import { enumRole } from 'src/common/enums/role.enum';
 
+
+@Private() @ApiBearerAuth()
 @ApiTags('Roles')
 @Controller('roles')
 export class RoleController {
@@ -17,9 +19,6 @@ export class RoleController {
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.ALL('roles') })
   @ApiOkResponse({ description: SWAGGER.OK.ALL('roles'), type: [RoleEntity] })
-  @ApiBearerAuth()
-  @Private()
-  @Roles([enumRole.ADMIN, enumRole.MODERATOR])
   @Get()
   async getAll() {
     return this.rolesService.findAll()
@@ -30,11 +29,18 @@ export class RoleController {
   @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('rol'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
   @ApiParam(API_PARAM.UUID)
-  @ApiBearerAuth()
-  @Private()
-  @Roles([enumRole.ADMIN, enumRole.MODERATOR])
-  @Get('/:uuid')
-  async get(@Param('uuid', pipeValidateUuid) uuid: string) {
+  @Get('uuid/:uuid')
+  async getUuid(@Param('uuid', pipeValidateUuid) uuid: string) {
     return this.rolesService.findOneBy.uuid(uuid)
+  }
+
+  @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('rol') })
+  @ApiOkResponse({ description: SWAGGER.OK.FIND('rol'), type: RoleEntity })
+  @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+  @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('rol'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
+  @ApiParam(API_PARAM.NAME)
+  @Get('name/:name')
+  async get(@Param('name') name: enumRole) {
+    return this.rolesService.findOneBy.name(name)
   }
 }

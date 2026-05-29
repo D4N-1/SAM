@@ -1,4 +1,4 @@
-import { enumBotRole } from "src/modules/bots/entities/bot.entity";
+import { enumBotRole } from "../enums/bot-role.enum";
 import { enumRole } from "../enums/role.enum";
 
 export interface ClientRequest {

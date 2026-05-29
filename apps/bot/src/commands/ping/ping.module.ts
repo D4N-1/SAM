@@ -4,6 +4,7 @@ import type interfaceMessage from "../../common/interfaces/parsed-message.interf
 import type interfaceCommand from "../../common/interfaces/command.interface.js";
 import { enumPingStates } from "./utils/ping.enums.js";
 import { PingService } from "./utils/ping.message.js";
+import { enumError } from "../../common/enums/error.enum.js";
 
 
 export default class PingCommand implements interfaceCommand {
@@ -25,7 +26,7 @@ export default class PingCommand implements interfaceCommand {
         await sam.readMessage( key );
         await sam.sendPresenceUpdate('composing', chatId);
 
-        if ( captent?.split(' ')[1] === '-error' ) throw new Error('INTENCIONAL')
+        if ( captent?.split(' ')[1] === enumError.ERROR ) throw new Error( enumError.INTENTIONAL )
 
         const start_text = await this.pingService.getMessage( enumPingStates.CALCULANDO );
 

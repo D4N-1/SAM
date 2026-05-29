@@ -4,11 +4,10 @@ import { DTO } from "src/common/constants/generic.dto";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { BotAuthEntity } from "./bot-auth.entity";
+import { enumBotRole } from "src/common/enums/bot-role.enum";
+import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 
-export enum enumBotRole {
-    BOT = 'BOT',
-    BEEBOT = 'BEEBOT'
-}
+export const BotRelations = [ 'contact', 'ownerContact' ]
 
 @Entity('bots')
 export class BotEntity {
@@ -33,10 +32,7 @@ export class BotEntity {
     @Column({ name: 'contact', type: 'varchar', nullable: true, unique: true, length: 35 })
     contactUid?: string | null;
 
-    @ApiProperty({
-        description: 'El contacto del bot',
-        type: () => ContactEntity,
-    })
+    @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.bot, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
@@ -90,6 +86,11 @@ export class BotEntity {
     deletedAt: Date;
 
 
-    @OneToMany( () => BotAuthEntity, (auth) => auth.bot)
+    @ApiHideProperty()
+    @OneToMany( () => BotAuthEntity, (auth) => auth.bot )
     auth: BotAuthEntity[]
+
+    @ApiHideProperty()
+    @OneToOne( () => RealmEntity, (realm) => realm.bot )
+    realm: RealmEntity;
 }

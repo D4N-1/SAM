@@ -30,10 +30,7 @@ export class GroupEntity {
     @Column({ name: 'community', type: 'varchar', length: 35, nullable: true })
     communityUid?: string | null;
 
-    @ApiProperty({
-        description: 'La comunidad al que pertenece',
-        type: () => CommunityEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => CommunityEntity, (community) => community.groups, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -54,7 +51,7 @@ export class GroupEntity {
 
     @ApiProperty({
         description: 'El nombre del grupo',
-        example: 'SAM x Grupo',
+        example: DTO.GROUP_NAME,
         type: String
     })
     @Column({ type: 'varchar', length: 256 })
@@ -71,10 +68,7 @@ export class GroupEntity {
     @Column({ name: 'name_owner', type: String, nullable: true })
     nameOwnerUid?: string | null;
 
-    @ApiProperty({
-        description: 'El contacto quien cambió el nombre del grupo',
-        type: () => ContactEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupNameOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -102,10 +96,7 @@ export class GroupEntity {
     @Column({ name: 'owner', type: String, nullable: true })
     ownerUid?: string | null;
 
-    @ApiProperty({
-        description: 'El contacto del creador del grupo',
-        type: () => ContactEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -127,10 +118,7 @@ export class GroupEntity {
     @Column({ name: 'description_owner', type: String, nullable: true })
     descriptionOwnerUid?: string | null;
 
-    @ApiProperty({
-        description: 'El contacto de quien cambió la descripción',
-        type: () => ContactEntity
-    })
+    @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupDescriptionOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -155,12 +143,15 @@ export class GroupEntity {
     @Column({ nullable: true, default: false })
     announce: boolean;
 
+
     @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt: Date;
+
 
     @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
     updatedAt: Date;
 
+    
     @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
     deletedAt: Date;
 

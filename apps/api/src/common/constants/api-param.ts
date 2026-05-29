@@ -15,5 +15,12 @@ export const API_PARAM = {
     description: 'El identificador unico',
     example: DTO.UID,
     type: String
+  },
+
+  NAME: {
+    name: 'name',
+    require: true,
+    description: 'El nombre único',
+    type: String
   }
 }

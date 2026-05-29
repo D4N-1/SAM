@@ -48,7 +48,7 @@ export class ContactEntity {
 
     @ApiProperty({
         description: 'Nombre del contacto',
-        example: DTO.OPCIONAL_NAME,
+        example: DTO.NAME + DTO.OPTIONAL,
         type: String
     })
     @Column({ type: 'varchar', length: 25, nullable: true })

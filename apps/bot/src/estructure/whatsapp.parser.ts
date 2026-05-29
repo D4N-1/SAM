@@ -7,6 +7,7 @@ import type typeDevice from "../common/types/device.type.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import enumContext from "../common/enums/context.enum.js";
 import { time } from "node:console";
+import { getContact } from "./whatsapp.service.js";
 
 const parseUid = (uid: string|undefined) => {
 
@@ -70,7 +71,7 @@ const downloadMedia = async(msg: any, type: Type) => {
 
 
 
-export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|undefined {
+export function parseMessage(sock: WASocket, msg: any): interfaceMessage|null|undefined {
     try {
         if (!msg || !msg.message) return null;
 
@@ -81,7 +82,7 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
         let senderAlt: string | undefined = parseUid(msg.key?.participantAlt || msg.key?.remoteJidAlt);
 
         const isFromMe: boolean = !!msg.key?.fromMe;
-        const pushName: string = isFromMe ? sam?.user?.name : msg.pushName;
+        const pushName: string = isFromMe ? sock?.user?.name : msg.pushName;
 
         const actualMessage = msg.message?.ephemeralMessage?.msg || msg.message;
 
@@ -91,9 +92,9 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
         const caption: string | undefined = actualMessage?.imageMessage?.caption || 
             actualMessage?.videoMessage?.caption;
 
-        const botNumber: string|undefined = parseUid(sam.user!.id);
+        const botNumber: string|undefined = parseUid(sock.user!.id);
         const botUid: string|undefined = botNumber?.split('@')[0]
-        const botName: string = sam.user?.name!
+        const botName = async(): Promise<string> => (await getContact(botUid!))?.name;
 
         const isGroup: boolean = chatId.endsWith('@g.us');
 
@@ -205,4 +206,8 @@ export function parseMessage(sam: WASocket, msg: any): interfaceMessage|null|und
     } catch (error) {
         Logger.error(enumContext.MessageParser, 'Crear ParsedMessage')
     }
+}
+
+function async(): string {
+    throw new Error("Function not implemented.");
 }

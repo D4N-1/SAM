@@ -6,7 +6,7 @@ export class CreateGroupDto {
 
     @ApiProperty({
         description: 'El UID de la comunidad que pertenece (opcional)',
-        example: DTO.OPTIONAL_GROUP_UID
+        example: DTO.GROUP_UID + DTO.OPTIONAL
     })
     @IsString()
     @IsOptional()
@@ -22,7 +22,7 @@ export class CreateGroupDto {
 
     @ApiProperty({
         description: 'El nombre del grupo',
-        example: 'SAM x Grupo',
+        example: DTO.GROUP_NAME,
     })
     @IsNotEmpty()
     @IsString()
@@ -32,7 +32,7 @@ export class CreateGroupDto {
 
     @ApiProperty({
         description: 'Fecha del ultimo cambio al nombre del grupo en UNIX (opcional)',
-        example: DTO.OPTIONAL_UNIX
+        example: DTO.UNIX + DTO.OPTIONAL
     })
     @IsOptional()
     @IsNumber()
@@ -40,7 +40,7 @@ export class CreateGroupDto {
 
     @ApiProperty({
         description: 'El UID del contacto del autor del nombre (opcional)',
-        example: DTO.OPTIONAL_UID
+        example: DTO.UID + DTO.OPTIONAL
     })
     @IsOptional()
     @IsString()
@@ -65,7 +65,7 @@ export class CreateGroupDto {
 
     @ApiProperty({
         description: 'El UID del contacto dueño del grupo',
-        example: DTO.OPTIONAL_UID
+        example: DTO.UID + DTO.OPTIONAL
     })
     @IsString()
     @IsOptional()
