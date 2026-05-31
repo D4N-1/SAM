@@ -30,6 +30,7 @@ export async function startWhatsappBot(uid: string, code: string) {
         // silent / fatal / error / warn / info / debug / trace
 
         syncFullHistory: false,
+        shouldSyncHistoryMessage: () => false,
 
         //qrTimeout: 20_000,
         //markOnlineOnConnect: true,

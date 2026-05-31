@@ -12,7 +12,7 @@ export class BaseEntity {
     index: number;
 
     @ApiProperty({
-        description: 'El identificador único del reino',
+        description: 'El identificador único de a entidad',
         example: DTO.UUID
     })
     @Column({ unique: true, type: 'uuid' })

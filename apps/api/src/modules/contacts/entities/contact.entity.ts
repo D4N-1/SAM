@@ -1,6 +1,7 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
+import { BaseEntity } from "src/common/entities/base.entity";
 import { BotEntity } from "src/modules/bots/entities/bot.entity";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
@@ -9,24 +10,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, OneToMan
 
 
 @Entity('contacts')
-export class ContactEntity {
-
-    @ApiHideProperty()
-    @PrimaryGeneratedColumn()
-    @Exclude()
-    index: number;
-
-
-    @ApiProperty({
-        description: 'El identificador unico público',
-        example: DTO.UUID,
-        type: String,
-        format: 'uuid'
-    })
-    @Column({ type: 'uuid', unique: true })
-    @Generated('uuid')
-    uuid: string;
-
+export class ContactEntity extends BaseEntity {
 
     @ApiProperty({
         description: 'El identificador único del contacto (formato @s/numero telefonico)',
@@ -54,18 +38,7 @@ export class ContactEntity {
     @Column({ type: 'varchar', length: 25, nullable: true })
     name?: string;
 
-
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt: Date;
-
-
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt: Date;
-
-
-    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
-    deletedAt: Date;
-
+    ////////////////////////////
 
     @ApiHideProperty()
     @OneToOne( () => UserEntity, (user) => user.contact)

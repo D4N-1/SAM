@@ -1,6 +1,7 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
+import { BaseEntity } from "src/common/entities/base.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -9,24 +10,7 @@ export const CommunityRelations = [ 'nameOwner', 'owner', 'descriptionOwner' ]
 
 
 @Entity('communities')
-export class CommunityEntity {
-
-    @ApiHideProperty()
-    @PrimaryGeneratedColumn()
-    @Exclude()
-    index: number;
-
-
-    @ApiProperty({
-        description: 'El identificador único público',
-        example: DTO.UUID,
-        type: String,
-        format: 'uuid'
-    })
-    @Column({ type: 'uuid', unique: true })
-    @Generated('uuid')
-    uuid: string;
-
+export class CommunityEntity extends BaseEntity {
 
     @ApiProperty({
         description: 'El identificador único de la comunidad',
@@ -131,18 +115,7 @@ export class CommunityEntity {
     @Column({ name: 'public_link', nullable: true, default: false })
     publicLink?: boolean;
 
-
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt: Date;
-
-
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt: Date;
-
-
-    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
-    deletedAt: Date;
-
+    ///////////////////////////////
 
     @ApiHideProperty()
     @OneToMany( () => GroupEntity, (group) => group.community)

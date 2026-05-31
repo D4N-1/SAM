@@ -1,29 +1,15 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
+import { BaseEntity } from "src/common/entities/base.entity";
 import { enumRole } from "src/common/enums/role.enum";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RoleEntity } from "src/modules/roles/entities/role.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
 export const UserRelations = [ 'contact', 'role' ]
 @Entity('users')
-export class UserEntity {
-
-    @ApiHideProperty()
-    @PrimaryGeneratedColumn()
-    @Exclude()
-    index: number;
-
-    @ApiProperty({
-        description: 'El identificador unico público',
-        example: DTO.UUID,
-        type: String,
-        format: 'uuid'
-    })
-    @Column({ type: 'uuid', unique: true })
-    @Generated('uuid')
-    uuid: string;
+export class UserEntity extends BaseEntity {
 
     @Column({ name: 'contact', type: 'varchar', nullable: true })
     contactUid: string | null;
@@ -88,12 +74,4 @@ export class UserEntity {
     @JoinColumn({ name: 'role', referencedColumnName: 'name' })
     role: RoleEntity;
 
-    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-    createdAt: Date;
-
-    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-    updatedAt: Date;
-
-    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
-    deletedAt: Date;
 }

@@ -6,28 +6,12 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColu
 import { BotAuthEntity } from "./bot-auth.entity";
 import { enumBotRole } from "src/common/enums/bot-role.enum";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
+import { BaseEntity } from "src/common/entities/base.entity";
 
 export const BotRelations = [ 'contact', 'ownerContact' ]
 
 @Entity('bots')
-export class BotEntity {
-
-    @ApiHideProperty()
-    @PrimaryGeneratedColumn()
-    @Exclude()
-    index: number;
-
-
-    @ApiProperty({
-        description: 'El indice único público del bot',
-        example: DTO.UUID,
-        type: String,
-        format: 'uuid'
-    })
-    @Column({ type: 'uuid', unique: true })
-    @Generated('uuid')
-    uuid: string;
-
+export class BotEntity extends BaseEntity {
 
     @Column({ name: 'contact', type: 'varchar', nullable: true, unique: true, length: 35 })
     contactUid?: string | null;
@@ -72,18 +56,6 @@ export class BotEntity {
     })
     @Column({ type: 'enum', enum: enumBotRole, default: enumBotRole.BEEBOT })
     role: enumBotRole
-
-
-    @CreateDateColumn()
-    createdAt: Date;
-
-
-    @UpdateDateColumn()
-    updatedAt: Date;
-
-
-    @DeleteDateColumn()
-    deletedAt: Date;
 
 
     @ApiHideProperty()

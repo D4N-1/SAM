@@ -1,4 +1,5 @@
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { json, urlencoded } from 'express'
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
@@ -15,6 +16,8 @@ async function bootstrap() {
     transform: true
   }))
 
+  app.use( json({ limit: '10mb' } ) )
+  app.use( urlencoded({ extended: true, limit: '10mb' } ) )
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   const config = new DocumentBuilder()
