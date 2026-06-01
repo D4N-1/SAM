@@ -8,9 +8,10 @@ import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { Private } from 'src/decorators/private.decorator';
 import { enumRole } from 'src/common/enums/role.enum';
+import { Roles } from 'src/decorators/roles-user.decorator';
 
 
-@Private() @ApiBearerAuth()
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Roles')
 @Controller('roles')
 export class RoleController {

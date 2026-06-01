@@ -13,8 +13,8 @@ import { RoleModule } from "../roles/role.module";
         ContactModule,
         RoleModule
     ],
-    controllers: [UserController],
-    providers: [UserService],
-    exports: [UserService]
+    controllers: [ UserController ],
+    providers: [ UserService ],
+    exports: [ UserService ]
 })
 export class UserModule {}

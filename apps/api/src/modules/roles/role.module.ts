@@ -4,9 +4,6 @@ import { RoleController } from './role.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';
 import { RoleSeederService } from '../../seeders/role-seeder.service';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtGuard } from '../auth/guards/jwt.guard';
-import { RolesGuard } from '../auth/guards/role.guard';
 
 
 @Module({
@@ -17,14 +14,6 @@ import { RolesGuard } from '../auth/guards/role.guard';
   providers: [
     RoleService,
     RoleSeederService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtGuard
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard
-    }
   ],
   exports: [RoleService]
 })

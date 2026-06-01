@@ -14,7 +14,9 @@ import { BotAuthService } from './auth/bot-auth.service';
     ContactModule
   ],
   controllers: [BotController, BotAUthController],
-  providers: [BotService, BotAuthService],
+  providers: [
+    BotService, BotAuthService,
+  ],
   exports: [BotService]
 })
 export class BotModule {}

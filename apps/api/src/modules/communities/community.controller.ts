@@ -8,13 +8,14 @@ import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { CreateCommunityDto } from "./dto/create-community.dto";
 import { UpdateCommunityDto } from "./dto/update-community.dto";
-import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { AllResponse } from "src/common/interfaces/response.type";
 import { Private } from "src/decorators/private.decorator";
 import { GetAllCommunityQueryDto } from "./dto/get-community.dto";
+import { Roles } from "src/decorators/roles-user.decorator";
+import { enumRole } from "src/common/enums/role.enum";
 
 
-@Private() @ApiBearerAuth()
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Comunidades')
 @Controller('communities')
 export class CommunityController {

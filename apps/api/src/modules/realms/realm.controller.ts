@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from "@nestjs/common";
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { GetAllRealmQueryDto } from "./dto/get-realm.dto";
 import { AllResponse } from "src/common/interfaces/response.type";
 import { RealmService } from "./realm.service";
@@ -9,7 +9,12 @@ import { UpdateRealmDto } from "./dto/update-realm.dto";
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { RealmEntity } from "./entities/realm.entity";
 import { ERROR_CODE } from "src/common/utils/error.utils";
+import { Private } from "src/decorators/private.decorator";
+import { Roles } from "src/decorators/roles-user.decorator";
+import { enumRole } from "src/common/enums/role.enum";
 
+
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Reinos')
 @Controller('realms')
 export class RealmController {

@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Query, Patch, Delete } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { GroupEntity } from './entities/group.entity';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
@@ -11,8 +11,10 @@ import { GetAllGroupQueryDto } from './dto/get-group.dto';
 import { AllResponse } from 'src/common/interfaces/response.type';
 import { Private } from 'src/decorators/private.decorator';
 import { UpdateGroupDto } from './dto/update-group.dto';
+import { Roles } from 'src/decorators/roles-user.decorator';
+import { enumRole } from 'src/common/enums/role.enum';
 
-@Private() @ApiBearerAuth()
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Grupos')
 @Controller('groups')
 export class GroupController {

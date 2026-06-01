@@ -14,7 +14,9 @@ import { CommandModule } from "../commands/commands.module";
         BotModule, CommandModule
     ],
     controllers: [ RealmController],
-    providers: [ RealmService ],
+    providers: [
+        RealmService,
+    ],
     exports: [ RealmService ]
 })
 export class RealmModule {}

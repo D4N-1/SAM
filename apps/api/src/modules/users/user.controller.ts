@@ -2,14 +2,19 @@ import { Controller, Get, Param, Body, Post, Patch, Delete, Query } from "@nestj
 import { UserService } from "./user.service";
 import { UserEntity } from "./entities/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags, ApiParam, ApiQuery } from "@nestjs/swagger";
+import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiCreatedResponse, ApiConflictResponse, ApiBadRequestResponse, ApiTags, ApiParam, ApiQuery, ApiBearerAuth } from "@nestjs/swagger";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { pipeValidateUuid } from "src/pipes/uuid.pipe";
 import { API_PARAM } from "src/common/constants/api-param";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { GetAllUserQueryDto } from "./dto/get-user.dto";
+import { Private } from "src/decorators/private.decorator";
+import { Roles } from "src/decorators/roles-user.decorator";
+import { enumRole } from "src/common/enums/role.enum";
 
+
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Users')
 @Controller('users')
 export class UserController {

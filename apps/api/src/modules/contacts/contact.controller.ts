@@ -10,9 +10,11 @@ import { API_PARAM } from "src/common/constants/api-param";
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { Private } from "src/decorators/private.decorator";
+import { Roles } from "src/decorators/roles-user.decorator";
+import { enumRole } from "src/common/enums/role.enum";
 
 
-@Private() @ApiBearerAuth()
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Contactos')
 @Controller('contacts')
 export class ContactController {

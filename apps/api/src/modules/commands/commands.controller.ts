@@ -9,6 +9,8 @@ import { CommandEntity } from './entities/command.entity';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { Private } from 'src/decorators/private.decorator';
 
+
+
 @Private() @ApiBearerAuth()
 @ApiTags('Comandos')
 @Controller('commands')

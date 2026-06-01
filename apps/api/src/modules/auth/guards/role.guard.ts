@@ -11,11 +11,13 @@ export class RolesGuard implements CanActivate {
 
     canActivate(context: ExecutionContext): boolean {
         
-        const requiredRoles = this.reflector.get(Roles, context.getHandler() )
+        const requiredRoles = this.reflector.getAllAndOverride<enumRole[]>(Roles, [
+            context.getClass(),
+            context.getHandler()
+        ])
 
         if (!requiredRoles) return true;
 
-        console.log(requiredRoles)
         const request = context.switchToHttp().getRequest();
         
         const client: ClientRequest = request.user;
@@ -25,7 +27,7 @@ export class RolesGuard implements CanActivate {
 
         const hasRole = requiredRoles.includes( client?.role as enumRole );
 
-        if (!hasRole) throw new ForbiddenException( ERROR_CODE.FORBIDDEN('No tienes permiso suficiente con tu rol actual para esta acción') )
+        if (!hasRole) throw new ForbiddenException( ERROR_CODE.FORBIDDEN(`Necesitas tener permiso de [ ${requiredRoles.join(' - ')} ] para realizar esta acción`) )
 
         return true
     }

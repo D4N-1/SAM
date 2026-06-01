@@ -10,9 +10,11 @@ import { AllResponse } from 'src/common/interfaces/response.type';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import { API_PARAM } from 'src/common/constants/api-param';
 import { Private } from 'src/decorators/private.decorator';
+import { Roles } from 'src/decorators/roles-user.decorator';
+import { enumRole } from 'src/common/enums/role.enum';
 
 
-@Private() @ApiBearerAuth()
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Bots')
 @Controller('bots')
 export class BotController {

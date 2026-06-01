@@ -1,12 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { BotAuthService } from "./bot-auth.service";
 import { SaveAuthDto } from "../dto/save-bot-auth.dto";
 import { API_PARAM } from "src/common/constants/api-param";
 import { BotAuthEntity } from "../entities/bot-auth.entity";
 import { ERROR_CODE } from "src/common/utils/error.utils";
+import { Private } from "src/decorators/private.decorator";
+import { Roles } from "src/decorators/roles-user.decorator";
+import { enumRole } from "src/common/enums/role.enum";
 
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Bot Auth')
 @Controller('bots/auth')
 export class BotAUthController {
