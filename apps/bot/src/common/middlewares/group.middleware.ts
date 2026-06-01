@@ -9,18 +9,18 @@ export class GroupMiddleware implements SamMiddleware {
     async use(context: CommandContext, next: NextFunction): Promise<void> {
         
         const { message, sam } = context;
-        const { chatId, botUid } = message;
+        const { chatId } = message;
 
         try {
 
           if (!chatId || !chatId.endsWith('@g.us')) return next();
 
-          const res = await Api.get(`/groups/uid/${chatId.split('@')[0]}`, { uid: botUid! });
+          const res = await Api.get(`/groups/uid/${chatId.split('@')[0]}`);
           if (res.status === 200) return next();
 
 
           Logger.log('GroupMiddleware', `Sincronizando grupo detectado: ${chatId}`);
-          await SyncManager.syncGroups(sam, chatId, botUid!);
+          await SyncManager.syncGroups(sam, chatId);
 
           next()
 

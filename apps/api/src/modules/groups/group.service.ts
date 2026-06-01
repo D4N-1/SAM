@@ -167,7 +167,7 @@ export class GroupService {
     if (descriptionOwnerUid ) updateGroupData.descriptionOwner = validContacts.find( c => c.uid === descriptionOwnerUid);
     if (nameTime !== undefined) updateGroupData.nameTime = new Date(nameTime * 1000);
     if (creation !== undefined) updateGroupData.creation = new Date(creation * 1000)
-
+    
     const updatedGroup = this.groupRepository.merge(group, updateGroupData);
 
     await this.cacheManager.del(enumCACHE_KEYS.GROUP + uid)

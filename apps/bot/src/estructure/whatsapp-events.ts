@@ -11,6 +11,7 @@ import commandRouter from "../commands/command.router.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
+import { groupUpdate } from "../common/utils/group-update.util.js";
 
 
 export async function registerConnectionEvent(uid: string, code: string, sam: WASocket) {
@@ -66,6 +67,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
 
 }
 
+
 export function registerCredsEvents(sam: WASocket, saveCreds: any) {
 
     sam.ev.on("creds.update", saveCreds);
@@ -86,6 +88,7 @@ export function sendAliveInterval(sam: WASocket) {
         }
     }, 60_000)
 }
+
 
 export async function registerMessagesEvent(samSocket: WASocket) {
 
@@ -115,5 +118,27 @@ export async function registerMessagesEvent(samSocket: WASocket) {
 
     } catch (error) {
         Logger.error(enumContext.WhatsappEvents, 'Internal')
+    }
+}
+
+
+export async function registerGroupsEvent(samSocket: WASocket) {
+
+    try {
+
+        samSocket.ev.on("groups.update", async (data: BaileysEventMap['groups.update']) => {
+
+            console.log(data)
+            for (let update of data) {
+
+                groupUpdate(samSocket, update)
+
+            }
+   
+        })
+
+    } catch (error) {
+        Logger.error(enumContext.WhatsappEvents, 'Internal')
+        console.error(error);
     }
 }

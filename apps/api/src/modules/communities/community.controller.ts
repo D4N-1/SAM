@@ -13,8 +13,10 @@ import { Private } from "src/decorators/private.decorator";
 import { GetAllCommunityQueryDto } from "./dto/get-community.dto";
 import { Roles } from "src/decorators/roles-user.decorator";
 import { enumRole } from "src/common/enums/role.enum";
+import { SkipThrottle } from "@nestjs/throttler";
 
 
+@SkipThrottle()
 @Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Comunidades')
 @Controller('communities')

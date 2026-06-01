@@ -13,7 +13,10 @@ import { Private } from 'src/decorators/private.decorator';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { Roles } from 'src/decorators/roles-user.decorator';
 import { enumRole } from 'src/common/enums/role.enum';
+import { SkipThrottle } from '@nestjs/throttler';
 
+
+@SkipThrottle()
 @Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Grupos')
 @Controller('groups')

@@ -3,6 +3,7 @@ export enum enumMessage {
     videoMessage = 'videoMessage',
     protocolMessage = 'protocolMessage',
     extendedTextMessage = 'extendedTextMessage',
-    stickerMessage = 'stickerMessage'
+    stickerMessage = 'stickerMessage',
+    encCommentMessage = 'encCommentMessage'
 }
 export { enumMessage as default }

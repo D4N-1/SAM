@@ -22,7 +22,7 @@ export class CreateUserDto {
     name: string;
 
     @ApiProperty({
-        example: DTO.DESCRIPTION
+        example: DTO.DESCRIPTION + DTO.OPTIONAL
     })
     @IsOptional()
     @IsString()
@@ -30,7 +30,7 @@ export class CreateUserDto {
     description?: string;
 
     @ApiProperty({
-        example: DTO.PHOTO
+        example: DTO.PHOTO + DTO.OPTIONAL
     })
     @IsOptional()
     @IsString()
@@ -38,7 +38,7 @@ export class CreateUserDto {
     imageUrl?: string;
 
     @ApiProperty({
-        example: DTO.EMAIL
+        example: DTO.EMAIL + DTO.OPTIONAL
     })
     @IsString()
     @IsOptional()

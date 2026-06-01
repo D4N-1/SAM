@@ -1,12 +1,11 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "./entities/user.entity";
+import { UserEntity, UserRelations } from "./entities/user.entity";
 import { Not, Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import bcrypt from 'bcrypt'
-import { SWAGGER } from "src/common/utils/swagger.utils";
 import { ContactService } from "../contacts/contact.service";
 import { RoleService } from "../roles/role.service";
 import { AllResponse } from "src/common/interfaces/response.type";
@@ -33,7 +32,7 @@ export class UserService {
         const skip = (page - 1) * limit;
 
         const [ data, total ] = await this.userRepository.findAndCount({
-            relations: relations.filter( rel => [ 'contact', 'role' ].includes(rel) ),
+            relations: relations.filter( rel => UserRelations.includes(rel) ),
             skip,
             take: limit,
             order: { index: 'ASC' }
@@ -57,7 +56,7 @@ export class UserService {
         uuid: async (uuid: string): Promise <UserEntity> => {
             const user = await this.userRepository.findOne({
                 where: { uuid },
-                relations: { contact: true, role: true }
+                relations: UserRelations
             })
 
             if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
@@ -67,10 +66,20 @@ export class UserService {
         contactUid: async (uid: string): Promise<UserEntity> => {
             const user = await this.userRepository.findOne({
                 where: { contact: { uid } },
-                relations: { contact: true, role: true }
+                relations: UserRelations
             })
 
             if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
+            return user
+        },
+
+        name: async (name: string): Promise<UserEntity> => {
+            const user = await this.userRepository.findOne({
+                where: { name },
+                relations: UserRelations
+            })
+
+            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') );
             return user
         }
     };

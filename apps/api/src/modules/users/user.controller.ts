@@ -14,7 +14,7 @@ import { Roles } from "src/decorators/roles-user.decorator";
 import { enumRole } from "src/common/enums/role.enum";
 
 
-@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
+//@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -34,8 +34,18 @@ export class UserController {
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
     @Get('/:uuid')
-    async get(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
+    async getUuid(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
         return this.userService.findOneBy.uuid(uuid)
+    }
+
+    @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('usuario') })
+    @ApiOkResponse({ description: SWAGGER.OK.FIND('usuario'), type: UserEntity })
+    @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
+    @ApiParam(API_PARAM.UUID)
+    @Get('/:name')
+    async get(@Param('name') name: string): Promise<UserEntity|null> {
+        return this.userService.findOneBy.name(name)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('usuario') })

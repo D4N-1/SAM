@@ -1,6 +1,6 @@
 import P from "pino"
 import { makeWASocket } from "@itsukichan/baileys";
-import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent, sendAliveInterval } from "./whatsapp-events.js";
+import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent, sendAliveInterval, registerGroupsEvent } from "./whatsapp-events.js";
 import apiLoginService from "./whatsapp-login.service.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
@@ -46,5 +46,6 @@ export async function startWhatsappBot(uid: string, code: string) {
     registerConnectionEvent(uid, code, sam);
     registerCredsEvents(sam, saveCreds);
     registerMessagesEvent(sam);
+    registerGroupsEvent(sam)
 
 }

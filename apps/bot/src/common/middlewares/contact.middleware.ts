@@ -12,41 +12,39 @@ export class ContactMiddleware implements SamMiddleware {
 
         try {
             
-            if (![ senderAlt, sender ].some( i => i?.endsWith('@s.whatsapp.net') ) ) return next();
+            if ( ![ senderAlt, sender ].some( i => i?.endsWith('@s.whatsapp.net') ) ) return next();
 
             const uid = senderAlt?.endsWith('@s.whatsapp.net') ? senderAlt?.split('@')[0] :
                 sender?.split('@')[0];
 
             const lid = sender?.endsWith('@') ? sender?.split('@')[0] :
-                senderAlt?.split('@')
+                senderAlt?.split('@');
 
-            const res = await Api.get(`/contacts/uid/${uid}`)
+            const res = await Api.get(`/contacts/uid/${uid}`);
 
             if (res?.status === 200) {
 
                 const contact = res.data;
 
-                console.log(contact)
-
                 if (contact.name !== pushName) await Api.patch(`/contacts/${uid}`, {
                     name: pushName
-                })
+                });
 
-                if (!pushName) context.message.pushName = contact.name
-                return next()
+                if (!pushName) context.message.pushName = contact.name;
+                return next();
             }
 
             await Api.post(`/contacts`, {
                 uid,
                 lid,
                 name: pushName
-            })
+            });
 
-            console.log('[] - NUEVO CONTACTO CREADO')
-            next()
+            console.log('[] - NUEVO CONTACTO CREADO');
+            next();
 
         } catch (error) {
-            Logger.error('ContactMiddleware', 'Error al obtener /contacts/uid')
+            Logger.error('ContactMiddleware', 'Error al obtener /contacts/uid');
         }
     }
 }

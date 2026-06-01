@@ -34,7 +34,7 @@ export class AuthService {
       const payload: ClientRequest = {
         type: enumClients.USER,
         uuid: user.uuid,
-        role: user.role.name
+        role: user?.role?.name
       }
 
       return {

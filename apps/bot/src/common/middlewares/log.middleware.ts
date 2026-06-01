@@ -21,12 +21,15 @@ export class LogMiddleware implements SamMiddleware {
 
 
         const text: string | undefined = Number(captent?.length) > 15 ? captent?.slice(0, 15) + '..' : captent;
+        const qText: string | undefined = Number(quoted?.qCaptent?.length) > 15 ? quoted?.qCaptent?.slice(0,15) + '..' : quoted?.qCaptent;
 
         console.log(`\n─────────────── [ MESSAGE ] ───────────────`);
         console.log(`[${type}] 🆔  ${chatId} - ${isFromMe ? "🤖" : "👤"} ${senderAlt||sender}: ${text||''}`); 
         console.log(`${isGroup? '🔰' : ''} - - ${pushName} - ⏳ ${timestampDate}`);
 
-        if (quoted.qSender) console.log(`↩️  ${quoted.qSender}:  ${quoted.qCaptent}`);
+        console.log(contentType)
+
+        if (quoted.qSender) console.log(`↩️  ${quoted.qSender}:  ${qText}`);
         if (mentionedJid) console.log(`🗣️  ${mentionedJid}`);
 
         await next();

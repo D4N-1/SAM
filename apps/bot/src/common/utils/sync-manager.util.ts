@@ -1,10 +1,11 @@
+import type { WASocket } from "@itsukichan/baileys";
 import type WhatsappService from "../../estructure/whatsapp.service.js";
 import { Api } from "./api.util.js";
 import Logger from "./logger.util.js";
 
 export class SyncManager {
 
-    static async syncGroups(sam: WhatsappService, chatId: string, botUid: string): Promise<void> {
+    static async syncGroups(sam: WhatsappService|WASocket, chatId: string): Promise<void> {
         try {
             const group = await sam.groupMetadata(chatId);
             if (!group) return;
@@ -23,7 +24,7 @@ export class SyncManager {
             let communityRes: any = null;
 
             if (linkedParent) {
-                communityRes = await Api.get(`/communities/uid/${linkedParent.split('@')[0]}`, { uid: botUid! }).catch(() => null);
+                communityRes = await Api.get(`/communities/uid/${linkedParent.split('@')[0]}`).catch(() => null);
 
                 if (!communityRes || communityRes.status !== 200) {
                     community = await sam.groupMetadata(linkedParent).catch(() => null);
@@ -38,7 +39,7 @@ export class SyncManager {
             }
 
             const bulkContacts = Array.from(uniqueContacts.values());
-            if (bulkContacts.length > 0) await Api.post(`/contacts/bulk`, bulkContacts, { uid: botUid! }).catch(() => null);
+            if (bulkContacts.length > 0) await Api.post(`/contacts/bulk`, bulkContacts).catch(() => null);
             
 
             console.log(communityRes?.data)
@@ -50,9 +51,9 @@ export class SyncManager {
                     size: community.size,
                     creation: community.creation,
                     description: community.desc,
-                }, { uid: botUid! }).catch(() => null);
+                }).catch(() => null);
 
-                console.log('COMMUNITY INSERTION:', communityPost?.data);
+                console.log('COMMUNITY INSERTION:', communityPost?.data?.community.subject);
             }
 
             const groupPost = await Api.post(`/groups`, {
@@ -65,9 +66,9 @@ export class SyncManager {
                 description: group.desc,
                 restrict: !!group.restrict,
                 announce: !!group.announce
-            }, { uid: botUid }).catch(() => null);
+            }).catch(() => null);
             
-            console.log('GROUP INSERTION:', groupPost?.data);
+            console.log('GROUP INSERTION:', groupPost?.data?.group?.subject);
 
             await Api.patch(`/groups/${group.id.split('@')[0]}`, {
                 ownerUid: group?.owner?.split('@')[0] || group.subjectOwner?.split('@')[0],
@@ -83,7 +84,6 @@ export class SyncManager {
                 }).catch(() => null);
             }
 
-            Logger.log('SyncManager', `Sincronización de dos pasos completada para: ${group.subject}`);
 
         } catch (error:any) {
             Logger.error('SyncManager', `Error en SyncManager: ${error.message}`);

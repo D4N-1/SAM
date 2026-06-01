@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager'
 import { redisStore } from 'cache-manager-ioredis-yet'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { TerminusModule } from '@nestjs/terminus'
 import { HttpModule } from '@nestjs/axios'
 import { ConfigModule } from '@nestjs/config'
@@ -25,6 +26,11 @@ import { CommandModule } from './modules/commands/commands.module';
 @Module({
   imports: [
 
+    ThrottlerModule.forRoot([{
+      ttl: 60_000,
+      limit: 45
+    }]),
+
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: async() => ({
@@ -41,6 +47,7 @@ import { CommandModule } from './modules/commands/commands.module';
       isGlobal: true,
       envFilePath: '.env'
     }),
+
     TerminusModule, HttpModule,
 
     DatabaseModule, RoleModule, ContactModule,
@@ -60,6 +67,10 @@ import { CommandModule } from './modules/commands/commands.module';
     {
       provide: APP_GUARD,
       useClass: RolesGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
     }
   ],
 })

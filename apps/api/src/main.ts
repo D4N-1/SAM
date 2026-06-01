@@ -1,13 +1,15 @@
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { json, urlencoded } from 'express'
+import { NestExpressApplication } from '@nestjs/platform-express'
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
 import { AppModule } from './app.module';
+import { ThrottlerExceptionFilter } from './filters/throttler-exception.filter';
 
 async function bootstrap() {
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors()
 
   app.useGlobalPipes(new ValidationPipe({
@@ -20,6 +22,8 @@ async function bootstrap() {
   app.use( json({ limit: '10mb' } ) )
   app.use( urlencoded({ extended: true, limit: '10mb' } ) )
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.useGlobalFilters(new ThrottlerExceptionFilter());
+  app.set('trust proxy', 'loopback')
 
   const config = new DocumentBuilder()
     .setTitle('Sam - API')

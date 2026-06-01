@@ -9,7 +9,10 @@ import { ERROR_CODE } from "src/common/utils/error.utils";
 import { Private } from "src/decorators/private.decorator";
 import { Roles } from "src/decorators/roles-user.decorator";
 import { enumRole } from "src/common/enums/role.enum";
+import { SkipThrottle } from "@nestjs/throttler";
 
+
+@SkipThrottle()
 @Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Bot Auth')
 @Controller('bots/auth')

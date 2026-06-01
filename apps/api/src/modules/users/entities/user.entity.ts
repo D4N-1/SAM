@@ -11,15 +11,12 @@ export const UserRelations = [ 'contact', 'role' ]
 @Entity('users')
 export class UserEntity extends BaseEntity {
 
-    @Column({ name: 'contact', type: 'varchar', nullable: true })
-    contactUid: string | null;
-
     @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.user, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     } )
-    @JoinColumn({ name: 'contact', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'contact' })
     contact: ContactEntity;
 
     @ApiProperty({
@@ -66,12 +63,10 @@ export class UserEntity extends BaseEntity {
     @Column({ name: 'password_hash', type: 'varchar', length: 255, nullable: true })
     passwordHash?: string;
 
-    @Column({ name: 'role', type: 'enum', enum: enumRole, nullable: true })
-    roleName: enumRole | null;
 
     @ApiHideProperty()
     @ManyToOne( () => RoleEntity, (role) => role.users )
-    @JoinColumn({ name: 'role', referencedColumnName: 'name' })
+    @JoinColumn({ name: 'role' })
     role: RoleEntity;
 
 }
