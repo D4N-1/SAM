@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BotEntity } from './entities/bot.entity';
+import { BotEntity, BotRelations } from './entities/bot.entity';
 import { enumBotRole } from 'src/common/enums/bot-role.enum';
 import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
@@ -55,7 +55,7 @@ export class BotService {
 
         const bot = await this.botRepository.findOne({
           where: { uuid },
-          relations: { contact: true, ownerContact: true }
+          relations: BotRelations
         })
 
         if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
@@ -65,8 +65,8 @@ export class BotService {
       contactUid: async(uid: string): Promise<BotEntity> => {
 
         const bot = await this.botRepository.findOne({
-          where: { contactUid: uid  },
-          relations: { contact: true, ownerContact: true }
+          where: { contact: { uid }  },
+          relations: BotRelations
         })
 
         if (!bot) throw new NotFoundException( ERROR_CODE.NOT_FOUND('bot') )
@@ -80,7 +80,7 @@ export class BotService {
       
         return await this.botRepository.findOne({
           where: { uuid },
-          relations: { contact: true, ownerContact: true }
+          relations: BotRelations
         })
       
       }
@@ -93,7 +93,7 @@ export class BotService {
     const { ownerContactUid, contactUid, code, role } = createBotDto;
 
     const bot = await this.botRepository.findOne({
-      where: { contactUid }
+      where: { contact: { uid: contactUid } }
     })
     if (bot) throw new ConflictException( ERROR_CODE.CONFLICT('bot', 'Ya existe un bot con ese contacto') )
 

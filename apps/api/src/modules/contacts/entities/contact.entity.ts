@@ -6,7 +6,7 @@ import { BotEntity } from "src/modules/bots/entities/bot.entity";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { UserEntity } from "src/modules/users/entities/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne } from "typeorm";
 
 
 @Entity('contacts')

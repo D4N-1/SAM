@@ -5,7 +5,7 @@ import { BaseEntity } from "src/common/entities/base.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 
 export const CommunityRelations = [ 'nameOwner', 'owner', 'descriptionOwner' ]
 
@@ -38,16 +38,13 @@ export class CommunityEntity extends BaseEntity {
     nameTime?: Date | null;
 
 
-    @Column({ name: 'name_owner', type: String, nullable: true })
-    nameOwnerUid?: string | null;
-
     @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.communityNameOwner, {
         nullable: true,
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'name_owner', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'name_owner' })
     nameOwner?: ContactEntity | null;
 
 
@@ -66,16 +63,13 @@ export class CommunityEntity extends BaseEntity {
     creation: Date;
 
 
-    @Column({ name: 'owner', type: String, nullable: true })
-    ownerUid?: string | null;
-
     @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.communityOwner, {
         nullable: true,
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'owner', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'owner' })
     owner?: ContactEntity | null;
 
 
@@ -88,16 +82,13 @@ export class CommunityEntity extends BaseEntity {
     description?: string | null;
 
 
-    @Column({ name: 'description_owner', type: String, nullable: true })
-    descriptionOwnerUid?: string | null;
-
     @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.communityDescriptionOwner, {
         nullable: true,
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'description_owner', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'description_owner' })
     descriptionOwner?: ContactEntity | null;
 
 
@@ -116,16 +107,13 @@ export class CommunityEntity extends BaseEntity {
     @Column({ name: 'public_link', nullable: true, default: false })
     publicLink?: boolean;
 
-
-    @Column({ name: 'realm', type: 'varchar', length: 35, nullable: true })
-    realmName: string | null;
     
     @ManyToOne( () => RealmEntity, (realm) => realm.communities, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
         nullable: true
     })
-    @JoinColumn({ name: 'realm', referencedColumnName: 'name' })
+    @JoinColumn({ name: 'realm' })
     realm?: RealmEntity | null;
 
     ///////////////////////////////

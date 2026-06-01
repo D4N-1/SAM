@@ -12,16 +12,13 @@ export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'o
 @Entity('groups')
 export class GroupEntity extends BaseEntity {
 
-    @Column({ name: 'community', type: 'varchar', length: 35, nullable: true })
-    communityUid?: string | null;
-
     @ApiHideProperty()
     @ManyToOne( () => CommunityEntity, (community) => community.groups, {
         nullable: true,
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'community', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'community' })
     community?: CommunityEntity | null;
 
 
@@ -50,16 +47,13 @@ export class GroupEntity extends BaseEntity {
     nameTime?: Date | null;
 
 
-    @Column({ name: 'name_owner', type: String, nullable: true })
-    nameOwnerUid?: string | null;
-
     @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupNameOwner, {
         nullable: true,
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'name_owner', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'name_owner' })
     nameOwner?: ContactEntity | null;
 
 
@@ -77,17 +71,13 @@ export class GroupEntity extends BaseEntity {
     @Column({ type: 'timestamp' })
     creation: Date;
 
-
-    @Column({ name: 'owner', type: String, nullable: true })
-    ownerUid?: string | null;
-
     @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupOwner, {
         nullable: true,
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'owner', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'owner' })
     owner?: ContactEntity | null;
 
 
@@ -100,16 +90,13 @@ export class GroupEntity extends BaseEntity {
     description?: string | null;
 
 
-    @Column({ name: 'description_owner', type: String, nullable: true })
-    descriptionOwnerUid?: string | null;
-
     @ApiHideProperty()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupDescriptionOwner, {
         nullable: true,
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'description_owner', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'description_owner' })
     descriptionOwner?: ContactEntity | null;
 
 
@@ -128,13 +115,6 @@ export class GroupEntity extends BaseEntity {
     @Column({ nullable: true, default: false })
     announce: boolean;
 
-
-    @ApiProperty({
-        description: 'El reino que pertenece',
-        example: DTO.REALM_NAME
-    })
-    @Column({ name: 'realm', type: 'varchar', length: 35, nullable: true })
-    realmName: string | null;
 
     @ApiHideProperty()
     @ManyToOne( () => RealmEntity, (realm) => realm.groups, {

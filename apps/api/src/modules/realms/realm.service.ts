@@ -62,7 +62,7 @@ export class RealmService {
         botUid: async(botUid: string) => {
 
             const realm = await this.realmRepository.findOne({
-                where: { botUid }
+                where: { bot: { contact: { uid: botUid } } }
             })
 
             if (!realm) throw new NotFoundException( ERROR_CODE.NOT_FOUND('reino') )
@@ -82,13 +82,14 @@ export class RealmService {
         const newRealmData: Partial<RealmEntity> = { ...newData };
 
         if (botUid) {
-            const realmUid = await this.realmRepository.findOneBy({ botUid });
+            const realmUid = await this.realmRepository.findOne({
+                where: { bot: { contact: { uid: botUid } } }
+            });
             if (realmUid) throw new ConflictException( ERROR_CODE.CONFLICT('reino', 'Este bot ya tiene un reino creado') );
 
             newRealmData.bot = await this.botService.findOneBy.contactUid(botUid);
         }
 
-        newRealmData.botUid = botUid;
         newRealmData.name = name;
 
         const newRealm = this.realmRepository.create(newRealmData);
@@ -105,10 +106,8 @@ export class RealmService {
 
         const updateRealmData: Partial<RealmEntity> = {};
 
-        if (updateRealmDto.name) {
-            const exits = await this.realmRepository.findOne({
-                where: { name: updateRealmData.name, index: Not(realm.index) }
-            })
+        if (newData.name && newData.name !== realm.name) {
+            const exits = await this.realmRepository.findOneBy({ name: updateRealmData.name })
             if (exits) throw new ConflictException( ERROR_CODE.CONFLICT('reino', 'Ya existe un reino con ese nombre') );
 
             updateRealmData.name = newData.name;
@@ -116,11 +115,11 @@ export class RealmService {
 
         if (botUid) {
             const exits = await this.realmRepository.findOne({
-                where: { botUid: botUid, index: Not(realm.index) }
+                where: { bot: { contact: { uid: botUid } } , index: Not(realm.index) }
             })
-            if (!exits) throw new ConflictException( ERROR_CODE.CONFLICT('reino',  'Este bot ya es dueño de otro reino') );
+            if (exits) throw new ConflictException( ERROR_CODE.CONFLICT('reino',  'Este bot ya es dueño de otro reino') );
 
-            updateRealmData.botUid = newData.name;
+            updateRealmData.bot = await this.botService.findOneBy.contactUid(botUid);
         }
 
 

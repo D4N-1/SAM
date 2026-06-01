@@ -21,12 +21,9 @@ export class RealmEntity extends BaseEntity {
     name: string;
 
 
-    @Column({ name: 'bot', nullable: true })
-    botUid: string | null;
-
     @ApiHideProperty()
     @OneToOne( () => BotEntity, (bot) => bot.realm )
-    @JoinColumn({ name: 'bot', referencedColumnName: 'contactUid' })
+    @JoinColumn({ name: 'bot' })
     bot: BotEntity;
 
 

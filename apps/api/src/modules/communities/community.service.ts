@@ -81,8 +81,8 @@ export class CommunityService {
         const newCommunityData: Partial<CommunityEntity> = { ...newData }
 
         if (realmName) {
-            await this.realmService.findOneBy.name(realmName);
-            newCommunityData.realmName = realmName;
+            const realm = await this.realmService.findOneBy.name(realmName);
+            newCommunityData.realm = realm;
         }
 
         const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
@@ -90,9 +90,9 @@ export class CommunityService {
         let validContacts: any[] = [];
         if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
         
-        if (ownerUid && validContacts.some( c => c.uid === ownerUid)) newCommunityData.ownerUid = ownerUid;
-        if (descriptionOwnerUid && validContacts.some( c => c.uid === descriptionOwnerUid)) newCommunityData.descriptionOwnerUid = descriptionOwnerUid;
-        if (nameOwnerUid && validContacts.some( c => c.uid === nameOwnerUid)) newCommunityData.nameOwnerUid = nameOwnerUid;
+        if (ownerUid && validContacts.some( c => c.uid === ownerUid)) newCommunityData.owner = validContacts.find( c => c.uid === ownerUid);
+        if (descriptionOwnerUid && validContacts.some( c => c.uid === descriptionOwnerUid)) newCommunityData.descriptionOwner = validContacts.find( c => c.uid === descriptionOwnerUid);
+        if (nameOwnerUid && validContacts.some( c => c.uid === nameOwnerUid)) newCommunityData.nameOwner = validContacts.find( c => c.uid === nameOwnerUid);
 
         if (nameTime) newCommunityData.nameTime = new Date(nameTime * 1_000);
 
@@ -111,8 +111,8 @@ export class CommunityService {
         const updateCommunityData: Partial<CommunityEntity> = { ...newData };        
 
         if (realmName !== undefined) {
-            await this.realmService.findOneBy.name(realmName);
-            updateCommunityData.realmName = realmName;
+            const realm = await this.realmService.findOneBy.name(realmName);
+            updateCommunityData.realm = realm;
         } 
 
         const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
@@ -120,9 +120,9 @@ export class CommunityService {
         let validContacts: any[] = [];
         if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
         
-        if (ownerUid && validContacts.some( c => c.uid === ownerUid)) updateCommunityData.ownerUid = ownerUid;
-        if (descriptionOwnerUid && validContacts.some( c => c.uid === descriptionOwnerUid)) updateCommunityData.descriptionOwnerUid = descriptionOwnerUid;
-        if (nameOwnerUid && validContacts.some( c => c.uid === nameOwnerUid)) updateCommunityData.nameOwnerUid = nameOwnerUid;
+        if (ownerUid) updateCommunityData.owner = validContacts.find( c => c.uid === ownerUid);
+        if (descriptionOwnerUid) updateCommunityData.descriptionOwner = validContacts.find( c => c.uid === descriptionOwnerUid);
+        if (nameOwnerUid) updateCommunityData.nameOwner = validContacts.find( c => c.uid === nameOwnerUid)
 
         if (nameTime) updateCommunityData.nameTime = new Date(nameTime * 1_000);
         if (creation) updateCommunityData.creation = new Date(creation * 1_000);

@@ -15,7 +15,7 @@ import { JwtGuard } from "../auth/guards/jwt.guard";
     ],
     controllers: [ContactController],
     providers: [
-        ContactService, ContactSeederService,
+        ContactService,
 
         {
             provide: APP_GUARD,

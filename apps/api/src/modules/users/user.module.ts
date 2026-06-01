@@ -5,7 +5,6 @@ import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { ContactModule } from "../contacts/contact.module";
 import { RoleModule } from "../roles/role.module";
-import { UserSeederService } from "src/seeders/user-seeder.service";
 
 
 @Module({
@@ -15,7 +14,7 @@ import { UserSeederService } from "src/seeders/user-seeder.service";
         RoleModule
     ],
     controllers: [UserController],
-    providers: [UserService, UserSeederService],
+    providers: [UserService],
     exports: [UserService]
 })
 export class UserModule {}

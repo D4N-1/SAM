@@ -1,32 +1,27 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
-import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { BotAuthEntity } from "./bot-auth.entity";
 import { enumBotRole } from "src/common/enums/bot-role.enum";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { BaseEntity } from "src/common/entities/base.entity";
+import { Exclude } from "class-transformer";
 
 export const BotRelations = [ 'contact', 'ownerContact' ]
 
 @Entity('bots')
 export class BotEntity extends BaseEntity {
 
-    @Column({ name: 'contact', type: 'varchar', nullable: true, unique: true, length: 35 })
-    contactUid?: string | null;
 
     @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.bot, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'contact', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'contact' })
     contact: ContactEntity;
 
-
-    @Column({ name: 'owner_contact', type: 'varchar', nullable: true, length: 35 })
-    ownerContactUid: string | null;
 
     @ApiHideProperty()
     @OneToOne( () => ContactEntity, (contact) => contact.botOwner, {
@@ -34,7 +29,7 @@ export class BotEntity extends BaseEntity {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'owner_contact', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'owner_contact' })
     ownerContact?: ContactEntity | null;
 
 
@@ -58,10 +53,15 @@ export class BotEntity extends BaseEntity {
     role: enumBotRole
 
 
+    //////////////////////////////
+
+
+    @Exclude()
     @ApiHideProperty()
     @OneToMany( () => BotAuthEntity, (auth) => auth.bot )
     auth: BotAuthEntity[]
 
+    @Exclude()
     @ApiHideProperty()
     @OneToOne( () => RealmEntity, (realm) => realm.bot )
     realm: RealmEntity;
