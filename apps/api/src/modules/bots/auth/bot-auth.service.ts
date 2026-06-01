@@ -20,7 +20,9 @@ export class BotAuthService {
 
     async deleteAllAuthKey(botUid: string) {
 
-        await this.botAuthRepository.delete(({ botUid }))
+        await this.botAuthRepository.delete({
+            bot: { contact: { uid: botUid } }
+        })
 
         return {
             message: `Todas las credenciales del bot ${botUid} han sido elimindas`
@@ -36,7 +38,10 @@ export class BotAuthService {
         const bot = await this.botService.findOneBy.contactUid(botUid)
 
         let auth = await this.botAuthRepository.findOne({
-            where: { botUid, key }
+            where: {
+                bot: { contact: { uid: botUid } },
+                key
+            }
         })
 
         const stringifyValue = JSON.stringify(value);
@@ -49,7 +54,7 @@ export class BotAuthService {
 
             try {
                 const newAuth = this.botAuthRepository.create({
-                    botUid,
+                    bot,
                     key,
                     value: stringifyValue
                 })
@@ -63,7 +68,8 @@ export class BotAuthService {
 
                     auth = await this.botAuthRepository.findOne({
                         where: {
-                            botUid, key
+                            bot: { contact: { uid: botUid }},
+                            key
                         }
                     });
                     if (auth) {
@@ -79,7 +85,7 @@ export class BotAuthService {
     async getAuthKey(botUid: string, key: string) {
         const auth = await this.botAuthRepository.findOne({
             where: {
-                botUid,
+                bot: { contact: { uid: botUid } },
                 key
             }
         })

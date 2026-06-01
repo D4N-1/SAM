@@ -2,7 +2,10 @@ import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { DTO } from "src/common/constants/generic.dto";
 import { BaseEntity } from "src/common/entities/base.entity";
 import { BotEntity } from "src/modules/bots/entities/bot.entity";
-import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import { CommunityEntity } from "src/modules/communities/entities/community.entity";
+import { GroupEntity } from "src/modules/groups/entities/group.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
+import { RealmCommandEntity } from "./uni-realm-command.entity";
 
 
 export const RealmRelations = [ 'bot' ]
@@ -27,11 +30,18 @@ export class RealmEntity extends BaseEntity {
     bot: BotEntity;
 
 
-    @ApiProperty({
-        description: 'El maximo de grupos',
-        example: DTO.SIZE
-    })
-    @Column({ name: 'max_size', type: 'tinyint', nullable: true, default: 10 })
-    maxSize?: number | null
+    ///////////////////////////////////
+
+    @ApiHideProperty()
+    @OneToMany( () => GroupEntity, (group) => group.realm)
+    groups: GroupEntity[];
+
+    @ApiHideProperty()
+    @OneToMany( () => CommunityEntity, (community) => community.realm)
+    communities: CommunityEntity[];
+
+    @ApiHideProperty()
+    @OneToMany( () => RealmCommandEntity, (realmCommand) => realmCommand.realm)
+    commands: RealmCommandEntity[];
 
 }

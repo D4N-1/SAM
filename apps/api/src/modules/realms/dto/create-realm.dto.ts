@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 
 
@@ -24,12 +24,4 @@ export class CreateRealmDto {
     @IsOptional()
     botUid?: string;
 
-
-    @ApiProperty({
-        description: 'La cantidad maxima de grupos permitidos',
-        example: DTO.SIZE
-    })
-    @IsNumber()
-    @IsOptional()
-    maxSize?: number;
 }

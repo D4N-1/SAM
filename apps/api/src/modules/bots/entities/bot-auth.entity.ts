@@ -14,15 +14,12 @@ export class BotAuthEntity {
     index: number;
 
 
-    @Column({ name: 'bot', type: 'varchar', nullable: true, length: 35 })
-    botUid: string | null;
-    
     @ApiHideProperty()
     @ManyToOne( () => BotEntity, (bot) => bot.auth, {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
     })
-    @JoinColumn({ name: 'bot', referencedColumnName: 'contactUid' })
+    @JoinColumn({ name: 'bot' })
     bot: BotEntity;
 
 

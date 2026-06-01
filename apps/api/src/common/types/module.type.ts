@@ -6,4 +6,5 @@ export type CREATED_MODULES =
     'grupos' | 'grupo' |
     'bots' | 'bot' |
     'bots auth' | 'bot auth' |
-    'reinos' | 'reino'
+    'reinos' | 'reino' |
+    'comandos' | 'comando'

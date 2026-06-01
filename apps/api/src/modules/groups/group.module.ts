@@ -8,11 +8,12 @@ import { GroupSeederService } from 'src/seeders/group-seeder.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from '../auth/guards/jwt.guard';
 import { ContactModule } from '../contacts/contact.module';
+import { RealmModule } from '../realms/realm.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([GroupEntity]),
-    CommunityModule, ContactModule
+    CommunityModule, ContactModule, RealmModule
     ],
   controllers: [GroupController],
   providers: [

@@ -1,12 +1,13 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RealmEntity, RealmRelations } from "./entities/realm.entity";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { CreateRealmDto } from "./dto/create-realm.dto";
 import { BotService } from "../bots/bot.service";
 import { GetAllRealmQueryDto } from "./dto/get-realm.dto";
 import { AllResponse } from "src/common/interfaces/response.type";
+import { UpdateRealmDto } from "./dto/update-realm.dto";
 
 
 @Injectable()
@@ -93,6 +94,39 @@ export class RealmService {
         const newRealm = this.realmRepository.create(newRealmData);
 
         return await this.realmRepository.save(newRealm);
+    }
+
+
+    async update(name: string, updateRealmDto: UpdateRealmDto) {
+
+        const { botUid, ...newData } = updateRealmDto;
+
+        const realm = await this.findOneBy.name(name)
+
+        const updateRealmData: Partial<RealmEntity> = {};
+
+        if (updateRealmDto.name) {
+            const exits = await this.realmRepository.findOne({
+                where: { name: updateRealmData.name, index: Not(realm.index) }
+            })
+            if (exits) throw new ConflictException( ERROR_CODE.CONFLICT('reino', 'Ya existe un reino con ese nombre') );
+
+            updateRealmData.name = newData.name;
+        }
+
+        if (botUid) {
+            const exits = await this.realmRepository.findOne({
+                where: { botUid: botUid, index: Not(realm.index) }
+            })
+            if (!exits) throw new ConflictException( ERROR_CODE.CONFLICT('reino',  'Este bot ya es dueño de otro reino') );
+
+            updateRealmData.botUid = newData.name;
+        }
+
+
+        const updatedRealm = this.realmRepository.merge(realm, updateRealmData)
+
+        return await this.realmRepository.save(updatedRealm)
     }
 
 

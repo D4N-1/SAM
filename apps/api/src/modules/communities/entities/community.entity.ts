@@ -4,6 +4,7 @@ import { DTO } from "src/common/constants/generic.dto";
 import { BaseEntity } from "src/common/entities/base.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
+import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export const CommunityRelations = [ 'nameOwner', 'owner', 'descriptionOwner' ]
@@ -114,6 +115,18 @@ export class CommunityEntity extends BaseEntity {
     })
     @Column({ name: 'public_link', nullable: true, default: false })
     publicLink?: boolean;
+
+
+    @Column({ name: 'realm', type: 'varchar', length: 35, nullable: true })
+    realmName: string | null;
+    
+    @ManyToOne( () => RealmEntity, (realm) => realm.communities, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+        nullable: true
+    })
+    @JoinColumn({ name: 'realm', referencedColumnName: 'name' })
+    realm?: RealmEntity | null;
 
     ///////////////////////////////
 

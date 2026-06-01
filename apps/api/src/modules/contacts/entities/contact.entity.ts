@@ -40,45 +40,54 @@ export class ContactEntity extends BaseEntity {
 
     ////////////////////////////
 
+    @Exclude()
     @ApiHideProperty()
     @OneToOne( () => UserEntity, (user) => user.contact)
     user: UserEntity;
 
 
+    @Exclude()
     @ApiHideProperty()
     @OneToMany( () => CommunityEntity, (community) => community.owner)
     communityOwner: CommunityEntity[];
 
+    @Exclude()
     @ApiHideProperty()
     @OneToMany( () => CommunityEntity, (community) => community.nameOwner)
     communityNameOwner: CommunityEntity[];
 
 
+    @Exclude()
     @ApiHideProperty()
     @OneToMany( () => CommunityEntity, (community) => community.descriptionOwner)
     communityDescriptionOwner: CommunityEntity[];
 
     
+    @Exclude()
     @ApiHideProperty()
     @OneToOne( () => BotEntity, (bot) => bot.contact)
     bot: BotEntity;
 
 
+    @Exclude()
     @ApiHideProperty()
     @OneToOne( () => BotEntity, (bot) => bot.ownerContact)
     botOwner: BotEntity;
 
 
+    @Exclude()
     @ApiHideProperty()
     @OneToMany( () => GroupEntity, (group) => group.nameOwner)
     groupNameOwner: GroupEntity[];
 
 
+    @Exclude()
     @ApiHideProperty()
     @OneToMany( () => GroupEntity, (group) => group.owner)
     groupOwner: GroupEntity[];
 
 
+    @Exclude()
     @ApiHideProperty()
     @OneToMany( () => GroupEntity, (group) => group.descriptionOwner)
     groupDescriptionOwner: GroupEntity[];

@@ -15,7 +15,7 @@ export class GroupMiddleware implements SamMiddleware {
 
           if (!chatId || !chatId.endsWith('@g.us')) return next();
 
-          const res = await Api.get(`/groups/uid/${chatId}`, { uid: botUid! });
+          const res = await Api.get(`/groups/uid/${chatId.split('@')[0]}`, { uid: botUid! });
           if (res.status === 200) return next();
 
 

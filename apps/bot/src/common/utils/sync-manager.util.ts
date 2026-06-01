@@ -23,7 +23,7 @@ export class SyncManager {
             let communityRes: any = null;
 
             if (linkedParent) {
-                communityRes = await Api.get(`/communities/uid/${linkedParent}`, { uid: botUid! }).catch(() => null);
+                communityRes = await Api.get(`/communities/uid/${linkedParent.split('@')[0]}`, { uid: botUid! }).catch(() => null);
 
                 if (!communityRes || communityRes.status !== 200) {
                     community = await sam.groupMetadata(linkedParent).catch(() => null);
@@ -44,7 +44,7 @@ export class SyncManager {
             console.log(communityRes?.data)
             if (community && communityRes?.status !== 200) {
                 const communityPost = await Api.post(`/communities`, {
-                    uid: community.id,
+                    uid: community.id.split('@')[0],
                     name: community.subject,
                     nameTime: community.subjectTime,
                     size: community.size,
@@ -56,8 +56,8 @@ export class SyncManager {
             }
 
             const groupPost = await Api.post(`/groups`, {
-                communityUid: linkedParent || null,
-                uid: group.id,
+                communityUid: linkedParent?.split('@')[0] || null,
+                uid: group.id.split('@')[0],
                 name: group.subject,
                 nameTime: group.subjectTime,
                 size: group.size,
@@ -69,14 +69,14 @@ export class SyncManager {
             
             console.log('GROUP INSERTION:', groupPost?.data);
 
-            await Api.patch(`/groups/${group.id}`, {
+            await Api.patch(`/groups/${group.id.split('@')[0]}`, {
                 ownerUid: group?.owner?.split('@')[0] || group.subjectOwner?.split('@')[0],
                 descriptionOwnerUid: group.descOwner?.split('@')[0] || group?.owner?.split('@')[0],
                 nameOwnerUid: group?.subjectOwner?.split('@')[0]
             }).catch(() => null);
 
             if (community) {
-                await Api.patch(`/communities/${community.id}`, {
+                await Api.patch(`/communities/${community.id.split('@')[0]}`, {
                     ownerUid: community.owner?.split('@')[0] || community.subjectOwner?.split('@')[0],
                     descriptionOwnerUid: community.descOwner?.split('@')[0] || community.owner?.split('@')[0],
                     nameOwnerUid: community?.subjectOwner?.split('@')[0]

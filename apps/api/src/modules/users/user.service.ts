@@ -115,7 +115,7 @@ export class UserService {
         const user = await this.findOneBy.uuid( uuid )
         
         const { contactUid, roleName, name, password, ...newData } = updateUserDto;
-        const updateData: Partial<UserEntity> = { ...newData }
+        const updateUserData: Partial<UserEntity> = { ...newData }
 
         if (contactUid) {
             const contact = await this.contactService.findOneBy.uid(contactUid);
@@ -125,21 +125,21 @@ export class UserService {
             });
             if (contactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
 
-            updateData.contact = contact;
+            updateUserData.contact = contact;
         }
 
         if (name) {
             const exists = await this.userRepository.findOne({
-                where: { name, uuid: Not(user.uuid) } })
+                where: { name, index: Not(user.index) } })
             if (exists) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
             
-            updateData.name = name;
+            updateUserData.name = name;
         }
 
-        if (roleName) updateData.role = await this.roleService.findOneBy.name( roleName )
-        if (password) updateData.passwordHash = await bcrypt.hash(password, 10)
+        if (roleName) updateUserData.role = await this.roleService.findOneBy.name( roleName )
+        if (password) updateUserData.passwordHash = await bcrypt.hash(password, 10)
 
-        const updatedUser = this.userRepository.merge(user, updateData);
+        const updatedUser = this.userRepository.merge(user, updateUserData);
 
         return await this.userRepository.save(updatedUser);
     }

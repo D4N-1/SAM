@@ -1,7 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GroupEntity } from './entities/group.entity';
+import { GroupEntity, GroupRelations } from './entities/group.entity';
 import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { GetAllGroupQueryDto } from './dto/get-group.dto';
@@ -9,7 +9,11 @@ import { AllResponse } from 'src/common/interfaces/response.type';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { CommunityService } from '../communities/community.service';
 import { ContactService } from '../contacts/contact.service';
-import { CommunityRelations } from '../communities/entities/community.entity';
+import { RealmService } from '../realms/realm.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
+import { enumCACHE_KEYS } from 'src/common/enums/cache-keys.enum';
+
 
 @Injectable()
 export class GroupService {
@@ -18,8 +22,12 @@ export class GroupService {
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
 
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
+
     private readonly communityService: CommunityService,
-    private readonly contactService: ContactService
+    private readonly contactService: ContactService,
+    private readonly realmService: RealmService
   ) {}
 
 
@@ -30,7 +38,7 @@ export class GroupService {
     const skip = (page - 1) * limit;
 
     const [ data, total ] = await this.groupRepository.findAndCount({
-      relations: relations.filter( rel => CommunityRelations.includes(rel) ),
+      relations: relations.filter( rel => GroupRelations.includes(rel) ),
       skip,
       take: limit,
       order: { index: 'ASC' }
@@ -51,43 +59,75 @@ export class GroupService {
   findOneBy = {
 
     uuid: async(uuid: string): Promise<GroupEntity> => {
-          const group = await this.groupRepository.findOne({
-              where: { uuid },
-              relations: { community: true }
-           })
-          if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
-          return group
+      const cacheKey = enumCACHE_KEYS.GROUP + uuid;
+
+      const cachedGroup = await this.cacheManager.get<GroupEntity>(cacheKey);
+      if (cachedGroup) return cachedGroup;
+
+
+      const group = await this.groupRepository.findOne({
+          where: { uuid },
+          relations: GroupRelations
+      })
+
+      if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
+
+      const plainGroup = Object.assign({}, group)
+      await this.cacheManager.set(cacheKey, plainGroup);
+
+      return group
     },
 
     uid: async(uid: string): Promise<GroupEntity> => {
-      const group = await this.groupRepository.findOne({
-        where: { uid },
-        relations: { community: true }
-      })
-      if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
-        return group;
-    }
+      const cacheKey = enumCACHE_KEYS.GROUP + uid;
 
+      const cachedGroup = await this.cacheManager.get<GroupEntity>(cacheKey);
+      if (cachedGroup) return cachedGroup;
+
+
+      const group = await this.groupRepository.findOne({
+          where: { uid },
+          relations: GroupRelations
+      })
+
+      if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
+
+      const plainGroup = Object.assign({}, group)
+      await this.cacheManager.set(cacheKey, plainGroup);
+      
+      return group
+    },
 
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<GroupEntity> {
 
-    const { communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, ...newData } = createGroupDto;
+    const { communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, realmName, ...newData } = createGroupDto;
 
     const group = await this.groupRepository.findOneBy({ uid: newData.uid })
     if (group) throw new ConflictException( ERROR_CODE.CONFLICT('grupo') )
 
     const newGroupData: Partial<GroupEntity> = { ...newData }
 
+
+    if (communityUid) {
+      await this.communityService.findOneBy.uid(communityUid);
+      newGroupData.communityUid = communityUid;
+    }
+
+    if (realmName) {
+      await this.realmService.findOneBy.name(realmName)
+      newGroupData.realmName = realmName;
+    }
+
     const contactUidToValidate = [nameOwnerUid, ownerUid, descriptionOwnerUid].filter(Boolean) as string[];
 
-    if (contactUidToValidate.length > 0) await this.contactService.findIn(contactUidToValidate)
+    let validContacts: any[] = [];
+    if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
 
-    if (communityUid) newGroupData.communityUid = communityUid;
-    if (nameOwnerUid) newGroupData.nameOwnerUid = nameOwnerUid;
-    if (ownerUid) newGroupData.ownerUid = ownerUid;
-    if (descriptionOwnerUid) newGroupData.descriptionOwnerUid = descriptionOwnerUid;
+    if (nameOwnerUid && validContacts.some( c => c.uid === nameOwnerUid)) newGroupData.nameOwnerUid = nameOwnerUid;
+    if (ownerUid && validContacts.some( c => c.uid === ownerUid)) newGroupData.ownerUid = ownerUid;
+    if (descriptionOwnerUid && validContacts.some( c => c.uid === descriptionOwnerUid)) newGroupData.descriptionOwnerUid = descriptionOwnerUid;
     if (nameTime) newGroupData.nameTime = new Date(nameTime * 1000);
 
     newGroupData.creation = new Date(creation * 1000)
@@ -101,9 +141,9 @@ export class GroupService {
 
 
   async update(uid: string, updateGroupDto: UpdateGroupDto) {
-    const group = await this.findOneBy.uid(uid);
+    const group = await this.findOneBy.uid( uid );
 
-    const { communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, ...newData } = updateGroupDto;
+    const { communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, realmName, ...newData } = updateGroupDto;
 
     const updateGroupData: Partial<GroupEntity> = { ...newData };
 
@@ -112,18 +152,25 @@ export class GroupService {
       updateGroupData.communityUid = communityUid;
     }
 
+    if (realmName !== undefined) {
+      await this.realmService.findOneBy.name(realmName);
+      updateGroupData.realmName = realmName;
+    } 
+
     const contactUidToValidate = [nameOwnerUid, ownerUid, descriptionOwnerUid].filter(Boolean) as string[];
 
-    if (contactUidToValidate.length > 0) await this.contactService.findIn(contactUidToValidate)
+    let validContacts: any[] = [];
+    if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
     
-    if (nameOwnerUid !== undefined) updateGroupData.nameOwnerUid = nameOwnerUid;
-    if (ownerUid !== undefined) updateGroupData.ownerUid = ownerUid;
-    if (descriptionOwnerUid !== undefined) updateGroupData.descriptionOwnerUid = descriptionOwnerUid;
+    if (nameOwnerUid && validContacts.some( c => c.uid === nameOwnerUid)) updateGroupData.nameOwnerUid = nameOwnerUid;
+    if (ownerUid && validContacts.some( c => c.uid === ownerUid)) updateGroupData.ownerUid = ownerUid;
+    if (descriptionOwnerUid && validContacts.some( c => c.uid === descriptionOwnerUid)) updateGroupData.descriptionOwnerUid = descriptionOwnerUid;
     if (nameTime !== undefined) updateGroupData.nameTime = new Date(nameTime * 1000);
     if (creation !== undefined) updateGroupData.creation = new Date(creation * 1000)
 
     const updatedGroup = this.groupRepository.merge(group, updateGroupData);
 
+    await this.cacheManager.del(enumCACHE_KEYS.GROUP + uid)
     return await this.groupRepository.save(updatedGroup);
 
   }

@@ -97,4 +97,12 @@ export class CreateCommunityDto {
     @IsBoolean()
     publicLink: boolean;
 
+    @ApiProperty({
+        description: 'El nombre del reino al que pertenece',
+        example: DTO.REALM_NAME
+    })
+    @IsString()
+    @IsOptional()
+    realmName?: string;
+
 }

@@ -1,19 +1,24 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ContactEntity } from "./entities/contact.entity";
 import { Repository } from "typeorm";
 import { CreateContactDto } from "./dto/create-contact.dto";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { UpdateContactDto } from "./dto/update-contact.dto";
-import { totalmem } from "os";
 import { AllResponse } from "src/common/interfaces/response.type";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import type { Cache } from "cache-manager";
+import { enumCACHE_KEYS } from "src/common/enums/cache-keys.enum";
 
 @Injectable()
 export class ContactService {
 
     constructor(
         @InjectRepository(ContactEntity)
-        private readonly contactRepository: Repository<ContactEntity>
+        private readonly contactRepository: Repository<ContactEntity>,
+
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache
     ) {}
 
 
@@ -43,16 +48,34 @@ export class ContactService {
     findOneBy = {
 
         uuid: async (uuid: string, text?: string): Promise<ContactEntity> => {
+            const cacheKey = enumCACHE_KEYS.CONTACT + uuid;
+
+            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            if (cachedContact) return cachedContact;
+
             const contact = await this.contactRepository.findOneBy({ uuid })
 
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
+
+            const plainContact = Object.assign({}, contact);
+            await this.cacheManager.set(cacheKey, plainContact)
+
             return contact
         },
 
         uid: async (uid: string, text?: string): Promise<ContactEntity> => {
+            const cacheKey = enumCACHE_KEYS.CONTACT + uid;
+
+            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            if (cachedContact) return cachedContact;
+
             const contact = await this.contactRepository.findOneBy({ uid })
 
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
+
+            const plainContact = Object.assign({}, contact)
+            await this.cacheManager.set(cacheKey, plainContact)
+
             return contact
         },
 
@@ -136,6 +159,7 @@ export class ContactService {
 
         const editContact = this.contactRepository.merge(contact, updateContactDto)
 
+        await this.cacheManager.del(enumCACHE_KEYS.CONTACT + uid)
         return await this.contactRepository.save(editContact)
     }
 

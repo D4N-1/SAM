@@ -8,6 +8,7 @@ import { UpdateCommunityDto } from "./dto/update-community.dto";
 import { ContactService } from "../contacts/contact.service";
 import { AllResponse } from "src/common/interfaces/response.type";
 import { GetAllCommunityQueryDto } from "./dto/get-community.dto";
+import { RealmService } from "../realms/realm.service";
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class CommunityService {
         @InjectRepository(CommunityEntity)
         private readonly communityRepository: Repository<CommunityEntity>,
 
-        private readonly contactService: ContactService
+        private readonly contactService: ContactService,
+        private readonly realmService: RealmService
     ) {}
 
 
@@ -71,16 +73,21 @@ export class CommunityService {
 
     async create(createCommunityDto: CreateCommunityDto): Promise<CommunityEntity | null> {
 
-        const { ownerUid, descriptionOwnerUid, creation, nameOwnerUid, nameTime, ...newData } = createCommunityDto;
+        const { ownerUid, descriptionOwnerUid, creation, nameOwnerUid, nameTime, realmName, ...newData } = createCommunityDto;
 
         const community = await this.communityRepository.findOneBy({ uid: newData.uid });
         if (community) throw new ConflictException( ERROR_CODE.CONFLICT('comunidad') );        
 
         const newCommunityData: Partial<CommunityEntity> = { ...newData }
 
+        if (realmName) {
+            await this.realmService.findOneBy.name(realmName);
+            newCommunityData.realmName = realmName;
+        }
+
         const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
 
-        let validContacts: any;
+        let validContacts: any[] = [];
         if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
         
         if (ownerUid && validContacts.some( c => c.uid === ownerUid)) newCommunityData.ownerUid = ownerUid;
@@ -99,13 +106,18 @@ export class CommunityService {
     async update(uid: string, updateCommunityDto: UpdateCommunityDto): Promise<CommunityEntity|null> {
         const community = await this.findOneBy.uid( uid )
 
-        const { ownerUid, descriptionOwnerUid, nameOwnerUid, creation, nameTime, ...newData } = updateCommunityDto;
+        const { ownerUid, descriptionOwnerUid, nameOwnerUid, creation, nameTime, realmName, ...newData } = updateCommunityDto;
 
         const updateCommunityData: Partial<CommunityEntity> = { ...newData };        
 
+        if (realmName !== undefined) {
+            await this.realmService.findOneBy.name(realmName);
+            updateCommunityData.realmName = realmName;
+        } 
+
         const contactUidToValidate = [ownerUid, descriptionOwnerUid, nameOwnerUid].filter(Boolean) as string[];
 
-        let validContacts: any;
+        let validContacts: any[] = [];
         if (contactUidToValidate.length > 0) validContacts = await this.contactService.findIn(contactUidToValidate)
         
         if (ownerUid && validContacts.some( c => c.uid === ownerUid)) updateCommunityData.ownerUid = ownerUid;
@@ -130,8 +142,8 @@ export class CommunityService {
         return await this.communityRepository.save(editCommunity)
     }
 
-    async delete(uuid: string) {
-        const community = await this.findOneBy.uuid(uuid)
+    async delete(uid: string) {
+        const community = await this.findOneBy.uid(uid)
 
         return {
             message: 'Comunidad ELIMINADA',
@@ -139,9 +151,9 @@ export class CommunityService {
         }
     }
 
-    async recover(uuid: string) {
+    async recover(uid: string) {
         const communty = await this.communityRepository.findOne({
-            where: { uuid },
+            where: { uid },
             withDeleted: true
         })
 

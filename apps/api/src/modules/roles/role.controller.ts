@@ -7,7 +7,6 @@ import { API_PARAM } from 'src/common/constants/api-param';
 import { pipeValidateUuid } from 'src/pipes/uuid.pipe';
 import { SWAGGER } from 'src/common/utils/swagger.utils';
 import { Private } from 'src/decorators/private.decorator';
-import { Roles } from 'src/decorators/roles-user.decorator';
 import { enumRole } from 'src/common/enums/role.enum';
 
 
@@ -36,7 +35,6 @@ export class RoleController {
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('rol') })
   @ApiOkResponse({ description: SWAGGER.OK.FIND('rol'), type: RoleEntity })
-  @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('rol'), schema: { example: ERROR_CODE.NOT_FOUND('rol') } })
   @ApiParam(API_PARAM.NAME)
   @Get('name/:name')

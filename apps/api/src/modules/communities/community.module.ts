@@ -6,12 +6,13 @@ import { CommunityEntity } from "./entities/community.entity";
 import { ContactModule } from "../contacts/contact.module";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtGuard } from "../auth/guards/jwt.guard";
+import { RealmModule } from "../realms/realm.module";
 
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([CommunityEntity]),
-        ContactModule
+        ContactModule, RealmModule
     ],
     controllers: [CommunityController],
     providers: [

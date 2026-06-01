@@ -16,6 +16,7 @@ async function bootstrap() {
     transform: true
   }))
 
+
   app.use( json({ limit: '10mb' } ) )
   app.use( urlencoded({ extended: true, limit: '10mb' } ) )
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));

@@ -4,6 +4,7 @@ import { DTO } from "src/common/constants/generic.dto";
 import { BaseEntity } from "src/common/entities/base.entity";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
+import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner' ];
@@ -126,6 +127,24 @@ export class GroupEntity extends BaseEntity {
     })
     @Column({ nullable: true, default: false })
     announce: boolean;
+
+
+    @ApiProperty({
+        description: 'El reino que pertenece',
+        example: DTO.REALM_NAME
+    })
+    @Column({ name: 'realm', type: 'varchar', length: 35, nullable: true })
+    realmName: string | null;
+
+    @ApiHideProperty()
+    @ManyToOne( () => RealmEntity, (realm) => realm.groups, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+        nullable: true
+    })
+    @JoinColumn({ name: 'realm', referencedColumnName: 'name' })
+    realm?: RealmEntity | null;
+
 
 
 }
