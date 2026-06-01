@@ -2,6 +2,7 @@ import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
 import { BaseEntity } from "src/common/entities/base.entity";
+import { enumEphemeralDuration } from "src/common/enums/ephemeral-duration.enum";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
@@ -114,6 +115,30 @@ export class GroupEntity extends BaseEntity {
     })
     @Column({ nullable: true, default: false })
     announce: boolean;
+
+
+    @ApiProperty({
+        description: 'Si los administradores deben aprobar el ingreso',
+        example: DTO.BOOLEAN
+    })
+    @Column({ nullable: true, default: false })
+    joinApprovalMode: boolean;
+
+
+    @ApiProperty({
+        description: 'Si los miembros pueden añadir participantes al grupo',
+        example: DTO.BOOLEAN
+    })
+    @Column({ nullable: true, default: true })
+    memberAddMode: boolean;
+
+
+    @ApiProperty({
+        description: 'La duración de los mensajes ',
+        example: enumEphemeralDuration.DAY
+    })
+    @Column({ nullable: true, default: 0 })
+    ephemeralDuration: enumEphemeralDuration;
 
 
     @ApiHideProperty()

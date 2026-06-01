@@ -4,6 +4,8 @@ export enum enumMessage {
     protocolMessage = 'protocolMessage',
     extendedTextMessage = 'extendedTextMessage',
     stickerMessage = 'stickerMessage',
-    encCommentMessage = 'encCommentMessage'
+    encCommentMessage = 'encCommentMessage',
+    reactionMessage = 'reactionMessage',
+    conversation = 'conversation'
 }
 export { enumMessage as default }

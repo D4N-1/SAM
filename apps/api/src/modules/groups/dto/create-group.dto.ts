@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
+import { enumEphemeralDuration } from "src/common/enums/ephemeral-duration.enum";
 
 export class CreateGroupDto {
 
@@ -104,6 +105,30 @@ export class CreateGroupDto {
     @IsBoolean()
     @IsOptional()
     announce?: boolean;
+
+    @ApiProperty({
+        description: 'Si los administradores deben aprobar el ingreso',
+        example: DTO.BOOLEAN
+    })
+    @IsBoolean()
+    @IsOptional()
+    joinApprovalMode?: boolean;
+
+    @ApiProperty({
+        description: 'Si los miembros pueden añadir participantes al grupo',
+        example: DTO.BOOLEAN
+    })
+    @IsBoolean()
+    @IsOptional()
+    memberAddMode?: boolean;
+    
+    @ApiProperty({
+        description: 'La duración de los mensajes ',
+        example: enumEphemeralDuration.DAY
+    })
+    @IsBoolean()
+    @IsOptional()
+    ephemeralDuration?: enumEphemeralDuration;
 
     @ApiProperty({
         description: 'El nombre del reino al que pertenece',

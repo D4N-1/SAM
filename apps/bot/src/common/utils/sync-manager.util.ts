@@ -50,7 +50,7 @@ export class SyncManager {
                     nameTime: community.subjectTime,
                     size: community.size,
                     creation: community.creation,
-                    description: community.desc,
+                    description: community.desc
                 }).catch(() => null);
 
                 console.log('COMMUNITY INSERTION:', communityPost?.data?.community.subject);
@@ -65,7 +65,10 @@ export class SyncManager {
                 creation: group.creation,
                 description: group.desc,
                 restrict: !!group.restrict,
-                announce: !!group.announce
+                announce: !!group.announce,
+                joinApprovalMode: !!group.joinApprovalMode,
+                memberAddMode: !!group.memberAddMode,
+                ephemeralDuration: group?.ephemeralDuration
             }).catch(() => null);
             
             console.log('GROUP INSERTION:', groupPost?.data?.group?.subject);
