@@ -17,7 +17,7 @@ export default class TraductorCommand implements interfaceCommand {
 
     async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
         
-        const { captent, chatId, key, quoted } = message;
+        const { captent, chatId, key, quoted, sender, msg } = message;
 
         await sam.readMessage(key);
         await sam.sendPresenceUpdate('composing', chatId);
@@ -39,7 +39,7 @@ export default class TraductorCommand implements interfaceCommand {
 
         const text = `🌐 𝗧𝗿𝗮𝗱𝘂𝗰𝗰𝗶𝗼𝗻 𝗮𝗹 *${leng}*\n\n${translated.text}`
 
-        return await sam.send.text(chatId, text)
+        return await sam.send.text(chatId, text, { reply: { msg, sender } } )
 
     }
 }

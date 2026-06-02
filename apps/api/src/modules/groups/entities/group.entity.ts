@@ -6,9 +6,18 @@ import { enumEphemeralDuration } from "src/common/enums/ephemeral-duration.enum"
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { GroupCommandEntity } from "../../group-commands/entities/group-command.entity";
 
 export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner' ];
+export const GroupFullRelations = {
+    community: {
+        realm: true
+    },
+    nameOwner: true,
+    descriptionOwner: true,
+    owner: true
+}
 
 @Entity('groups')
 export class GroupEntity extends BaseEntity {
@@ -152,4 +161,10 @@ export class GroupEntity extends BaseEntity {
 
 
 
+    ////////////////////////
+
+
+    @ApiHideProperty()
+    @OneToMany( () => GroupCommandEntity, (groupCommand) => groupCommand.group )
+    commands: GroupCommandEntity[];
 }

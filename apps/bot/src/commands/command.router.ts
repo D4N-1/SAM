@@ -58,7 +58,7 @@ export class CommandRouter {
 
                 if (!message?.captent?.startsWith("!")) return;
         
-                const commandName = message.captent.trim().split(" ")[0]?.replace("!", "").toLowerCase();
+                const commandName = message.captent.trim().split(" ")[0]?.split('.')[0]?.replace("!", "").toLowerCase();
                 if (!commandName) return;
 
                 const command = this.commands.get(commandName)

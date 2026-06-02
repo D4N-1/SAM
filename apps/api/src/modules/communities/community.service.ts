@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CommunityEntity, CommunityRelations } from "./entities/community.entity";
 import { Not, Repository } from "typeorm";
@@ -9,6 +9,9 @@ import { ContactService } from "../contacts/contact.service";
 import { AllResponse } from "src/common/interfaces/response.type";
 import { GetAllCommunityQueryDto } from "./dto/get-community.dto";
 import { RealmService } from "../realms/realm.service";
+import { enumCACHE_KEYS } from "src/common/enums/cache-keys.enum";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import type { Cache } from "cache-manager";
 
 
 @Injectable()
@@ -17,6 +20,9 @@ export class CommunityService {
     constructor(
         @InjectRepository(CommunityEntity)
         private readonly communityRepository: Repository<CommunityEntity>,
+
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache,
 
         private readonly contactService: ContactService,
         private readonly realmService: RealmService
@@ -46,7 +52,40 @@ export class CommunityService {
             currentPage: page
           }
         }
-      }
+    }
+
+    async countAll() {
+        return await this.communityRepository.count()
+    }
+
+    async findAllGroups(uid: string) {
+
+        const community = await this.communityRepository.findOne({
+            where: { uid },
+            relations: {
+                groups: true
+            }
+        })
+
+        if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
+            return community
+    }
+
+    async delCache (uid: string) {
+
+        const communityCacheKey = enumCACHE_KEYS.COMMUNITY + uid;
+        const groupCacheKey = enumCACHE_KEYS.GROUP;
+
+        const community = await this.findAllGroups(uid);
+
+        await this.cacheManager.del(communityCacheKey)
+
+        for (const group of community.groups) {
+          await this.cacheManager.del(groupCacheKey + group.uid)
+        }
+
+    }
+    
 
     findOneBy = {
 
@@ -67,6 +106,18 @@ export class CommunityService {
             })
 
             if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
+            return community
+        }
+    }
+
+    findOrNull = {
+
+        uid: async (uid: string): Promise<CommunityEntity|null> => {
+            const community = await this.communityRepository.findOne({
+                where: { uid },
+                relations: CommunityRelations
+            })
+
             return community
         }
     }
@@ -137,19 +188,23 @@ export class CommunityService {
             updateCommunityData.uid = updateCommunityDto.uid
         }
 
-
         const editCommunity = this.communityRepository.merge(community, updateCommunityData)
+        this.delCache(uid)
         return await this.communityRepository.save(editCommunity)
     }
 
+
     async delete(uid: string) {
         const community = await this.findOneBy.uid(uid)
+
+        this.delCache(uid)
 
         return {
             message: 'Comunidad ELIMINADA',
             community: await this.communityRepository.softRemove(community)
         }
     }
+
 
     async recover(uid: string) {
         const communty = await this.communityRepository.findOne({
@@ -160,6 +215,7 @@ export class CommunityService {
         if (!communty) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
         if (!communty.deletedAt) throw new ConflictException( ERROR_CODE.NOT_FOUND('comunidad') )
 
+        this.delCache(uid)
         return await this.communityRepository.recover(communty)
     }
 

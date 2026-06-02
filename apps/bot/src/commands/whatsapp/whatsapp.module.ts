@@ -1,4 +1,3 @@
-import axios from "axios";
 import type interfaceCommand from "../../common/interfaces/command.interface.js";
 import type interfaceMessage from "../../common/interfaces/parsed-message.interface.js";
 import type WhatsappService from "../../estructure/whatsapp.service.js";
@@ -14,7 +13,7 @@ export default class WhatsappCommand implements interfaceCommand {
 
     async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
         
-        const { key, chatId, captent, senderAlt, sender, quoted, mentionedJid } = message;
+        const { key, chatId, captent, senderAlt, sender, quoted, mentionedJid, msg } = message;
 
         sam.readMessage(key);
         sam.sendPresenceUpdate('composing', chatId);
@@ -43,7 +42,8 @@ export default class WhatsappCommand implements interfaceCommand {
         const name = apiContact.name;
         const text = await getText(name, apiContact.uid, info, updated)
 
-        await sam.send.image(chatId, text, image)
+        //await sam.send.image(chatId, text, image, { forward: true, preview: image } )
+        await sam.dum(chatId)
             
     }
 }

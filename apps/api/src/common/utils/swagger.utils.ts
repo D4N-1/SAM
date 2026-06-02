@@ -4,6 +4,7 @@ export const SWAGGER = {
 
     SUMMARY: {
         ALL: (type: CREATED_MODULES) => `Lista todos los ${type}`,
+        COUNT: (type: CREATED_MODULES) => `Cuenta la cantidad de entidades de ${type}`,
         CREATE: (type?: CREATED_MODULES) => `Crea un nuevo ${type}`,
         FIND: (type: CREATED_MODULES) => `Obtiene un ${type}`,
         EDIT: (type: CREATED_MODULES) => `Edita un ${type}`,
@@ -12,6 +13,7 @@ export const SWAGGER = {
     },
     OK: {
         ALL: (type: CREATED_MODULES) => `Todos los ${type} existentes`,
+        COUNT: (type: CREATED_MODULES) => `Cuantos ${type} existen`,
         CREATE: (type: CREATED_MODULES) => `${type} creado con exito`,
         FIND: (type: CREATED_MODULES) => `${type} encontrado con exito`,
         EDIT: (type: CREATED_MODULES) => `${type} editado con exito`,

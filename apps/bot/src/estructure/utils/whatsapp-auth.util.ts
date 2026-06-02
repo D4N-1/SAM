@@ -2,7 +2,6 @@ import { Api } from '../../common/utils/api.util.js';
 import type { AuthenticationState } from '@itsukichan/baileys';
 import { BufferJSON, initAuthCreds } from '@itsukichan/baileys';
 import Logger from '../../common/utils/logger.util.js';
-import enumContext from '../../common/enums/context.enum.js';
 
 export const useApiAuthState = async (botUid: string) => {
     

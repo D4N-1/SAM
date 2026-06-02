@@ -17,8 +17,8 @@ export class ContactEntity extends BaseEntity {
         example: DTO.UID,
         type: String
     })
-    @Column({ type: 'varchar', length: 35, unique: true })
-    uid: string;
+    @Column({ type: 'varchar', length: 35, unique: true, nullable: true })
+    uid?: string;
 
 
     @ApiProperty({

@@ -1,10 +1,9 @@
-import type { WASocket } from "@itsukichan/baileys";
 import { Api } from "./api.util.js";
 import Logger from "./logger.util.js";
 import { SyncManager } from "./sync-manager.util.js";
 
 
-export async function groupUpdate(sam: WASocket, update: any) {
+export async function groupUpdate(sam: any, update: any) {
 
     try {
 
@@ -12,7 +11,6 @@ export async function groupUpdate(sam: WASocket, update: any) {
             restrict=null, joinApprovalMode=null, memberAddMode=null,
             ephemeralDuration=null } = update;
 
-        console.log(update)
 
         const groupUid = id?.split('@')[0]
         const groupRes = await Api.get(`/groups/uid/${groupUid}`);

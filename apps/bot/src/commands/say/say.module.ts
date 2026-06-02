@@ -6,11 +6,11 @@ import { enumError } from "../../common/enums/error.enum.js";
 
 export default class SayCommand implements interfaceCommand {
     name = 'say';
-    aliases = [ 'decir' ];
+    aliases = [ 'decir', 'di' ];
 
     async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
         
-        const { key, chatId, quoted, captent, msg, sender } = message;
+        const { key, chatId, quoted, captent, msg, sender, isGif } = message;
 
 
         await sam.readMessage( key );
@@ -27,7 +27,7 @@ export default class SayCommand implements interfaceCommand {
         if (!text && !image && !video && !sticker) return await sam.send.text(chatId, getHint(), { reply: { msg, sender } } );
 
         if (image) return await sam.send.image(chatId, text!, image! )
-            if (video) return await sam.send.video(chatId, text!, video! )
+            if (video) return await sam.send.video(chatId, text!, video!, { gifPlayback: isGif||quoted?.qIsGif } )
                 if (sticker) return await sam.send.sticker(chatId, sticker )
             
         return await sam.send.text(chatId, text! )

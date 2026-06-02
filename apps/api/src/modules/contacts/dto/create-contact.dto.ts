@@ -9,9 +9,9 @@ export class CreateContactDto {
         example: DTO.UID
     })
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     @MaxLength(35)
-    uid: string;
+    uid?: string;
 
     @ApiProperty({
         example: DTO.LID

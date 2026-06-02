@@ -3,7 +3,7 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 
 
-export class CreateRealmCommandDto {
+export class CreateGroupCommandDto {
 
     @ApiProperty({
         description: 'El nombre del comando que se activará',

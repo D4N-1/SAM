@@ -1,11 +1,10 @@
-import type { WASocket } from "@itsukichan/baileys";
 import type WhatsappService from "../../estructure/whatsapp.service.js";
 import { Api } from "./api.util.js";
 import Logger from "./logger.util.js";
 
 export class SyncManager {
 
-    static async syncGroups(sam: WhatsappService|WASocket, chatId: string): Promise<void> {
+    static async syncGroups(sam: WhatsappService|any, chatId: string): Promise<void> {
         try {
             const group = await sam.groupMetadata(chatId);
             if (!group) return;

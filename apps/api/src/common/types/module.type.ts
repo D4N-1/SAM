@@ -8,4 +8,4 @@ export type CREATED_MODULES =
     'bots auth' | 'bot auth' |
     'reinos' | 'reino' |
     'comandos' | 'comando' |
-    'comandos de reino' | 'comando del reino'
+    'comandos del grupo' | 'comando del grupo'

@@ -12,9 +12,6 @@ export class AppService {
 
   ) {}
 
-  getHello(): string {
-    return 'Hello World!';
-  }
 
   async getHealth() {
     const timestamp = new Date().toISOString();

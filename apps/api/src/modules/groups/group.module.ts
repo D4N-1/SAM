@@ -12,9 +12,8 @@ import { RealmModule } from '../realms/realm.module';
     TypeOrmModule.forFeature([GroupEntity]),
     CommunityModule, ContactModule, RealmModule
     ],
-  controllers: [GroupController],
-  providers: [
-    GroupService,
-  ],
+  controllers: [ GroupController],
+  providers: [ GroupService ],
+  exports: [ GroupService ]
 })
 export class GroupModule {}

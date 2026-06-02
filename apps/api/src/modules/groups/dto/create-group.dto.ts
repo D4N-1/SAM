@@ -126,7 +126,6 @@ export class CreateGroupDto {
         description: 'La duración de los mensajes ',
         example: enumEphemeralDuration.DAY
     })
-    @IsBoolean()
     @IsOptional()
     ephemeralDuration?: enumEphemeralDuration;
 

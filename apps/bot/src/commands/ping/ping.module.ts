@@ -42,7 +42,7 @@ export default class PingCommand implements interfaceCommand {
 
 
         const end_message = await this.pingService.getMessage(enumPingStates.CALCULADO, diff);
-        await sam.editMessage(chatId, end_message, sentMessage.key );
+        await sam.send.text(chatId, end_message, { edit: sentMessage.key, reply: { msg, sender } });
 
         await sam.sendPresenceUpdate('paused', chatId)
 

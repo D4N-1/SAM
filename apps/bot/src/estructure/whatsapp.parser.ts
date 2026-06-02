@@ -6,7 +6,6 @@ import Logger from "../common/utils/logger.util.js";
 import type typeDevice from "../common/types/device.type.js";
 import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import enumContext from "../common/enums/context.enum.js";
-import { time } from "node:console";
 import { getContact } from "./whatsapp.service.js";
 
 const parseUid = (uid: string|undefined) => {

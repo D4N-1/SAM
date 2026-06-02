@@ -30,6 +30,13 @@ export class GroupController {
     return this.groupService.findAll(query)
   }
 
+  @ApiOperation({ summary: SWAGGER.SUMMARY.COUNT('grupos') })
+  @ApiOkResponse({ description: SWAGGER.OK.COUNT('grupos') } )
+  @Get('all')
+  async countAll() {
+    return this.groupService.countAll()
+  }
+
   @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('grupo') })
   @ApiOkResponse({ description: SWAGGER.OK.ALL('grupo'), type: GroupEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('grupo'), schema: { example: ERROR_CODE.NOT_FOUND('grupo') } })

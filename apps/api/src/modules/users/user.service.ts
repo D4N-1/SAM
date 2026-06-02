@@ -88,7 +88,7 @@ export class UserService {
         uuid: async (uuid: string): Promise <UserEntity|null> => {
             return await this.userRepository.findOne({
                 where: { uuid },
-                relations: { contact: true, role: true }
+                relations: UserRelations
             })
         },
     }

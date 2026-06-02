@@ -100,11 +100,15 @@ export class ContactService {
     }
 
 
-    async bulk(createContactsDto: CreateContactDto[]) {
+    async bulk(createContactsDto: any) {
 
         if (createContactsDto?.length === 0) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos') );
         
-        const rawEntities = createContactsDto.map(c => ({
+        const contactsArray = Array.isArray(createContactsDto) 
+        ? createContactsDto 
+        : Object.values(createContactsDto);
+
+        const rawEntities = contactsArray.map(c => ({
                 uid: String(c.uid),
                 lid: c.lid ? String(c.lid) : undefined,
         }));
@@ -113,21 +117,20 @@ export class ContactService {
             .insert()
             .into(ContactEntity)
             .values(rawEntities)
-            .orUpdate(['lid'])
+            .orUpdate(['lid'], ['uid'])
             .execute()
 
         return { status: 'OK', inserted: rawEntities.length }
-        
-
+    
 
     }
 
     async create(createContactDto: CreateContactDto): Promise<ContactEntity|null> {
 
-        const { lid, ...newData } = createContactDto
+        const { lid, uid, ...newData } = createContactDto
 
         const newContactData: Partial<ContactEntity> = { ...newData }
-        const contact = await this.contactRepository.findOneBy({ uid: newData.uid })
+        const contact = await this.contactRepository.findOneBy({ uid })
         if (contact) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa UID') )
 
         if (lid) {

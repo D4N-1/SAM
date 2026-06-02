@@ -34,6 +34,14 @@ export class CommunityController {
         return this.communityService.findAll(query)
     }
 
+    
+    @ApiOperation({ summary: SWAGGER.SUMMARY.COUNT('comunidades') })
+    @ApiOkResponse({ description: SWAGGER.OK.COUNT('comunidades') } )
+    @Get('all')
+    async countAll() {
+      return this.communityService.countAll()
+    }
+
     @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('comunidad') })
     @ApiOkResponse({ description: SWAGGER.OK.FIND('comunidad'), type: CommunityEntity })
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })

@@ -22,6 +22,7 @@ import { JwtGuard } from './modules/auth/guards/jwt.guard';
 import { RolesGuard } from './modules/auth/guards/role.guard';
 import { RealmModule } from './modules/realms/realm.module';
 import { CommandModule } from './modules/commands/commands.module';
+import { GroupCommandModule } from './modules/group-commands/group-command.module';
 
 @Module({
   imports: [
@@ -62,8 +63,8 @@ import { CommandModule } from './modules/commands/commands.module';
     UserModule, AuthModule, CommunityModule,
     GroupModule, BotModule, RealmModule,
     QuotesModule,
-    CommandModule,
-     ],
+    CommandModule, GroupCommandModule
+    ],
   controllers: [AppController],
   providers: [
     AppService,

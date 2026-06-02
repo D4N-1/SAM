@@ -1,7 +1,7 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GroupEntity, GroupRelations } from './entities/group.entity';
+import { GroupEntity, GroupFullRelations, GroupRelations } from './entities/group.entity';
 import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { GetAllGroupQueryDto } from './dto/get-group.dto';
@@ -13,6 +13,7 @@ import { RealmService } from '../realms/realm.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import { enumCACHE_KEYS } from 'src/common/enums/cache-keys.enum';
+import { instanceToPlain } from 'class-transformer';
 
 
 @Injectable()
@@ -56,6 +57,16 @@ export class GroupService {
     }
   }
 
+  async countAll() {
+    return await this.groupRepository.count()
+  }
+
+  delCache(uid: string) {
+
+    this.cacheManager.del(enumCACHE_KEYS.GROUP + uid)
+  }
+
+
   findOneBy = {
 
     uuid: async(uuid: string): Promise<GroupEntity> => {
@@ -72,7 +83,7 @@ export class GroupService {
 
       if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
 
-      const plainGroup = Object.assign({}, group)
+      const plainGroup = instanceToPlain(group)
       await this.cacheManager.set(cacheKey, plainGroup);
 
       return group
@@ -87,17 +98,30 @@ export class GroupService {
 
       const group = await this.groupRepository.findOne({
           where: { uid },
-          relations: GroupRelations
+          relations: GroupFullRelations
       })
 
       if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
 
-      const plainGroup = Object.assign({}, group)
+      const plainGroup = instanceToPlain(group)
       await this.cacheManager.set(cacheKey, plainGroup);
       
       return group
     },
 
+  }
+
+  findOrNull = {
+
+    uid: async(uid: string): Promise<GroupEntity|null> => {
+
+      const group = await this.groupRepository.findOne({
+          where: { uid },
+          relations: GroupRelations
+      })
+      
+      return group
+    },
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<GroupEntity> {
@@ -153,6 +177,16 @@ export class GroupService {
     }
 
     if (realmName !== undefined) {
+
+      if (updateGroupData.community) {
+
+        const community = await this.communityService.findOrNull.uid(updateGroupData?.community?.uid)
+        if (community?.realm) throw new ConflictException( ERROR_CODE.CONFLICT('comando del grupo', 'La comunidad de este grupo ya tiene reino, no puedes relacionar este grupo a otro reino') ) 
+      } else if (group.community) {
+        const community = await this.communityService.findOrNull.uid(group.community.uid)
+        if (community?.realm) throw new ConflictException( ERROR_CODE.CONFLICT('comando del grupo', 'La comunidad de este grupo ya tiene reino, no puedes relacionar este grupo a otro reino'))
+    }
+
       const realm = await this.realmService.findOneBy.name(realmName);
       updateGroupData.realm = realm;
     } 
@@ -170,7 +204,7 @@ export class GroupService {
     
     const updatedGroup = this.groupRepository.merge(group, updateGroupData);
 
-    await this.cacheManager.del(enumCACHE_KEYS.GROUP + uid)
+    this.delCache(uid)
     return await this.groupRepository.save(updatedGroup);
 
   }
@@ -180,28 +214,32 @@ export class GroupService {
 
     const group = await this.findOneBy.uid(uid)
 
-      return {
-          message: 'Grupo ELIMINADO',
-          data: await this.groupRepository.softRemove(group)
-      }
+
+    this.delCache(uid)
+    return {
+        message: 'Grupo ELIMINADO',
+        data: await this.groupRepository.softRemove(group)
+    }
   }
 
-    async recover(uid: string) {
+  async recover(uid: string) {
 
-        const group = await this.groupRepository.findOne({
-            where: { uid },
-            withDeleted: true
-        })
+    const group = await this.groupRepository.findOne({
+        where: { uid },
+        withDeleted: true
+    })
 
-        if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
+    if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
 
-        if (!group.deletedAt) throw new ConflictException( ERROR_CODE.CONFLICT('grupo', 'El groupo no ha sido eliminado aún') )
+    if (!group.deletedAt) throw new ConflictException( ERROR_CODE.CONFLICT('grupo', 'El groupo no ha sido eliminado aún') )
 
-        return {
-          message: 'Grupo RECUPERADO',
-          data: await this.groupRepository.recover(group)
-        }
+    await this.cacheManager.del(enumCACHE_KEYS.GROUP + uid)
+
+    return {
+      message: 'Grupo RECUPERADO',
+      data: await this.groupRepository.recover(group)
     }
+  }
 
   
 }

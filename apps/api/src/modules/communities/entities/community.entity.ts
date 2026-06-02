@@ -1,5 +1,4 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
-import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
 import { BaseEntity } from "src/common/entities/base.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
@@ -7,7 +6,7 @@ import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 
-export const CommunityRelations = [ 'nameOwner', 'owner', 'descriptionOwner' ]
+export const CommunityRelations = [ 'nameOwner', 'owner', 'descriptionOwner', 'realm', 'groups' ]
 
 
 @Entity('communities')

@@ -102,6 +102,7 @@ export async function registerMessagesEvent(samSocket: WASocket) {
 
             const msg = data.messages[0];
 
+            //console.log( JSON.stringify( msg, null, 2) )
             if (!msg.key) return;
 
 

@@ -1,10 +1,11 @@
 import { random } from "../../../common/utils/function.util.js";
-import messages from "../json/whatsapp.messages.json" with { type: "json" }
+import messages from "../json/bot-telemetry.messages.json" with { type: "json" }
 
-export interface getText {
+export interface interfaceTelemetry {
     botName: string,
     uid: string,
     groups: number,
+    communities: number,
     uptime: number,
     prefix: string,
     date: Date,
@@ -12,14 +13,15 @@ export interface getText {
     role: string
 }
 
-export async function getText(data: getText) {
+export async function getTelemetryText(data: interfaceTelemetry) {
 
-    const { botName, uid, groups, uptime, prefix, date, mode, role } = data;
+    const { botName, uid, groups, communities, uptime, prefix, date, mode, role } = data;
     let textSelected = random(messages).join('\n')
 
     textSelected = textSelected.replace('{botName}', botName);
     textSelected = textSelected.replace('{uid}', uid);
     textSelected = textSelected.replace('{groups}', groups);
+    textSelected = textSelected.replace('{communities}', communities)
     textSelected = textSelected.replace('{uptime}', uptime + ' s');
     textSelected = textSelected.replace('{prefix}', prefix);
     textSelected = textSelected.replace('{date}', date);

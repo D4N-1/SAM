@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
 import { AppModule } from './app.module';
 import { ThrottlerExceptionFilter } from './filters/throttler-exception.filter';
+import logRegister from './common/utils/logger.util';
 
 async function bootstrap() {
 
@@ -56,5 +57,15 @@ async function bootstrap() {
 
   console.log(`Servicio escuchando en ${LOCAL} - ${DNS}`)
   console.log(`Documentación disponible en ${LOCAL}/docs - ${DNS}/docs`)
+
+  process.on('SIGINT', async () => {
+    logRegister.end();
+
+    logRegister.on('finish', () => {
+      process.exit()
+    })
+
+  })
+  
 }
 bootstrap();

@@ -1,11 +1,8 @@
-import { Controller, Get, HttpCode, Post, Body, Req } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Req, Res } from '@nestjs/common';
+import type { Request, Response } from 'express'
 import { AppService } from './app.service';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { pipeValidateNumber } from './pipes/app.pipe';
-import { Private } from './decorators/private.decorator';
-import { Roles } from './decorators/roles-user.decorator';
-import { enumRole } from './common/enums/role.enum';
-import type { Request } from 'express';
+import {  ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 
 @ApiTags('Main')
 @Controller()
@@ -20,30 +17,81 @@ export class AppController {
     return this.appService.getHealth();
   }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @ApiBearerAuth()
-  @Private()
-  @Roles([ enumRole.ADMIN, enumRole.MODERATOR ])
-  @ApiBody({})
-  @Post('/pipe')
-  postApp(@Body(pipeValidateNumber) body: { name: string, age: number }) {
-    return `Hola ${body.name}, tienes ${body.age} años`
-  }
-
 
   @Get('ip')
-debugIp(@Req() req: Request) {
-  return {
-    rawIp: req.socket.remoteAddress,
-    xForwardedFor: req.headers['x-forwarded-for'], // ¿Llega algo aquí?
-    isTrust: req.app.get('trust proxy'),
-    ip: req.ip,
-    ips: req.ips, // Esto te mostrará la cadena completa (IP cliente, IP proxy)
-    headers: req.headers['x-forwarded-for']
-  };
-}
+  debugIp(@Req() req: Request) {
+    return {
+      rawIp: req.socket.remoteAddress,
+      xForwardedFor: req.headers['x-forwarded-for'], // ¿Llega algo aquí?
+      isTrust: req.app.get('trust proxy'),
+      ip: req.ip,
+      ips: req.ips, // Esto te mostrará la cadena completa (IP cliente, IP proxy)
+      headers: req.headers['x-forwarded-for']
+    };
+  }
+
+
+  @Get('/image/:id.png')
+  async wsPreview(@Param('id') id: string, @Req() req: Request, @Res() res: Response) {
+
+    const agent = (req.headers["user-agent"] || "").toLowerCase();
+    const url = req.params.id
+
+    console.log(agent)
+    console.log(url)
+
+    const esWhatsapp =
+      agent.includes("whatsapp") ||
+      agent.includes("whatsapp/") ||
+      agent.includes("wa-web") ||
+      agent.includes("whats-app");
+
+    res.set({
+      "Cache-Control": "no-store, no-cache, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0"
+    });
+
+
+    if (esWhatsapp) {
+      console.log('ES WHATSAPP')
+      return res.status(403)
+      
+    } else return res.redirect('https://sambot.live')
+
+  }
+
+
+  /*
+  app.get("/thumbnail/:id.png", async (req, res) => {
+
+  const ua = (req.headers["user-agent"] || "").toLowerCase();
+  const nocache = req.query.nocache || Date.now();
+  const url = req.params.id
+
+  console.log(ua)
+  console.log(url)
+
+  const esWhatsapp =
+    ua.includes("whatsapp") ||
+    ua.includes("whatsapp/") ||
+    ua.includes("wa-web") ||
+    ua.includes("whats-app");
+
+  res.set({
+    "Cache-Control": "no-store, no-cache, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0"
+  });
+
+  if (esWhatsapp) {
+
+      res.status(403)
+      //res.type(contentType).send(data);
+    return;
+  }
+
+  return res.redirect("/");
+});
+*/
 }
