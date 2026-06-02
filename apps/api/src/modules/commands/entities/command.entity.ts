@@ -1,6 +1,6 @@
 import { ApiHideProperty } from "@nestjs/swagger";
 import { BaseEntity } from "src/common/entities/base.entity";
-import { RealmCommandEntity } from "src/modules/realms/entities/uni-realm-command.entity";
+import { RealmCommandEntity } from "src/modules/realms/entities/realm-command.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity('commands')

@@ -1,7 +1,7 @@
 import { ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
-import { IS_PRIVATE_KEY } from "src/decorators/private.decorator";
+import { Private } from "src/decorators/private.decorator";
 
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
@@ -12,7 +12,7 @@ export class JwtGuard extends AuthGuard('jwt') {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
 
-        const isPrivate = this.reflector.getAllAndOverride(IS_PRIVATE_KEY, [
+        const isPrivate = this.reflector.getAllAndOverride(Private, [
             context.getHandler(),
             context.getClass()
         ])

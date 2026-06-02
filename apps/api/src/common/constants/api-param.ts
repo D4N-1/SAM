@@ -6,7 +6,7 @@ export const API_PARAM = {
     required: true,
     description: 'El identificador unico asignado',
     example: '550e8400-e29b-41d4-a716-446655440000',
-    type: String
+    type: 'string'
   },
 
   UID: {
@@ -14,13 +14,14 @@ export const API_PARAM = {
     required: true,
     description: 'El identificador unico',
     example: DTO.UID,
-    type: String
+    type: 'string'
   },
 
   NAME: {
     name: 'name',
     require: true,
     description: 'El nombre único',
-    type: String
+    example: DTO.NAME,
+    type: 'string'
   }
 }

@@ -6,6 +6,7 @@ export enum enumMessage {
     stickerMessage = 'stickerMessage',
     encCommentMessage = 'encCommentMessage',
     reactionMessage = 'reactionMessage',
-    conversation = 'conversation'
+    conversation = 'conversation',
+    encReactionMessage = 'encReactionMessage'
 }
 export { enumMessage as default }

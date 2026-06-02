@@ -5,7 +5,7 @@ import { BotEntity } from "src/modules/bots/entities/bot.entity";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { GroupEntity } from "src/modules/groups/entities/group.entity";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
-import { RealmCommandEntity } from "./uni-realm-command.entity";
+import { RealmCommandEntity } from "./realm-command.entity";
 
 
 export const RealmRelations = [ 'bot' ]

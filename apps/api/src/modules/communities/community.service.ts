@@ -53,7 +53,7 @@ export class CommunityService {
         uuid: async (uuid: string): Promise<CommunityEntity> => {
             const community = await this.communityRepository.findOne({
                 where: { uuid },
-                relations: { owner: true }
+                relations: CommunityRelations
              })
 
             if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )
@@ -63,7 +63,7 @@ export class CommunityService {
         uid: async (uid: string): Promise<CommunityEntity> => {
             const community = await this.communityRepository.findOne({
                 where: { uid },
-                relations: { owner: true }
+                relations: CommunityRelations
             })
 
             if (!community) throw new NotFoundException( ERROR_CODE.NOT_FOUND('comunidad') )

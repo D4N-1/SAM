@@ -28,7 +28,15 @@ import { CommandModule } from './modules/commands/commands.module';
 
     ThrottlerModule.forRoot([{
       ttl: 60_000,
-      limit: 45
+      limit: 45,
+      skipIf: (context) => {
+        const req = context.switchToHttp().getRequest()
+        const clientIp = req.ip;
+
+        const ignoredIps = [ '127.0.0.1', '::1', '::ffff:127.0.0.1' ]
+
+        return ignoredIps.includes(clientIp)
+      }
     }]),
 
     CacheModule.registerAsync({

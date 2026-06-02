@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { RoleEntity } from "../modules/roles/entities/role.entity";
@@ -7,6 +7,7 @@ import { enumRole } from "../common/enums/role.enum";
 
 @Injectable()
 export class RoleSeederService implements OnModuleInit {
+    private readonly logger = new Logger(RoleSeederService.name)
     
     constructor(
         @InjectRepository(RoleEntity)
@@ -15,6 +16,7 @@ export class RoleSeederService implements OnModuleInit {
 
     async onModuleInit() {
         await this.seedRoles()
+        this.logger.log('Seeder spreaded')
     }
 
     async seedRoles() {
@@ -29,6 +31,5 @@ export class RoleSeederService implements OnModuleInit {
             }
         }
 
-        console.log(`[] - Seeder de Roles realizado`)
     }
 }

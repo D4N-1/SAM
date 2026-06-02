@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsObject, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { DTO } from 'src/common/constants/generic.dto';
+import { IsStringOrObject } from 'src/common/utils/class-validator';
 
 export class SaveAuthDto {
 
@@ -21,10 +22,10 @@ export class SaveAuthDto {
   key: string;
 
   @ApiProperty({
-    description: 'El objeto con los datos criptográficos que envía Baileys',
+    description: 'El objeto o string con los datos criptográficos que envía Baileys',
     example: { noiseKey: { private: '...', public: '...' } },
   })
-  @IsObject()
+  @IsStringOrObject()
   @IsNotEmpty()
   value: Record<string, any>;
 }
