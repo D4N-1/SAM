@@ -1,0 +1,61 @@
+[
+    [
+        "*Hola {name}*",
+        "",
+        "Soy {botName}",
+        "",
+        "Soy un bot para WhatsApp dedicado exclusivamente para ti y para tus grupos",
+        "",
+        "Si quieres saber mas de mi o como interactuar conmigo, usa estos botones de abajo",
+        "",
+        "> Gracias por usar a *SAM*"
+    ],
+    [
+        "¡Hola! 👋 Soy *{botName}*",
+        "",
+        "Tu asistente personal para WhatsApp. He llegado para ayudarte a gestionar tus grupos de manera más eficiente y divertida 🚀",
+        "",
+        "¿Listo para empezar? Explora todo lo que puedo hacer por ti a través de los botones de abajo",
+        "",
+        "> Gracias por confiar en *SAM* ✨"
+    ],
+    [
+        "¡Bienvenido {name}! Soy *{botName}* 🤖",
+        "",
+        "Mi misión es optimizar la administración de tus chats y grupos. Desde moderación hasta juegos increibles, siempre a tu servicio",
+        "",
+        "¿Quieres ver de qué soy capaz? Consulta mis comandos y funciones aquí abajo",
+        "",
+        "> Potencia tu experiencia con *SAM* ⚙️"
+    ],
+    [
+        "Hola, soy *{botName}* 🖖",
+        "",
+        "Estoy diseñado para gestionar tus grupos y facilitarte la vida en WhatsApp",
+        "",
+        "¿Qué quieres hacer hoy?",
+        "👇 Elige una opción abajo",
+        "",
+        "> *SAM* — Gestión para tus chats"
+    ],
+    [
+        "¡Hola! Soy *{botName}* y estoy feliz por presentarme 🌐",
+        "",
+        "No solo soy un bot; soy tu centro de mando para todo lo que sucede en tus grupos. Estoy aqui para darle vida a tus chats con una infinidad de comandos",
+        "",
+        "Descubre cómo puedo serte de ayuda en tus grupos aquí:",
+        "",
+        "> *SAM* | Tu bot personalizable y gratis 🚀"
+    ],
+    [
+        "¡Hola, {name}! 🗺️",
+        "",
+        "Soy *{botName}*, tu bot único. Diseñada para navegar contigo",
+        "",
+        "¿Quieres ver todas las funciones que tengo desbloqueadas para ti?",
+        "",
+        "Haz clic en los botones de abajo para empezar el recorrido",
+        "",
+        "> *SAM* | ¡Lista para la acción! ⚡"
+    ]
+]

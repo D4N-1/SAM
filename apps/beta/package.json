@@ -2,7 +2,8 @@
   "name": "beta",
   "version": "1.0.0",
   "scripts": {
-    "start": "node main.js"
+    "test": "tsx watch src/main.ts",
+    "start": "tsc && node dist/main.js"
   },
   "type": "module",
   "keywords": [],
