@@ -1,0 +1,17 @@
+{
+  "name": "beta",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@itsliaaa/baileys": "^0.3.16",
+    "pino": "^10.3.1"
+  }
+}
