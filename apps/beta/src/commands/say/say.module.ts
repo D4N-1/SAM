@@ -22,15 +22,16 @@ export default class SayCommand implements interfaceCommand {
 
         const image = await quoted.qImage() || await message.image();
         const video = await quoted.qVideo() || await message.video();
+        const gifPlayback = isGif||quoted?.qIsGif
         const sticker = await quoted.qSticker();
 
-        if (!text && !image && !video && !sticker) return await sam.send.text(chatId, getHint(), { reply: { msg, sender } } );
+        if (!text && !image && !video && !sticker) return await sam.sendMessage(chatId, { text: getHint(), reply: { msg, sender } } );
 
-        if (image) return await sam.send.image(chatId, text!, image! )
-            if (video) return await sam.send.video(chatId, text!, video!, { gifPlayback: isGif||quoted?.qIsGif } )
-                if (sticker) return await sam.send.sticker(chatId, sticker )
+        if (image) return await sam.sendMessage(chatId, { text, image } )
+            if (video) return await sam.sendMessage(chatId, { text, video, gifPlayback } )
+                if (sticker) return await sam.sendMessage(chatId, { sticker } )
             
-        return await sam.send.text(chatId, text! )
+        return await sam.sendMessage(chatId, { text } )
 
     }
 }

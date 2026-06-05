@@ -34,7 +34,6 @@ export class BotAuthService {
 
         const { botUid, key, value } = saveAuthDto;
 
-
         const bot = await this.botService.findOneBy.contactUid(botUid)
 
         let auth = await this.botAuthRepository.findOne({
@@ -44,10 +43,9 @@ export class BotAuthService {
             }
         })
 
-        const stringifyValue = JSON.stringify(value);
 
         if (auth) {
-            auth.value = stringifyValue
+            auth.value = value
             return await this.botAuthRepository.save(auth)
 
         } else {
@@ -56,7 +54,7 @@ export class BotAuthService {
                 const newAuth = this.botAuthRepository.create({
                     bot,
                     key,
-                    value: stringifyValue
+                    value: value
                 })
             
                 return await this.botAuthRepository.save(newAuth)
@@ -73,7 +71,7 @@ export class BotAuthService {
                         }
                     });
                     if (auth) {
-                        auth.value = stringifyValue;
+                        auth.value = value;
                         return await this.botAuthRepository.save(auth)
                     }
                 } else throw error;
@@ -91,6 +89,23 @@ export class BotAuthService {
         })
 
         if (!auth) return null;
-            return auth.value;
+            return auth;
+    }
+
+
+    
+    async deleteAuthKey(uid: string, key: string) {
+
+        const creds = await this.getAuthKey(uid, key)
+        if (!creds) return null
+        
+        await this.botAuthRepository.delete({
+            bot: { contact: { uid: uid } },
+            key
+        })
+
+        return {
+            message: `La CRED ${key} del bot ha sido eliminada`
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { downloadContentFromMessage, getContentType, getDevice, type WASocket } from "@itsukichan/baileys"
+import { downloadContentFromMessage, getContentType, getDevice } from "@itsliaaa/baileys"
 import type interfaceKey from "../common/interfaces/key-message.interface.js";
 import type interfaceMessage from "../common/interfaces/parsed-message.interface.js";
 import axios from "axios";
@@ -70,7 +70,7 @@ const downloadMedia = async(msg: any, type: Type) => {
 
 
 
-export function parseMessage(sock: WASocket, msg: any): interfaceMessage|null|undefined {
+export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefined {
     try {
         if (!msg || !msg.message) return null;
 
@@ -91,11 +91,21 @@ export function parseMessage(sock: WASocket, msg: any): interfaceMessage|null|un
         const caption: string | undefined = actualMessage?.imageMessage?.caption || 
             actualMessage?.videoMessage?.caption;
 
+        const buttonContent: string | undefined = actualMessage?.templateButtonReplyMessage?.selectedId
+        const buttonDisplay: string | undefined = actualMessage?.templateButtonReplyMessage?.selectedDisplayText
+        /*
+          "message": {
+    "templateButtonReplyMessage": {
+      "selectedId": "!bot.tel",
+      "selectedDisplayText": "Detalles técnicos",
+      */
+
         const botNumber: string|undefined = parseUid(sock.user!.id);
         const botUid: string|undefined = botNumber?.split('@')[0]
         const botName = async(): Promise<string> => (await getContact(botUid!))?.name;
 
         const isGroup: boolean = chatId.endsWith('@g.us');
+        const isPrivate: boolean = chatId.endsWith('@s.whatsapp.net') || chatId.endsWith('@lid')
 
         const contentType: enumMessage = getContentType(msg.message) as enumMessage;
 
@@ -161,11 +171,14 @@ export function parseMessage(sock: WASocket, msg: any): interfaceMessage|null|un
             pushName,
             content,
             caption,
-            captent: content ?? caption,
+            buttonContent,
+            buttonDisplay,
+            captent: content ?? caption ?? buttonContent,
             botNumber,
             botUid,
             botName,
             isGroup,
+            isPrivate,
             contentType,
             allMentions,
             mentionedJid,

@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { SWAGGER } from "src/common/utils/swagger.utils";
 import { BotAuthService } from "./bot-auth.service";
-import { SaveAuthDto } from "../dto/save-bot-auth.dto";
 import { API_PARAM } from "src/common/constants/api-param";
 import { BotAuthEntity } from "../entities/bot-auth.entity";
 import { ERROR_CODE } from "src/common/utils/error.utils";
@@ -24,9 +23,10 @@ export class BotAUthController {
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('bot auth') })
     @ApiOkResponse({ description: SWAGGER.OK.FIND('bot auth'), type: BotAuthEntity })
-    @Get(':botUid/:key')
-    async getAuthKey(@Param('botUid') botUid: string, @Param('key') key: string) {
-        return this.botAuthService.getAuthKey(botUid, key)
+    @ApiParam(API_PARAM.UID)
+    @Get(':uid/:key')
+    async getAuthKey(@Param('uid') uid: string, @Param('key') key: string) {
+        return this.botAuthService.getAuthKey(uid, key)
     }
 
     
@@ -34,16 +34,26 @@ export class BotAUthController {
     @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('bot auth'), type: BotAuthEntity })
     @ApiConflictResponse({ description: SWAGGER.CONFLICT('bot auth'), schema: { example: ERROR_CODE.CONFLICT('bot auth') } })
     @Post()
-    async saveAuthKey(@Body() saveAuthDto: SaveAuthDto) {
+    async saveAuthKey(@Body() saveAuthDto: any) {
+        console.log(`LA API RECIBE UN: ${typeof saveAuthDto.value}`)
         return this.botAuthService.saveAuthKey(saveAuthDto)
     }
 
     @ApiOperation({ summary: SWAGGER.SUMMARY.DELETE('bot auth') })
     @ApiOkResponse({ description: SWAGGER.OK.DELETE('bot auth'), type: BotAuthEntity })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('bot auth'), schema: { example: ERROR_CODE.NOT_FOUND('bot auth') } })
-    @Delete(':uid')
     @ApiParam(API_PARAM.UID)
-    async deleteAllAuthKey(@Param('uid') botUid: string){
-        return this.botAuthService.deleteAllAuthKey(botUid)
+    @Delete(':uid')
+    async deleteAllAuthKey(@Param('uid') uid: string){
+        return this.botAuthService.deleteAllAuthKey(uid)
+    }
+
+    @ApiOperation({ summary: SWAGGER.SUMMARY.DELETE('bot auth') })
+    @ApiOkResponse({ description: SWAGGER.OK.DELETE('bot auth'), type: BotAuthEntity })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('bot auth'), schema: { example: ERROR_CODE.NOT_FOUND('bot auth') } })
+    @ApiParam(API_PARAM.UID)
+    @Delete(':uid/:key')
+    async deleteAuthKey(@Param('uid') uid: string, @Param('key') key: string){
+        return this.botAuthService.deleteAuthKey(uid, key)
     }
 }

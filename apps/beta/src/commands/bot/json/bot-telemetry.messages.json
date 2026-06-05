@@ -22,7 +22,7 @@
     "╔═════ *{botName}* ═════╗",
     "║ ◈ ROL: {role}",
     "║ ◈ ID: +{uid}",
-    "╚═════════════════════╝",
+    "╚═════════════╝",
     "",
     "◉ ESTADÍSTICAS:",
     "  *{groups}* Grupos | *{communities}* Comunidades",

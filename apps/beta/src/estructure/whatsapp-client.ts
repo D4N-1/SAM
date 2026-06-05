@@ -1,5 +1,5 @@
 import P from "pino"
-import { makeWASocket } from "@itsukichan/baileys";
+import { makeWASocket, useMultiFileAuthState } from "@itsliaaa/baileys";
 import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent, sendAliveInterval, registerGroupsEvent } from "./whatsapp-events.js";
 import apiLoginService from "./whatsapp-login.service.js";
 import Logger from "../common/utils/logger.util.js";
@@ -20,32 +20,31 @@ export async function startWhatsappBot(uid: string, code: string) {
     
     const { state, saveCreds } = await useApiAuthState(uid);
     
+
     const sam:any = makeWASocket({
-        version: [2, 3000, 1037076227],
+        //version: [2, 3000, 1037076227],
         auth: state,
         //browser: [ 'Windows', 'Edge', "2.3000.1039785632-alpha" ],
         browser: ['Ubuntu', 'Chrome', '120.0.0'],
         // Chrome / Safari / Firefox / Edge / Opera
-        logger: P({ level: "silent" }),
+        logger: P({ level: "warn" }),
         // silent / fatal / error / warn / info / debug / trace
 
-        syncFullHistory: false,
-        shouldSyncHistoryMessage: () => false,
+        //syncFullHistory: false,
+        //shouldSyncHistoryMessage: () => false,
 
         //qrTimeout: 20_000,
         //markOnlineOnConnect: true,
 
         //connectTimeoutMs: 60_000,
+        markOnlineOnConnect: true,
         keepAliveIntervalMs: 30_000,
         generateHighQualityLinkPreview: true,
         linkPreviewImageThumbnailWidth: 300
     });
 
 
-    sendAliveInterval(sam);
-    registerConnectionEvent(uid, code, sam);
     registerCredsEvents(sam, saveCreds);
-    registerMessagesEvent(sam);
-    registerGroupsEvent(sam)
+    registerConnectionEvent(uid, code, sam);
 
 }

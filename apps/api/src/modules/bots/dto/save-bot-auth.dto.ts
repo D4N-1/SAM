@@ -25,7 +25,7 @@ export class SaveAuthDto {
     description: 'El objeto o string con los datos criptográficos que envía Baileys',
     example: { noiseKey: { private: '...', public: '...' } },
   })
-  @IsStringOrObject()
+  @IsString()
   @IsNotEmpty()
-  value: Record<string, any>;
+  value: string;
 }

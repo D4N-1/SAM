@@ -7,6 +7,7 @@ export enum enumMessage {
     encCommentMessage = 'encCommentMessage',
     reactionMessage = 'reactionMessage',
     conversation = 'conversation',
-    encReactionMessage = 'encReactionMessage'
+    encReactionMessage = 'encReactionMessage',
+    templateButtonReplyMessage = 'templateButtonReplyMessage'
 }
 export { enumMessage as default }

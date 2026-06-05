@@ -1,62 +1,91 @@
 import { Api } from '../../common/utils/api.util.js';
-import type { AuthenticationState } from '@itsukichan/baileys';
-import { BufferJSON, initAuthCreds } from '@itsukichan/baileys';
+import { BufferJSON, initAuthCreds, proto } from '@itsliaaa/baileys';
 import Logger from '../../common/utils/logger.util.js';
 
 export const useApiAuthState = async (botUid: string) => {
-    
-    const loadData = async (key: string) => {
-        try {
-            const response = await Api.get(`/bots/auth/${botUid}/${key}`);
-            
-            if (response.status !== 200) return null;
-            
-            const rawData = response.data;
-            const jsonString = typeof rawData === 'string' ? rawData : JSON.stringify(rawData);
 
-            return JSON.parse( jsonString, BufferJSON.reviver )
-        } catch (error) {
-            return null; 
-        }
-    };
 
-    const saveData = async (key: string, value: any) => {
+    const writeData = async (key: string, value: any) => {
         try {
+
+
+            const string = JSON.stringify( value, BufferJSON.replacer )
+            
             await Api.post('/bots/auth', {
                 botUid: botUid,
                 key: key,
-                value: value
+                value: string
             });
+
         } catch (error:any) {
-            Logger.error('WhatsAppAuth', `Error guardando la llave [${key}] en la API`);
+            console.error(`Error escribiendo ${key}:`, error);
+            return null;
+        }
+    };
+    
+    const readData = async (key: string) => {
+        try {
+
+            const response = await Api.get(`/bots/auth/${botUid}/${key}`);
+
+            const data = response.data;
+            if (response.status !== 200 || !data) return null;
+
+            const value = JSON.parse(data.value, BufferJSON.reviver);
+            return value;
+        } catch (error) {
+            console.error(`Error leyendo ${key}:`, error);
+            return null;
         }
     };
 
-    const state: AuthenticationState = {
+    const removeData = async (key: string) => {
+        try {
 
-        creds: await loadData('creds') || initAuthCreds(), 
-        keys: {
-            get: async (type, ids) => {
-                const data: { [_: string]: any } = {};
-                for (const id of ids) {
-                    data[id] = await loadData(`${type}-${id}`);
-                }
-                return data;
-            },
-            set: async (data: any) => {
-                for (const type in data) {
-                    for (const id in data[type]) {
-                        await saveData(`${type}-${id}`, data[type][id]);
+            await Api.del(`/bots/auth/${botUid}/${key}`)
+
+        } catch { }
+    }
+
+
+    const creds = ( await readData('creds') ) || initAuthCreds();
+    return {
+        state: {
+
+            creds, 
+            keys: {
+                get: async (type: string, ids: string[]) => {
+                    const data: any = {};
+
+                    await Promise.all(ids.map( async(id) => {
+                        
+                        let value = await readData(`${type}-${id}`);
+                        if (type === 'app-state-sync-key' && value) {
+                            value = proto.Message.AppStateSyncKeyData.fromObject(value);
+                        }
+
+                        data[id] = value;
+
+                    }));
+                    return data;
+                },
+
+                set: async (data: any) => {
+                    for (const type in data) {
+                        for (const id in data[type]) {
+                            const value = data[type][id];
+                            const key = `${type}-${id}`;
+                            // Cambia esto: tasks.push(...)
+                            // Por esto (await directo):
+                            await (value ? writeData(key, value) : removeData(key));
+                        }
                     }
                 }
             }
-        }
-    };
+        },
 
-    return {
-        state,
         saveCreds: async () => {
-            await saveData('creds', state.creds);
+            return writeData('creds', creds)
         }
-    };
-};
+    }
+}

@@ -1,6 +1,6 @@
 import type { enumStatusConnection } from "../enums/enum.status.js";
 
-export const msgSTATUS_CONNECTION: Record <enumStatusConnection, string> = {
+export const msgSTATUS_CONNECTION = {
     connecting: "CONECTANDO...",
     close: "CERRADA",
     open: "ESTABLECIDA"

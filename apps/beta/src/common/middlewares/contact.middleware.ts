@@ -18,7 +18,7 @@ export class ContactMiddleware implements SamMiddleware {
                 sender?.split('@')[0];
 
             const lid = sender?.endsWith('@') ? sender?.split('@')[0] :
-                senderAlt?.split('@');
+                senderAlt?.split('@')[0];
 
             const res = await Api.get(`/contacts/uid/${uid}`);
 

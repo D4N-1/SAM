@@ -3,12 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "@sam/bot-test": "cd apps/bot && npm run test",
-    "@sam/bot-start": "cd apps/bot && npm run start",
-    "@sam/api-test": "cd apps/api && npm run test",
-    "@sam/api-start": "cd apps/api && npm run start",
-    "@sam/web-test": "cd apps/web && npm run watch",
-    "@sam/web-start": "cd apps/web && npm run start"
   },
   "workspaces": [
     "apps/*"
