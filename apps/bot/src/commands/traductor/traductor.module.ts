@@ -24,10 +24,10 @@ export default class TraductorCommand implements interfaceCommand {
 
         if (captent?.split(' ')[1] === enumError.ERROR ) throw new Error( enumError.INTENTIONAL )
 
-        if ( captent?.startsWith('!traducir') || captent?.startsWith('!traductor') ) return await sam.send.text(chatId, '🌐 𝗨𝘀𝗮 𝗲𝘀𝘁𝗲 𝗰𝗼𝗺𝗮𝗻𝗱𝗼 𝗰𝗼𝗻 𝗲𝗹 𝗶𝗱𝗶𝗼𝗺𝗮 𝗮𝗹 𝗰𝘂𝗮𝗹 𝗱𝗲𝘀𝗲𝗮𝘀 𝘁𝗿𝗮𝗱𝘂𝗰𝗶𝗿\n\n> ☉ \`!english\` hola')
+        if ( captent?.startsWith('!traducir') || captent?.startsWith('!traductor') ) return await sam.sendMessage(chatId, { text: '🌐 𝗨𝘀𝗮 𝗲𝘀𝘁𝗲 𝗰𝗼𝗺𝗮𝗻𝗱𝗼 𝗰𝗼𝗻 𝗲𝗹 𝗶𝗱𝗶𝗼𝗺𝗮 𝗮𝗹 𝗰𝘂𝗮𝗹 𝗱𝗲𝘀𝗲𝗮𝘀 𝘁𝗿𝗮𝗱𝘂𝗰𝗶𝗿\n\n> ☉ \`!english\` hola' } )
 
         const origin = quoted.qCaptent || captent?.split(' ').slice(1).join(' ').trim();
-        if ( !origin ) return await sam.send.text(chatId, getHint())
+        if ( !origin ) return await sam.sendMessage(chatId, { text: getHint() } )
 
         const leng = captent?.slice(1).split(' ')[0]
         const to = [ 'english', 'ingles' ].includes(leng!) ? 'en' :
@@ -39,7 +39,7 @@ export default class TraductorCommand implements interfaceCommand {
 
         const text = `🌐 𝗧𝗿𝗮𝗱𝘂𝗰𝗰𝗶𝗼𝗻 𝗮𝗹 *${leng}*\n\n${translated.text}`
 
-        return await sam.send.text(chatId, text, { reply: { msg, sender } } )
+        return await sam.sendMessage(chatId, { text, reply: { msg, sender } } )
 
     }
 }

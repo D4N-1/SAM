@@ -1,6 +1,5 @@
 import type interfaceCommand from "../common/interfaces/command.interface.js";
 import type interfaceMessage from "../common/interfaces/parsed-message.interface.js";
-import type { WASocket } from "@itsukichan/baileys";
 import WhatsappService from "../estructure/whatsapp.service.js";
 import { ALL_COMMANDS, GLOBAL_MIDDLEWARES } from "./command.module.js";
 import Logger from "../common/utils/logger.util.js";
@@ -42,7 +41,7 @@ export class CommandRouter {
         command.aliases?.forEach( alias => this.commands.set(alias, command) )
     }
 
-    public async handler(samSocket: WASocket, message: interfaceMessage) {
+    public async handler(samSocket: any, message: interfaceMessage) {
 
         const sam = new WhatsappService(samSocket);
 
@@ -75,7 +74,7 @@ export class CommandRouter {
                         Logger.error(`${name.toUpperCase()}Module`, 'Internal')
                         console.error(error)
                     }
-                    sam.send.text(message.chatId, await GetErrorMessage(name), { canal: true, reply: { msg: message, sender: message.sender }})
+                    sam.sendMessage(message.chatId, { text: await GetErrorMessage(name), canal: true, reply: { msg: message, sender: message.sender }})
                 }
             })
 

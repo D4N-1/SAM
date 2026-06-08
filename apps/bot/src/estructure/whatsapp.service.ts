@@ -1,9 +1,12 @@
-import { generateWAMessageFromContent, proto } from '@itsukichan/baileys';
-import type { WAPresence, WASocket } from "@itsukichan/baileys";
 import type interfaceKey from "../common/interfaces/key-message.interface.js";
 import type { interfaceMessageOptions } from "../common/interfaces/message-options.interface.js";
+import { prepareWAMessageMedia } from '@itsliaaa/baileys'
 import { Api } from "../common/utils/api.util.js";
+import { randomFooter } from "../common/messages/footer.message.js";
+import { simbolJADE } from "../common/constants/ascii.constant.js";
 
+
+const url = 'https://sambot.live'
 
 export async function getContact(id: string) {
 
@@ -27,155 +30,48 @@ export async function count(type: 'communities' | 'groups') {
 export default class WhatsappService {
 
     constructor(
-        private readonly sock: WASocket
+        private readonly sock: any
     ) {}
 
-    send = {
+    async sendMessage(chatId: string, options?: interfaceMessageOptions) {
 
-        text: async(chatId: string, text: string, options?: interfaceMessageOptions) => {
-            return this.sock.sendMessage(chatId, { text, ...this.addMessageOptions(options) })
-        },
+            const messageOptions = await this.addMessageOptions(options);
+            console.log(messageOptions)
+            return this.sock.sendMessage(chatId, messageOptions)
 
-        image: async(chatId: string, caption: string, image: Buffer, options?: interfaceMessageOptions) => {
-            return this.sock.sendMessage(chatId, { image, caption, ...this.addMessageOptions(options) })
-        },
-
-        video: async(chatId: string, caption: string, video: Buffer, options?: interfaceMessageOptions) => {
-            return this.sock.sendMessage(chatId, { video, caption, ...this.addMessageOptions(options) })
-        },
-
-        sticker: async(chatId: string, sticker: Buffer, options?: interfaceMessageOptions) => {
-            return this.sock.sendMessage(chatId, { sticker, ...this.addMessageOptions(options) })
-        }
     }
 
-    
-async dum(chatId: string) {
-    // 1. Construimos el contenido del mensaje
-    const messageContent = {
-        extendedTextMessage: {
-            text: "Este es un mensaje con preview",
-            contextInfo: {
-                externalAdReply: {
-                    title: "SAM",
-                    body: "Prueba forzada",
-                    mediaType: 1,
-                    thumbnailUrl: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-                    sourceUrl: "https://google.com",
-                    renderLargerThumbnail: true,
-                    showAdAttribution: false
-                }
-            }
-        }
-    };
 
-    // 2. Usamos el constructor de proto (esto evita el error de lectura de undefined)
-    const finalMessage = {
-        message: messageContent
-    };
 
-    // 3. Relay directo
-    return await this.sock.relayMessage(chatId, finalMessage.message, { 
-        messageId: 'SAM' + Date.now() 
-    });
-}
+    async addMessageOptions(options: interfaceMessageOptions|undefined) {
 
-    /*
-
-{
-  "key": {
-    "remoteJid": "120363419101925665@g.us",
-    "fromMe": true,
-    "id": "SUKIB031AC296617FA31"
-  },
-  "message": {
-    "extendedTextMessage": {
-      "text": "¡Hola, D4N1! 🗺️\n\nSoy *SAM*, tu bot único. Diseñada para  navegar contigo\n\n¿Quieres ver todas las funciones que tengo desbloqueadas para ti?\n\nHaz clic en los botones de abajo para empezar el recorrido\n\n> *SAM* | ¡Lista para la acción! ⚡",
-      "contextInfo": {
-        "expiration": "7776000",
-        "externalAdReply": {
-          "title": "si",
-          "body": "Desarrollado para ti",
-          "mediaType": "IMAGE",
-          "thumbnailUrl": "https://sambot.live/",
-          "thumbnail": "/9j/4AAQSkZJRgABAQAAQCjUUWglNleRjOtGb",
-          "sourceUrl": "https://sambot.live/",
-          "renderLargerThumbnail": true,
-          "showAdAttribution": false
-        }
-      }
-    },
-    "messageContextInfo": {
-      "messageSecret": "03qSbMbLE2FY8SPjRHJKaB34WJDJbMs73brIyTkVO8o="    
-    }
-  },
-  "messageTimestamp": "1780440369",
-  "status": "PENDING",
-  "participant": "573115548811:94@s.whatsapp.net"
-}
-  */
-
-/*
-{
-  "key": {
-    "remoteJid": "120363419101925665@g.us",
-    "fromMe": false,
-    "id": "ACC6AD5CD27825E3F3A9B56AA2A8047D",
-    "participant": "159893176774698@lid",
-    "participantAlt": "573208201009@s.whatsapp.net"
-  },
-  "messageTimestamp": 1780440431,
-  "pushName": "D4N1",
-  "broadcast": false,
-  "newsletter": false,
-  "platform": "android",
-  "message": {
-    "extendedTextMessage": {
-      "text": "https://sambot.live/",
-      "matchedText": "https://sambot.live/",
-      "description": "SAM x whatsapp",
-      "title": "SAM home",
-      "previewType": "NONE",
-      "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/4gqm=",
-      "contextInfo": {
-        "expiration": 7776000,
-        "disappearingMode": {
-          "initiator": "CHANGED_IN_CHAT",
-          "trigger": "UNKNOWN"
-        }
-      },
-      "thumbnailDirectPath": "/v/t62.36144-24/659240961_2935054390243913_436830592238742242_n.enc?ccb=11-4&oh=01_Q5Aa4gGezxkjE-cDJFErNNuukgU_40ltmpEYCDUhecnYY6Qogw&oe=6A46CC79&_nc_sid=5e03e0",
-      "thumbnailSha256": "ylDCI1rJ0+rzALj5bVyNOlL28rkp+vpyELinfIJ0JnU=",
-      "thumbnailEncSha256": "A8tIPaYjIVd/a+3vMuNI4FedUMWA2uf4zT6iE2vhnaU=",
-      "mediaKey": "GfVOSOUC5xhIO87xRjGxunOrFjXlXYVEiT6G5oCa9Xg=",
-      "mediaKeyTimestamp": "1780440430",
-      "thumbnailHeight": 573,
-      "thumbnailWidth": 1024,
-      "inviteLinkGroupTypeV2": "DEFAULT"
-    },
-    "messageContextInfo": {
-      "messageSecret": "L5xF++8g9kcnaDm2ME5kca9qWykOptHAL5OlOn+C9/g="
-    }
-  }
-}
-
-  */
-
-    addMessageOptions(options: interfaceMessageOptions|undefined) {
-
-        const sent: any = {};
+        let res: any = {};
         const contextInfo: any = {};
 
         if (!options) return {};
 
-        const { reply, mentions, canal, gifPlayback, edit, footer, forward, preview } = options;
+        const { reply, mentions, canal, gifPlayback, edit, footer, forward, preview,
+            externalPreview, miniPreview, secure, ai, image, caption, sticker, text, video, nativeflow } = options;
 
-        if (gifPlayback) sent.gifPlayback = gifPlayback;
-        if (edit) sent.edit = edit;
-        if (footer) sent.footer = 'SAM'
+        if (edit) res.edit = edit;
+        if (footer) res.footer = randomFooter();
+        if (ai) res.ai = true
+        if (secure) res.secureMetaServiceLabel = secure
         
+        if (image) {
+            res.image = image
+            res.caption = caption || ''
 
-        if (reply?.msg && reply.sender) {
+        } else if (video) {
+
+            res.video = video;
+            res.caption = caption || ''
+            if (gifPlayback) res.gifPlayback = gifPlayback;
+
+        } else if (sticker) res.sticker = sticker;
+        else res.text = text;
+
+        if (reply) {
             contextInfo.quotedMessage = reply.msg.message
             contextInfo.stanzaId = reply.msg.key.id
             contextInfo.participant = reply.sender
@@ -193,23 +89,70 @@ async dum(chatId: string) {
           }
         }
 
+        res.contextInfo = contextInfo;
+
+
         if (preview) {
 
-            contextInfo.externalAdReply = {
-              mediaType: 1,
-              title: 'si',
-              body: `Desarrollado para ti`,
-              thumbnail: preview,
-              thumbnailUrl: 'https://sambot.live/',
-              sourceUrl: 'https://sambot.live/',
-              showAdAttribution: false,
-              renderLargerThumbnail: true,
+            const { imageMessage: image } = await prepareWAMessageMedia({
+                image: preview.image
+            }, {
+               upload: this.sock.waUploadToServer,
+               mediaTypeOverride: 'thumbnail-link'
+            })
+
+            image!.height = 480
+            image!.width = 480
+
+            res.text += `\n\n> ${simbolJADE} ${url}`
+            res.linkPreview = {
+                'matched-text': url,
+                title: preview.title,
+                description: preview.description,
+                previewType: 0,
+                jpegThumbnail: preview.image,
+                highQualityThumbnail: image,
+                linkPreviewMetadata: {
+                    linkMediaDuration: 0, // --- Duration in seconds (for video/audio content)
+                    socialMediaPostType: 1, // --- Enum: 0 = NONE, 1 = REEL, 2 = LIVE_VIDEO, 3 = LONG_VIDEO, 4 = SINGLE_IMAGE, 5 = CAROUSEL
+                }
             }
+            
+
         }
 
-        sent.contextInfo = contextInfo;
+        if (miniPreview) {
+            res.linkPreview = {
+               'matched-text': url,
+               title: 'ZZZ',
+               description: 'ZZZ',
+               previewType: 0,
+               jpegThumbnail: miniPreview
+            }
 
-        return Object.keys(sent).length ? sent
+        }
+
+        if (externalPreview) {
+
+            res.externalAdReply = {
+                mediaType: 1,
+                title: 'title',
+                body: `Desarrollado para ti ♡`,
+                thumbnail: externalPreview,
+                thumbnailUrl: 'https://sambot.live',
+                sourceUrl: 'https://sambot.live',
+                showAdAttribution: true,
+                renderLargerThumbnail: true,
+            }
+
+        }
+
+
+
+        if (nativeflow) res = { ...res, ...nativeflow }
+        
+
+        return Object.keys(res).length > 0 ? res
             : {}
           
     }
@@ -219,7 +162,7 @@ async dum(chatId: string) {
         return this.sock.readMessages([key])
     }
 
-    async sendPresenceUpdate(type: WAPresence, chatId: string) {
+    async sendPresenceUpdate(type: any, chatId: string) {
         return this.sock.sendPresenceUpdate(type, chatId)
     }
 
@@ -264,5 +207,6 @@ async dum(chatId: string) {
     async countCommunities() {
         return count('communities')
     }
+
 
 }

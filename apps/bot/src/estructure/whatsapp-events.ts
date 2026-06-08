@@ -1,6 +1,6 @@
 import * as qrcode from "qrcode"
+import { DisconnectReason } from "@itsliaaa/baileys";
 import { Boom } from "@hapi/boom";
-import { type WASocket, type BaileysEventMap } from "@itsukichan/baileys"
 import { startWhatsappBot } from "./whatsapp-client.js"
 import { enumStatusConnection } from "../common/enums/enum.status.js"
 import { msgSTATUS_TITLE, msgSTATUS_CONNECTION } from "../common/messages/log-status.message.js"
@@ -13,12 +13,13 @@ import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 import { groupUpdate } from "../common/utils/group-update.util.js";
 
+let isConnecting = false;
 
-export async function registerConnectionEvent(uid: string, code: string, sam: WASocket) {
+export async function registerConnectionEvent(uid: string, code: string, sam: any) {
 
     try {
     
-        sam.ev.on("connection.update", async (data: BaileysEventMap['connection.update']) => {
+        sam.ev.on("connection.update", async (data: any) => {
 
             let { connection, qr, lastDisconnect } = data
 
@@ -27,38 +28,47 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
 
             if (connection) {
                 console.log("\n" + msgSTATUS_TITLE)
-                console.log(msgSTATUS_CONNECTION[connection] + '\n')
+                console.log(msgSTATUS_CONNECTION[connection as keyof typeof msgSTATUS_CONNECTION] + '\n')
             }
 
-            if (!sam.authState.creds.registered && qr) {
+            if (connection === 'connecting') {
+                if (isConnecting) return;
+                isConnecting = true
+            }
+
+            if (connection === 'connecting' && !sam.authState.creds.registered) {
 
                 await wait(4_000)
 
                 console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
 
 
-                await sam.requestPairingCode(uid, code)
+                //await sam.requestPairingCode(uid, code)
 
                 console.log(`CODIGO DE EMPAREJAMIENTO: ${code}`)
-            }
 
-            if (connection === enumStatusConnection.CLOSE) {
-
-                sam.ev.removeAllListeners('connection.update');
-                sam.ev.removeAllListeners('messages.upsert');
-                sam.ev.removeAllListeners('creds.update');
+            } else if (connection === enumStatusConnection.CLOSE) {
+                isConnecting = false
 
                 const reason = (lastDisconnect?.error as Boom)?.output?.statusCode;
+                const shouldReconnect = new Boom(connection?.lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
                 console.log(reason)
 
                 //if (reason == 401)
 
-                Logger.error('WhatsappEvents', `Reintentando conexión en 5 segundos...`)
-                await wait(5_000);
-                startWhatsappBot(uid, code);
+                if (shouldReconnect) {
+                    Logger.error('WhatsappEvents', `Reintentando conexión en 5 segundos...`)
+                    await wait(1_000);
+                    startWhatsappBot(uid, code);
+                }
             }
 
-            if (connection === enumStatusConnection.OPEN) Logger.log(enumContext.WhatsappEvents, 'SAM en ACTIVO')
+            if (connection === enumStatusConnection.OPEN) {
+                Logger.log(enumContext.WhatsappEvents, 'SAM en ACTIVO')
+                sendAliveInterval(sam);
+                registerMessagesEvent(sam);
+                registerGroupsEvent(sam)
+            }
         })
 
     } catch (error) {
@@ -68,14 +78,14 @@ export async function registerConnectionEvent(uid: string, code: string, sam: WA
 }
 
 
-export function registerCredsEvents(sam: WASocket, saveCreds: any) {
+export function registerCredsEvents(sam: any, saveCreds: any) {
 
     sam.ev.on("creds.update", saveCreds);
 
 }
 
 
-export function sendAliveInterval(sam: WASocket) {
+export function sendAliveInterval(sam: any) {
 
     setInterval(async () => {
         try {
@@ -90,23 +100,23 @@ export function sendAliveInterval(sam: WASocket) {
 }
 
 
-export async function registerMessagesEvent(samSocket: WASocket) {
+export async function registerMessagesEvent(samSocket: any) {
 
     try {
 
 
-        samSocket.ev.on("messages.upsert", async (data: BaileysEventMap['messages.upsert']) => {
+        samSocket.ev.on("messages.upsert", async (data: any) => {
+
 
 
             if (!data.messages || data.messages.length === 0) return;
 
             const msg = data.messages[0];
 
-            //console.log( JSON.stringify( msg, null, 2) )
             if (!msg.key) return;
 
 
-            // console.log('MENSAJE')
+            //console.log( JSON.stringify( msg, null, 2) )
             let parsedMessage: interfaceMessage|null|undefined = parseMessage(samSocket, msg);
             if (!parsedMessage) return;
 
@@ -117,17 +127,19 @@ export async function registerMessagesEvent(samSocket: WASocket) {
         });
 
 
+
+
     } catch (error) {
         Logger.error(enumContext.WhatsappEvents, 'Internal')
     }
 }
 
 
-export async function registerGroupsEvent(samSocket: WASocket) {
+export async function registerGroupsEvent(samSocket: any) {
 
     try {
 
-        samSocket.ev.on("groups.update", async (data: BaileysEventMap['groups.update']) => {
+        samSocket.ev.on("groups.update", async (data: any) => {
 
             console.log(data)
             for (let update of data) {

@@ -30,7 +30,13 @@ export async function telemetryCommand(message: interfaceMessage, sam: WhatsappS
 
     const text = await getTelemetryText(data)
 
-    await sam.send.image(chatId, text, botImage, { canal: true })
+    await sam.sendMessage(chatId, { text, preview: {
+        image: botImage,
+        title: data.botName
+    },
+    canal: true
+    }
+    )
 
 }
 
@@ -46,14 +52,33 @@ export async function presentationCommand(message: interfaceMessage, sam: Whatsa
     let botImageUrl: string;
     try { botImageUrl = await sam.profilePictureUrl(botNumber!) } catch { botImageUrl = 'https://tse2.mm.bing.net/th/id/OIP.guJ4ESMEbUAiUlMVAZ9ZmwHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3' }
 
-    const botImage = await downloadImage(botImageUrl);
+    const image = await downloadImage(botImageUrl);
 
     const presentation: interfacePresentation = {
         botName: await botName(),
         name: contact.name
     }
 
-    const text = await getPresentationText(presentation)
+    const caption = await getPresentationText(presentation)
 
-    await sam.send.text(chatId, text, { canal: true, footer: true, forward: true, preview: botImage })
+    await sam.sendMessage(chatId, { caption, footer: true, image, nativeflow: {
+        offerText: 'Saludos',
+        optionText: 'Presiona aqui',
+        optionTitle: '¿Por donde quieres comenzar?',
+        nativeFlow: [
+            {
+                text: 'Mi página oficial',
+                url: 'https://sambot.live',
+            },
+            {
+                text: 'Mi canal oficial',
+                url: 'https://whatsapp.com/channel/0029Vb6ZB1o9xVJXchnYrH1n'
+            },
+            {
+                text: 'Detalles técnicos',
+                id: '!bot.tel'
+            },
+        ]
+    }
+    })
 }

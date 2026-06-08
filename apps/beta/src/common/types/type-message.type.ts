@@ -1,1 +1,0 @@
-export type typeMessage = 'imageMessage' | 'videoMessage'

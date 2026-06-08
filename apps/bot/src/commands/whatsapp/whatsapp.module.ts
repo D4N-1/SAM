@@ -13,7 +13,7 @@ export default class WhatsappCommand implements interfaceCommand {
 
     async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
         
-        const { key, chatId, captent, senderAlt, sender, quoted, mentionedJid, msg } = message;
+        const { key, chatId, captent, senderAlt, sender, quoted, mentionedJid } = message;
 
         sam.readMessage(key);
         sam.sendPresenceUpdate('composing', chatId);
@@ -21,14 +21,19 @@ export default class WhatsappCommand implements interfaceCommand {
         const arg = captent?.split(' ').slice(1).filter(p => !p.startsWith('@')).join('').trim();
 
         if (arg === '-error') throw new Error('INTENCIONAL')
+
+            console.log(quoted)
+            console.log(mentionedJid)
+            console.log(senderAlt)
+    
         let user = arg || quoted.qSender || mentionedJid || senderAlt || sender;
 
         user = user?.endsWith('@s.whatsapp.net') || user?.endsWith('@lid') ? user : user + '@s.whatsapp.net'
 
         const contact = await sam.onWhatsApp(user!);
-        if (!contact || contact?.length === 0) return sam.send.text(chatId, getHint())
-
         const apiContact = await sam.getContact(user)
+
+        if (!contact && !apiContact) return sam.sendMessage(chatId, { text: getHint() })
         
         const status: any = await sam.fetchStatus(user!);
         const info: string | undefined = status?.[0]?.status?.status?.trim();
@@ -38,12 +43,13 @@ export default class WhatsappCommand implements interfaceCommand {
         try { ( imageUrl = await sam.profilePictureUrl(user!) )  } catch { imageUrl = imageBackUrl() }
 
         const image = await downloadImage(imageUrl)
-
+        
         const name = apiContact.name;
+
         const text = await getText(name, apiContact.uid, info, updated)
 
-        //await sam.send.image(chatId, text, image, { forward: true, preview: image } )
-        await sam.dum(chatId)
+
+        await sam.sendMessage(chatId, { text, preview: image })
             
     }
 }

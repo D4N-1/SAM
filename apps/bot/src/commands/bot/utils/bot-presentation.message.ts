@@ -11,7 +11,11 @@ export async function getPresentationText(data: interfacePresentation) {
 
     const { botName, name } = data;
 
-    let textSelected = random(messages).join('\n')
+    const title = random( messages.title )
+    const body = random( messages.body )
+    const footer = random( messages.footer )
+
+    let textSelected = title + '\n\n' + body + '\n\n' + footer
 
     textSelected = textSelected.replace('{botName}', botName);
     textSelected = textSelected.replace('{name}', name);

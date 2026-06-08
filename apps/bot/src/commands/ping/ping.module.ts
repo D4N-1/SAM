@@ -17,9 +17,9 @@ export default class PingCommand implements interfaceCommand {
     name = 'ping';
     aliases = ['p', 'pong'];
 
-    async execute(message: interfaceMessage,sam: WhatsappService): Promise<void> {
+    async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
 
-        const { key, chatId, captent, msg, sender } = message;
+        const { key, chatId, captent, msg, sender, isPrivate } = message;
 
         const start = Date.now()
 
@@ -30,7 +30,7 @@ export default class PingCommand implements interfaceCommand {
 
         const start_text = await this.pingService.getMessage( enumPingStates.CALCULANDO );
 
-        const sentMessage = await sam.send.text( chatId, start_text, { reply: { msg, sender } } );
+        const sentMessage = await sam.sendMessage( chatId, { text: start_text, reply: { msg, sender }, ai: isPrivate } );
         const end = Date.now();
 
         const diff = end - start;
@@ -42,7 +42,7 @@ export default class PingCommand implements interfaceCommand {
 
 
         const end_message = await this.pingService.getMessage(enumPingStates.CALCULADO, diff);
-        await sam.send.text(chatId, end_message, { edit: sentMessage.key, reply: { msg, sender } });
+        await sam.sendMessage(chatId, { text: end_message, edit: sentMessage.key, reply: { msg, sender, }, ai: isPrivate  });
 
         await sam.sendPresenceUpdate('paused', chatId)
 

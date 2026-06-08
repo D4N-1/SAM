@@ -1,17 +1,18 @@
 {
-  "name": "bot",
-  "version": "0.2.0",
+  "name": "beta",
+  "version": "1.0.0",
   "scripts": {
     "test": "tsx watch src/main.ts",
     "start": "tsc && node dist/main.js"
   },
   "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
+    "@hapi/boom": "^10.0.1",
     "@itsliaaa/baileys": "^0.3.16",
-    "@itsukichan/baileys": "^7.3.2",
-    "@types/qrcode": "^1.5.6",
-    "@whiskeysockets/baileys": "^7.0.0-rc13",
-    "pino": "^10.3.1",
-    "qrcode": "^1.5.4"
+    "pino": "^10.3.1"
   }
 }
