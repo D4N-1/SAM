@@ -1,50 +1,27 @@
-import type { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface.js";
-import { Api } from "../utils/api.util.js";
-import Logger from "../utils/logger.util.js";
+import { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface";
 
 
 export class ContactMiddleware implements SamMiddleware {
 
     async use(context: CommandContext, next: NextFunction): Promise<void> {
         
-        const { message } = context;
-        const { sender, senderAlt, pushName } = message;
+        const { quoted, mentionedJid, senderAlt, sender, captent } = context.message;
+        const sam = context.sam;
 
-        try {
-            
-            if ( ![ senderAlt, sender ].some( i => i?.endsWith('@s.whatsapp.net') ) ) return next();
+        const arg = captent?.split(' ').slice(1).join('').trim().replace(/[+@]|-(?!e)/g, '')
 
-            const uid = senderAlt?.endsWith('@s.whatsapp.net') ? senderAlt?.split('@')[0] :
-                sender?.split('@')[0];
-
-            const lid = sender?.endsWith('@') ? sender?.split('@')[0] :
-                senderAlt?.split('@')[0];
-
-            const res = await Api.get(`/contacts/uid/${uid}`);
-
-            if (res?.status === 200) {
-
-                const contact = res.data;
-
-                if (contact.name !== pushName) await Api.patch(`/contacts/${uid}`, {
-                    name: pushName
-                });
-
-                if (!pushName) context.message.pushName = contact.name;
-                return next();
-            }
-
-            await Api.post(`/contacts`, {
-                uid,
-                lid,
-                name: pushName
-            });
-
-            console.log('[] - NUEVO CONTACTO CREADO');
-            next();
-
-        } catch (error) {
-            Logger.error('ContactMiddleware', 'Error al obtener /contacts/uid');
+        let user = quoted.qSender || mentionedJid || arg?.replace('@','') || senderAlt || sender;
+        
+        user = user?.endsWith('@s.whatsapp.net') || user?.endsWith('@lid') ? user : user + '@s.whatsapp.net'
+        
+        const contact = await sam.onWhatsApp(user!);
+        const apiContact = await sam.getContact(user);
+        context.metadata = {
+            user,
+            contact,
+            apiContact
         }
+
+        next();
     }
 }

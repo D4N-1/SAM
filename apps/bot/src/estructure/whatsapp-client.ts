@@ -1,6 +1,6 @@
 import P from "pino"
 import { makeWASocket, useMultiFileAuthState } from "@itsliaaa/baileys";
-import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent, sendAliveInterval, registerGroupsEvent } from "./whatsapp-events.js";
+import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent, sendAliveInterval, registerGroupsEvent, registerGroupParticipantsEvent } from "./whatsapp-events.js";
 import apiLoginService from "./whatsapp-login.service.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";

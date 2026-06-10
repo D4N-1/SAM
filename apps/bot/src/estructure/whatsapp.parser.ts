@@ -18,18 +18,28 @@ const parseUid = (uid: string|undefined) => {
 }
 
 
-type Type = enumMessage.videoMessage | enumMessage.imageMessage | enumMessage.stickerMessage
+type Type = enumMessage.videoMessage | enumMessage.imageMessage |
+    enumMessage.stickerMessage | enumMessage.documentMessage |
+    enumMessage.audioMessage | enumMessage.documentWithCaptionMessage
 const downloadMedia = async(msg: any, type: Type) => {
 
     try {
 
+        console.log('\n\nDOWNLOADING')
+        console.log(JSON.stringify( msg,null,2 ) )
+
         const mediaType = type === enumMessage.imageMessage ? 'image' :
             type === enumMessage.stickerMessage ? 'sticker' :
             type === enumMessage.videoMessage ? 'video' :
+            type === enumMessage.audioMessage ? 'audio' :
+            type === enumMessage.documentMessage ? 'document' :
+            type === enumMessage.documentWithCaptionMessage ? 'document' :
             undefined;
 
         if (!mediaType) return;
-        const mediaMessage = msg?.message?.[`${mediaType}Message`] || msg?.message?.ephemeralMessage?.msg?.[`${mediaType}Message`];
+        const mediaMessage = msg?.message?.[`${mediaType}Message`] ||
+            msg?.message?.ephemeralMessage?.msg?.[`${mediaType}Message`] ||
+            msg?.message?.documentWithCaptionMessage?.message?.documentMessage;
 
         if (mediaMessage?.mediaKey) {
 
@@ -74,7 +84,9 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
     try {
         if (!msg || !msg.message) return null;
 
+        
         //console.log( JSON.stringify(msg,null,2) )
+
         
         const chatId: string = msg.key?.remoteJid || '';
         let sender: string | undefined = parseUid(msg.key?.participant || msg.key?.remoteJid);
@@ -89,16 +101,14 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
             actualMessage?.extendedTextMessage?.text;
 
         const caption: string | undefined = actualMessage?.imageMessage?.caption || 
-            actualMessage?.videoMessage?.caption;
+            actualMessage?.videoMessage?.caption ||
+            actualMessage?.documentMessage?.caption;
+
+        const fileName: string | undefined = actualMessage?.documentMessage?.fileName;
 
         const buttonContent: string | undefined = actualMessage?.templateButtonReplyMessage?.selectedId
         const buttonDisplay: string | undefined = actualMessage?.templateButtonReplyMessage?.selectedDisplayText
-        /*
-          "message": {
-    "templateButtonReplyMessage": {
-      "selectedId": "!bot.tel",
-      "selectedDisplayText": "Detalles técnicos",
-      */
+
 
         const botNumber: string|undefined = parseUid(sock.user!.id);
         const botUid: string|undefined = botNumber?.split('@')[0]
@@ -117,6 +127,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
 
         const isGif: boolean | undefined = actualMessage?.videoMessage?.gifPlayback;
         const isAnimated: boolean | undefined = actualMessage?.stickerMessage?.isAnimated;
+        const ptt: boolean | undefined = actualMessage?.audioMessage?.ptt;
 
         if (isFromMe && botNumber) sender = botNumber;
 
@@ -150,7 +161,9 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
             msg.message?.imageMessage?.contextInfo?.quotedMessage?.conversation;
 
         const qCaption: string|undefined = quotedMessage?.videoMessage?.caption ||
-            quotedMessage?.imageMessage?.caption;
+            quotedMessage?.imageMessage?.caption ||
+            quotedMessage?.documentMessage?.caption ||
+            quotedMessage?.documentWithCaptionMessage?.message?.documentMessage?.caption;
 
         const qSender: string|undefined = parseUid( msg.message?.videoMessage?.contextInfo?.participant ||
             msg.message?.imageMessage?.contextInfo?.participant ||
@@ -161,6 +174,14 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
         const qContentType: enumMessage = getContentType(quotedMessage) as enumMessage;
         const qIsGif: boolean | undefined = quotedMessage?.videoMessage?.gifPlayback;
         const qIsAnimated: boolean | undefined = quotedMessage?.stickerMessage?.isAnimated;
+        const qMimetype: string | undefined = quotedMessage?.documentMessage?.mimetype ||
+            quotedMessage?.documentWithCaptionMessage?.message?.documentMessage?.mimetype;
+        const qFileName: string | undefined = quotedMessage?.documentMessage?.fileName ||
+            quotedMessage?.documentMessage?.caption ||
+            quotedMessage?.documentWithCaptionMessage?.message?.documentMessage?.fileName ||
+            quotedMessage?.documentWithCaptionMessage?.message?.documentMessage?.caption;
+        const qPtt: boolean | undefined = quotedMessage?.audioMessage?.ptt;
+
 
         const fakeQuotedMessage = quotedMessage ? { message: quotedMessage } : null;
 
@@ -171,6 +192,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
             pushName,
             content,
             caption,
+            fileName,
             buttonContent,
             buttonDisplay,
             captent: content ?? caption ?? buttonContent,
@@ -183,6 +205,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
             allMentions,
             mentionedJid,
             isGif,
+            ptt,
             isFromMe,
             quoted: {
                 qContent,
@@ -195,9 +218,16 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
                     async () => undefined,
                 qImage: qContentType === enumMessage.imageMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
                     async () => undefined,
+                qAudio: qContentType === enumMessage.audioMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+                    async () => undefined,
+                qPtt,
                 qSticker: qContentType === enumMessage.stickerMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
                     async () => undefined,
-                qIsAnimated
+                qIsAnimated,
+                qDocument: qContentType === enumMessage.documentMessage || qContentType === enumMessage.documentWithCaptionMessage ? () => downloadMedia(fakeQuotedMessage, qContentType) :
+                    async () => undefined,
+                qMimetype,
+                qFileName
             },
             key,
             timestamp,
@@ -210,9 +240,13 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
                 async () => undefined,
             image: contentType === enumMessage.imageMessage ? () => downloadMedia(msg, contentType) :
                 async () => undefined,
+            audio: contentType === enumMessage.audioMessage ? () => downloadMedia(msg, contentType) :
+                async () => undefined,
             sticker: contentType === enumMessage.stickerMessage ? () => downloadMedia(msg, contentType) :
                 async () => undefined,
             isAnimated,
+            document: contentType === enumMessage.documentMessage ? () => downloadMedia(msg, contentType) :
+                async() => undefined,
             msg
         };
     } catch (error) {

@@ -1,5 +1,5 @@
 {
-  "name": "beta",
+  "name": "bot",
   "version": "1.0.0",
   "scripts": {
     "test": "tsx watch src/main.ts",

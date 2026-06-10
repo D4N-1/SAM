@@ -35,7 +35,6 @@ export class BotAUthController {
     @ApiConflictResponse({ description: SWAGGER.CONFLICT('bot auth'), schema: { example: ERROR_CODE.CONFLICT('bot auth') } })
     @Post()
     async saveAuthKey(@Body() saveAuthDto: any) {
-        console.log(`LA API RECIBE UN: ${typeof saveAuthDto.value}`)
         return this.botAuthService.saveAuthKey(saveAuthDto)
     }
 

@@ -6,6 +6,7 @@ import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 import GetErrorMessage from "../common/messages/error-status.message.js";
 import { MiddlewarePipeline } from "../common/utils/middleware-pipeline.util.js";
+import { enumError } from "../common/enums/error.enum.js";
 
 
 export class CommandRouter {
@@ -38,20 +39,28 @@ export class CommandRouter {
 
     private add(command: interfaceCommand) {
         this.commands.set(command.name, command);
-        command.aliases?.forEach( alias => this.commands.set(alias, command) )
+
+        for (const alias of command?.aliases ?? []) this.commands.set(alias, command);
     }
 
     public async handler(samSocket: any, message: interfaceMessage) {
 
-        const sam = new WhatsappService(samSocket);
+        const sam: WhatsappService = new WhatsappService(samSocket);
 
         try {
 
-            const pipeline = new MiddlewarePipeline();
 
-            for (const globalMiddleware of this.globalMiddlewares) pipeline.use(globalMiddleware);
+            const context = {
+                message,
+                sam,
+                metadata: {}
+            }
 
-            await pipeline.execute({ message, sam }, async() => {
+            const globalPipeline = new MiddlewarePipeline();
+
+            for (const globalMiddleware of this.globalMiddlewares) globalPipeline.use(globalMiddleware);
+
+            await globalPipeline.execute(context, async() => {
 
                 if (message.isFromMe) return;
 
@@ -63,19 +72,27 @@ export class CommandRouter {
                 const command = this.commands.get(commandName)
                 if (!command) return;
 
-                try {
-                    await command.execute(message, sam)
+                const internalPipeline = new MiddlewarePipeline();
 
-                } catch (error:any) {
+                for (const internalMiddleware of command.middlewares ?? []) internalPipeline.use(new internalMiddleware() );
+                
 
-                    const name = command.name;
+                await internalPipeline.execute(context, async() => {
 
-                    if (error.message !== 'INTENCIONAL') {
-                        Logger.error(`${name.toUpperCase()}Module`, 'Internal')
-                        console.error(error)
+                    try {
+                        await command.execute(context.message, context.sam, context.metadata)
+
+                    } catch (error:any) {
+
+                        const name = command.name;
+
+                        if (error.message !== enumError.INTENTIONAL) {
+                            Logger.error(`${name.toUpperCase()}Module`, 'Internal')
+                            console.error(error)
+                        }
+                        sam.sendMessage(message.chatId, { text: await GetErrorMessage(command), canal: true, reply: { msg: message, sender: message.sender }})
                     }
-                    sam.sendMessage(message.chatId, { text: await GetErrorMessage(name), canal: true, reply: { msg: message, sender: message.sender }})
-                }
+                })
             })
 
         } catch (error: any) {

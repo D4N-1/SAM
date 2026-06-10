@@ -2,7 +2,7 @@ import path from "node:path"
 import { random } from "../utils/function.util.js"
 import fs from 'node:fs'
 import fsAsync from 'node:fs/promises'
-import { ROOT_PATH } from "../constants/path.constant.js"
+import type interfaceCommand from "../interfaces/command.interface.js"
 
 
 const msgHEADER_ERROR = (arr?: any[]|undefined): string => {
@@ -30,17 +30,18 @@ const msgFOOTER_ERROR = (arr?: any[]|undefined): string => {
     ])
 }
 
-export async function GetErrorMessage(command?: string|undefined): Promise<string> {
+export async function GetErrorMessage(command?: interfaceCommand): Promise<string> {
 
     try {
 
-        if (!command) return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR();
+        console.log(command)
+        
+        if (!command || !command?.dirname) return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR();
 
-        const COMMANDS_PATH = path.resolve( ROOT_PATH, 'src', 'commands')
-        const JSON_PATH = path.resolve(COMMANDS_PATH, command, 'json', 'error.messages.json')
+        const JSON_PATH = path.resolve( command.dirname, 'json', 'error.messages.json')
         const exits = fs.existsSync( JSON_PATH )
 
-        if (!exits) return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR()
+        if (!exits) return msgHEADER_ERROR() + '\n\n' + msgFOOTER_ERROR();
 
         const rawJson = await fsAsync.readFile(JSON_PATH, 'utf-8')
         const Error = JSON.parse(rawJson)

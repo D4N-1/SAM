@@ -7,6 +7,7 @@ export default interface interfaceCommand {
 
     name: string,
     aliases?: string[],
-    middlewares?: SamMiddleware[],
-    execute(message: interfaceMessage, sam: WhatsappService): Promise<void>
+    dirname?: string,
+    middlewares?: (new (...args: any[]) => SamMiddleware)[],
+    execute(message: interfaceMessage, sam: WhatsappService, metadata: Record<string, any>): Promise<void>
 }

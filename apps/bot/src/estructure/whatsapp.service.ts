@@ -10,6 +10,8 @@ const url = 'https://sambot.live'
 
 export async function getContact(id: string) {
 
+    id = id?.split('@')[0]!
+
     if ( id.endsWith('@lid') ) {
         const res = await Api.get(`/contacts/lid/${id.split('@')[0]}`)
 
@@ -50,13 +52,15 @@ export default class WhatsappService {
 
         if (!options) return {};
 
-        const { reply, mentions, canal, gifPlayback, edit, footer, forward, preview,
-            externalPreview, miniPreview, secure, ai, image, caption, sticker, text, video, nativeflow } = options;
+        const { reply, mentions, mentionAll, canal, gifPlayback, edit, footer, forward, preview,
+            externalPreview, miniPreview, secure, ai, image, caption, sticker, document,
+            mimetype, fileName, text, video, nativeflow, audio, ptt } = options;
 
         if (edit) res.edit = edit;
         if (footer) res.footer = randomFooter();
         if (ai) res.ai = true
         if (secure) res.secureMetaServiceLabel = secure
+        if (mentionAll) res.mentionAll = mentionAll
         
         if (image) {
             res.image = image
@@ -69,7 +73,18 @@ export default class WhatsappService {
             if (gifPlayback) res.gifPlayback = gifPlayback;
 
         } else if (sticker) res.sticker = sticker;
-        else res.text = text;
+        else if (document) {
+            res.document = document;
+            res.mimetype = mimetype;
+            res.fileName = fileName || caption;
+            res.caption = fileName ? caption : '';
+
+        } else if (audio) {
+            res.audio = audio;
+            res.ptt = ptt;
+
+        } else res.text = text;
+        
 
         if (reply) {
             contextInfo.quotedMessage = reply.msg.message
@@ -107,7 +122,7 @@ export default class WhatsappService {
             res.text += `\n\n> ${simbolJADE} ${url}`
             res.linkPreview = {
                 'matched-text': url,
-                title: preview.title,
+                title: preview.title || '',
                 description: preview.description,
                 previewType: 0,
                 jpegThumbnail: preview.image,
@@ -162,7 +177,7 @@ export default class WhatsappService {
         return this.sock.readMessages([key])
     }
 
-    async sendPresenceUpdate(type: any, chatId: string) {
+    async sendPresenceUpdate(type: 'available'|'unavailable'|'composing'|'recording'|'paused', chatId: string) {
         return this.sock.sendPresenceUpdate(type, chatId)
     }
 
@@ -192,6 +207,10 @@ export default class WhatsappService {
         return this.sock.groupFetchAllParticipating()
     }
 
+    async groupParticipantsUpdate(chatId: string, contact: string, action: 'promote'|'demote') {
+        return this.sock.groupParticipantsUpdate(chatId, [contact], action);
+    }
+
     async getContact(uid: string): Promise<{uid: string, name: string }> {
         return getContact(uid)
     }
@@ -210,3 +229,4 @@ export default class WhatsappService {
 
 
 }
+

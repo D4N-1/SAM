@@ -12,6 +12,7 @@ import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 import { groupUpdate } from "../common/utils/group-update.util.js";
+import { GroupParticipantUpdate } from "./utils/group-participant-update.util.js";
 
 let isConnecting = false;
 
@@ -68,6 +69,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: an
                 sendAliveInterval(sam);
                 registerMessagesEvent(sam);
                 registerGroupsEvent(sam)
+                registerGroupParticipantsEvent(sam);
             }
         })
 
@@ -153,5 +155,22 @@ export async function registerGroupsEvent(samSocket: any) {
     } catch (error) {
         Logger.error(enumContext.WhatsappEvents, 'Internal')
         console.error(error);
+    }
+}
+
+
+export async function registerGroupParticipantsEvent(samSocket: any) {
+
+    try {
+
+        samSocket.ev.on("group-participants.update", async (data: any) => {
+
+            GroupParticipantUpdate(samSocket, data)
+
+        })
+
+    } catch (error) {
+        Logger.error(enumContext.WhatsappEvents, 'GroupParticipants')
+        console.error(error)
     }
 }

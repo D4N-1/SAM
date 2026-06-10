@@ -6,6 +6,7 @@ export class SyncManager {
 
     static async syncGroups(sam: WhatsappService|any, chatId: string): Promise<void> {
         try {
+
             const group = await sam.groupMetadata(chatId);
             if (!group) return;
 
@@ -41,7 +42,6 @@ export class SyncManager {
             if (bulkContacts.length > 0) await Api.post(`/contacts/bulk`, bulkContacts).catch(() => null);
             
 
-            console.log(communityRes?.data)
             if (community && communityRes?.status !== 200) {
                 const communityPost = await Api.post(`/communities`, {
                     uid: community.id.split('@')[0],
@@ -53,24 +53,61 @@ export class SyncManager {
                 }).catch(() => null);
 
                 console.log('COMMUNITY INSERTION:', communityPost?.data?.community.subject);
+
+            } else if (community && communityRes?.status === 200) {
+                await Api.patch(`/communities/${community.id.split('@')[0]}`, {
+                    uid: community.id.split('@')[0],
+                    name: community.subject,
+                    nameTime: community.subjectTime,
+                    size: community.size,
+                    creation: community.creation,
+                    description: community.desc
+
+                })
+
+                console.log('COMMUNITY UPDATE')
             }
 
-            const groupPost = await Api.post(`/groups`, {
-                communityUid: linkedParent?.split('@')[0] || null,
-                uid: group.id.split('@')[0],
-                name: group.subject,
-                nameTime: group.subjectTime,
-                size: group.size,
-                creation: group.creation,
-                description: group.desc,
-                restrict: !!group.restrict,
-                announce: !!group.announce,
-                joinApprovalMode: !!group.joinApprovalMode,
-                memberAddMode: !!group.memberAddMode,
-                ephemeralDuration: group?.ephemeralDuration
-            }).catch(() => null);
+            const groupRes = await Api.get(`/groups/${group.id.split('@')[0]}`)
+
+            if (groupRes.status !== 200) {
+                const groupPost = await Api.post(`/groups`, {
+                    communityUid: linkedParent?.split('@')[0] || null,
+                    uid: group.id.split('@')[0],
+                    name: group.subject,
+                    nameTime: group.subjectTime,
+                    size: group.size,
+                    creation: group.creation,
+                    description: group.desc,
+                    restrict: !!group.restrict,
+                    announce: !!group.announce,
+                    joinApprovalMode: !!group.joinApprovalMode,
+                    memberAddMode: !!group.memberAddMode,
+                    ephemeralDuration: group?.ephemeralDuration
+                }).catch(() => null);
             
-            console.log('GROUP INSERTION:', groupPost?.data?.group?.subject);
+                console.log('GROUP INSERTION:', groupPost?.data?.group?.subject);
+
+            } else if (groupRes?.status === 200) {
+                Api.patch(`/groups/${group.id.split('@')[0]}`, {
+                    communityUid: linkedParent?.split('@')[0] || null,
+                    uid: group.id.split('@')[0],
+                    name: group.subject,
+                    nameTime: group.subjectTime,
+                    size: group.size,
+                    creation: group.creation,
+                    description: group.desc,
+                    restrict: !!group.restrict,
+                    announce: !!group.announce,
+                    joinApprovalMode: !!group.joinApprovalMode,
+                    memberAddMode: !!group.memberAddMode,
+                    ephemeralDuration: group?.ephemeralDuration
+
+                })
+
+                console.log('GROUP UPDATE:', group?.subject);
+
+            }
 
             await Api.patch(`/groups/${group.id.split('@')[0]}`, {
                 ownerUid: group?.owner?.split('@')[0] || group.subjectOwner?.split('@')[0],
