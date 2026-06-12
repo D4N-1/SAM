@@ -54,13 +54,18 @@ export default class WhatsappService {
 
         const { reply, mentions, mentionAll, canal, gifPlayback, edit, footer, forward, preview,
             externalPreview, miniPreview, secure, ai, image, caption, sticker, document,
-            mimetype, fileName, text, video, nativeflow, audio, ptt } = options;
+            mimetype, fileName, text, video, nativeflow, audio, ptt, react } = options;
 
         if (edit) res.edit = edit;
         if (footer) res.footer = randomFooter();
         if (ai) res.ai = true
         if (secure) res.secureMetaServiceLabel = secure
         if (mentionAll) res.mentionAll = mentionAll
+
+        if (react) res.react = {
+            text: res.text,
+            key: res.key
+        }
         
         if (image) {
             res.image = image
@@ -93,7 +98,8 @@ export default class WhatsappService {
         }
 
         if (forward) contextInfo.isForwarded = true
-        if (mentions && mentions?.length > 0) contextInfo.mentionedJid = mentions
+
+        if (mentions && mentions?.length > 0) res.mentions = mentions
 
         if (canal) {
           contextInfo.isForwarded = true,
@@ -181,6 +187,18 @@ export default class WhatsappService {
         return this.sock.sendPresenceUpdate(type, chatId)
     }
 
+    async groupSettingUpdate(chatId: string, setting: 'announcement'|'not_announcement') {
+        return this.sock.groupSettingUpdate(chatId, setting);
+    }
+
+    async groupUpdateSubject(chatId: string, name: string) {
+        return this.sock.groupUpdateSubject(chatId, name);
+    }
+
+    async groupUpdateDescription(chatId: string, desc: string) {
+        return this.sock.groupUpdateDescription(chatId, desc)
+    }
+
     async onWhatsApp(uid: string) {
         return this.sock?.onWhatsApp(uid)
     }
@@ -207,7 +225,7 @@ export default class WhatsappService {
         return this.sock.groupFetchAllParticipating()
     }
 
-    async groupParticipantsUpdate(chatId: string, contact: string, action: 'promote'|'demote') {
+    async groupParticipantsUpdate(chatId: string, contact: string, action: 'promote'|'demote'|'remove'|'add') {
         return this.sock.groupParticipantsUpdate(chatId, [contact], action);
     }
 

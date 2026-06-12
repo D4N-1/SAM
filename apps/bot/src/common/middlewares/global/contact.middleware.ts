@@ -20,11 +20,12 @@ export class ContactMiddleware implements SamMiddleware {
             const lid = sender?.endsWith('@') ? sender?.split('@')[0] :
                 senderAlt?.split('@')[0];
 
-            const res = await Api.get(`/contacts/uid/${uid}`);
+            const resUid = await Api.get(`/contacts/uid/${uid}`);
+            const resLid = await Api.get(`/contacts/lid/${lid}`)
 
-            if (res?.status === 200) {
+            if (resUid?.status === 200 && resLid?.status === 200) {
 
-                const contact = res.data;
+                const contact = resUid.data;
 
                 if (contact.name !== pushName) await Api.patch(`/contacts/${uid}`, {
                     name: pushName
@@ -32,6 +33,7 @@ export class ContactMiddleware implements SamMiddleware {
 
                 if (!pushName) context.message.pushName = contact.name;
                 return next();
+
             }
 
             await Api.post(`/contacts`, {

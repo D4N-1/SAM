@@ -8,6 +8,10 @@ export interface interfaceMessageOptions {
     audio?: Buffer|undefined,
     sticker?: Buffer|undefined,
     document?: Buffer|undefined,
+    react?: {
+        text: string,
+        key: interfaceKey
+    },
     mimetype?: string|undefined,
     fileName?: string|undefined,
     ptt?: boolean|undefined,

@@ -7,6 +7,7 @@ import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares
 import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware.js";
 import type WhatsappService from "../../../estructure/whatsapp.service.js";
 import { fileURLToPath } from "node:url";
+import { delay } from "@itsliaaa/baileys";
 
 
 export default class PromoteCommand implements interfaceCommand {
@@ -17,7 +18,7 @@ export default class PromoteCommand implements interfaceCommand {
     
     middlewares = [ GroupChatMiddleware, AdminMiddleware, BotAdminMiddleware ];
 
-    async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
+    async execute(message: interfaceMessage, sam: WhatsappService, metadata): Promise<void> {
         
         const { key, chatId, quoted, mentionedJid, captent, msg, sender } = message;
 
@@ -34,7 +35,7 @@ export default class PromoteCommand implements interfaceCommand {
 
         if (!user) return sam.sendMessage(chatId, { text: 'Menciona a quien deseas ascender a admin', reply: { msg, sender } })
 
-        const group: interfaceGroup = await sam.groupMetadata(chatId)
+        const group: interfaceGroup = metadata.group || await sam.groupMetadata(chatId)
         const exists = group.participants.find( p => p.id === user ||
             p.lid === user ||
             p.phoneNumber === user)
