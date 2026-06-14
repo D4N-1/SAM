@@ -12,6 +12,7 @@ import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { Private } from "src/decorators/private.decorator";
 import { Roles } from "src/decorators/roles-user.decorator";
 import { enumRole } from "src/common/enums/role.enum";
+import { ApiPublic } from "src/common/utils/ApiPublic.util";
 
 
 @Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
@@ -31,7 +32,7 @@ export class ContactController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('contacto') })
     @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('contacto'), type: ContactEntity })
     @ApiConflictResponse({ description: SWAGGER.CONFLICT('contacto'), schema: { example: ERROR_CODE.CONFLICT('usuario') } })
-    @Post()
+    @Post() @ApiPublic()
     async create(@Body() createContactDto: CreateContactDto): Promise<ContactEntity|null> {
         return this.contactService.create(createContactDto)
     }

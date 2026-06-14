@@ -14,14 +14,14 @@ export class AuditLogEntity extends BaseEntity {
     @Column({ name: 'entity_index' })
     entityIndex: number;
 
-    @Column({ type: 'enum', enum: enumCRUD })
-    action: enumCRUD;
+    @Column({ type: 'varchar', length: 55 })
+    action: string;
 
-    @Column({ name: 'performed_by' })
+    @Column({ name: 'performed_by', nullable: true })
     performedBy: string;
 
-    @Column({ name: 'performed_index' })
-    performedId: number;
+    @Column({ name: 'performed_uuid', nullable: true })
+    performedId: string;
 
     @Column({ type: 'json', name: 'old_data' })
     oldData: string;
@@ -29,7 +29,7 @@ export class AuditLogEntity extends BaseEntity {
     @Column({ type: 'json', name: 'new_data' })
     newData: string;
 
-    @Column()
+    @Column({ nullable: true })
     context: string;
 
 }

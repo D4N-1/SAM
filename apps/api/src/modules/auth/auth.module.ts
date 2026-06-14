@@ -7,6 +7,7 @@ import { UserModule } from '../users/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { BotModule } from '../bots/bot.module';
+import { ClsModule } from 'nestjs-cls';
 
 
 @Module({
@@ -20,7 +21,7 @@ import { BotModule } from '../bots/bot.module';
         signOptions: { expiresIn: config.getOrThrow<'string'|number|any>('EXPIRES_IN') }
       })
     }),
-    UserModule, BotModule
+    UserModule, BotModule, ClsModule
   ],
   controllers: [AuthController],
   providers: [

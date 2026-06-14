@@ -23,10 +23,19 @@ import { RolesGuard } from './modules/auth/guards/role.guard';
 import { RealmModule } from './modules/realms/realm.module';
 import { CommandModule } from './modules/commands/commands.module';
 import { GroupCommandModule } from './modules/group-commands/group-command.module';
+import { AuditLogModule } from './modules/audit_logs/audit-log.module';
+import { ClsModule } from 'nestjs-cls';
 
 @Module({
   imports: [
 
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true
+      }
+    }),
+    
     ThrottlerModule.forRoot([{
       ttl: 60_000,
       limit: 45,
@@ -63,7 +72,8 @@ import { GroupCommandModule } from './modules/group-commands/group-command.modul
     UserModule, AuthModule, CommunityModule,
     GroupModule, BotModule, RealmModule,
     QuotesModule,
-    CommandModule, GroupCommandModule
+    CommandModule, GroupCommandModule,
+    AuditLogModule
     ],
   controllers: [AppController],
   providers: [
