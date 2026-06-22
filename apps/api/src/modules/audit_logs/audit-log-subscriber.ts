@@ -28,20 +28,20 @@ export class AuditSubscriber implements EntitySubscriberInterface {
   }
 
   // 1. Captura inserciones (POST / Creaciones)
-  afterInsert(event: InsertEvent<any>) {
-    this.saveLog('INSERT', event);
+  async afterInsert(event: InsertEvent<any>) {
+    await this.saveLog('INSERT', event);
   }
 
   // 2. Captura actualizaciones (PUT-PATCH / Modificaciones)
   // Usamos "beforeUpdate" porque nos permite acceder de forma segura a "event.databaseEntity" (el estado viejo)
-  beforeUpdate(event: UpdateEvent<any>) {
-    this.saveLog('UPDATE', event);
+  async beforeUpdate(event: UpdateEvent<any>) {
+    await this.saveLog('UPDATE', event);
   }
 
   // 3. Captura eliminaciones (DELETE)
   // Usamos "beforeRemove" para tener acceso a los datos que están a punto de borrarse
-  beforeRemove(event: RemoveEvent<any>) {
-    this.saveLog('DELETE', event);
+  async beforeRemove(event: RemoveEvent<any>) {
+    await this.saveLog('DELETE', event);
   }
 
   private async saveLog(action: string, event: any) {

@@ -17,12 +17,12 @@ export const apiInstance = axios.create({
 
 
 export const Api = {
+
     get: (url:string, config?:any) => apiInstance.get(url, config),
     post: (url: string, data: any, config?: any) => apiInstance.post(url, data, config),
     patch: (url: string, data: any, config?: any) => apiInstance.patch(url, data, config),
     del: (url: string, config?: any) => apiInstance.delete(url, config),
 
-    setToken: (token: string) => {
-        apiInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    }
+    setToken: (token: string) => apiInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    
 }

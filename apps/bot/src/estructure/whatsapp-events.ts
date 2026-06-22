@@ -44,7 +44,7 @@ export async function registerConnectionEvent(uid: string, code: string, sam: an
                 console.log(`Solicitando codigo de emparejamiento a WhatsApp...`)
 
 
-                //await sam.requestPairingCode(uid, code)
+                await sam.requestPairingCode(uid, code)
 
                 console.log(`CODIGO DE EMPAREJAMIENTO: ${code}`)
 

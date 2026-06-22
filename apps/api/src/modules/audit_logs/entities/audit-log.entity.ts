@@ -23,10 +23,10 @@ export class AuditLogEntity extends BaseEntity {
     @Column({ name: 'performed_uuid', nullable: true })
     performedId: string;
 
-    @Column({ type: 'json', name: 'old_data' })
+    @Column({ type: 'json', name: 'old_data', nullable: true })
     oldData: string;
 
-    @Column({ type: 'json', name: 'new_data' })
+    @Column({ type: 'json', name: 'new_data', nullable: true  })
     newData: string;
 
     @Column({ nullable: true })
