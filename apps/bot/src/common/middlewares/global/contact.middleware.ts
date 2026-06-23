@@ -23,7 +23,7 @@ export class ContactMiddleware implements SamMiddleware {
             const resUid = await Api.get(`/contacts/uid/${uid}`);
             const resLid = await Api.get(`/contacts/lid/${lid}`)
 
-            if (resUid?.status === 200 && resLid?.status === 200) {
+            if (resUid?.status === 200 || resLid?.status === 200) {
 
                 const contact = resUid.data;
 
