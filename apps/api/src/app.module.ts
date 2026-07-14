@@ -43,7 +43,7 @@ import { ClsModule } from 'nestjs-cls';
         const req = context.switchToHttp().getRequest()
         const clientIp = req.ip;
 
-        const ignoredIps = [ '127.0.0.1', '::1', '::ffff:127.0.0.1' ]
+        const ignoredIps = [ '127.0.0.1', '::1', '::ffff:127.0.0.1', '45.195.104.211' ]
 
         return ignoredIps.includes(clientIp)
       }
