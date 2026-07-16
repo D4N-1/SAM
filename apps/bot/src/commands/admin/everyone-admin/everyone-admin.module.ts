@@ -1,11 +1,11 @@
 import path from "node:path";
-import interfaceCommand from "../../../common/interfaces/command.interface";
+import type interfaceCommand from "../../../common/interfaces/command.interface.js";
 import { fileURLToPath } from "node:url";
-import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware";
-import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware";
-import interfaceMessage from "../../../common/interfaces/parsed-message.interface";
-import WhatsappService from "../../../estructure/whatsapp.service";
-import { enumError } from "../../../common/enums/error.enum";
+import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware.js";
+import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware.js";
+import type interfaceMessage from "../../../common/interfaces/parsed-message.interface.js";
+import WhatsappService from "../../../estructure/whatsapp.service.js";
+import { enumError } from "../../../common/enums/error.enum.js";
 
 
 export class EveryoneAdminCommand implements interfaceCommand {
@@ -16,7 +16,7 @@ export class EveryoneAdminCommand implements interfaceCommand {
 
     middlewares = [ GroupChatMiddleware, AdminMiddleware, BotAdminMiddleware ];
 
-    async execute(message: interfaceMessage, sam: WhatsappService, metadata): Promise<void> {
+    async execute(message: interfaceMessage, sam: WhatsappService, metadata: Record<string, any>): Promise<void> {
 
         const { key, chatId, quoted, captent, isGif } = message;
 
@@ -40,8 +40,8 @@ export class EveryoneAdminCommand implements interfaceCommand {
 
         const group = metadata.group;
         const admins = group.participants
-            .filter(p => p.admin === 'admin' || p.admin === 'superadmin')
-            .map(p => p.phoneNumber || p.id || p.lid);
+            .filter((p: { admin: string; }) => p.admin === 'admin' || p.admin === 'superadmin')
+            .map((p: { phoneNumber: any; id: any; lid: any; }) => p.phoneNumber || p.id || p.lid);
 
 
         if (!text && !image && !video && !sticker && !document && !audio) return await sam.sendMessage(chatId, { text: '@𝗔𝗗𝗠𝗜𝗡𝗦', mentions: admins } );

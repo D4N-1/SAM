@@ -1,12 +1,11 @@
 import path from "node:path";
-import interfaceCommand from "../../../common/interfaces/command.interface";
+import type interfaceCommand from "../../../common/interfaces/command.interface.js";
 import { fileURLToPath } from "node:url";
-import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware";
-import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware";
-import interfaceMessage from "../../../common/interfaces/parsed-message.interface";
-import WhatsappService from "../../../estructure/whatsapp.service";
-import { enumError } from "../../../common/enums/error.enum";
-import { interfaceGroup } from "../../../common/interfaces/group.interface";
+import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware.js";
+import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware.js";
+import type interfaceMessage from "../../../common/interfaces/parsed-message.interface.js";
+import WhatsappService from "../../../estructure/whatsapp.service.js";
+import { enumError } from "../../../common/enums/error.enum.js";
 
 
 

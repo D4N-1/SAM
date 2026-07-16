@@ -19,7 +19,7 @@ export default class WhatsappCommand implements interfaceCommand {
 
     middlewares = [ ContactMiddleware ]
 
-    async execute(message: interfaceMessage, sam: WhatsappService, metadata): Promise<void> {
+    async execute(message: interfaceMessage, sam: WhatsappService, metadata: Record<string, any>): Promise<void> {
         
         const { key, chatId, captent } = message;
 

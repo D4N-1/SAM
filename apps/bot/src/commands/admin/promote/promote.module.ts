@@ -7,7 +7,6 @@ import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares
 import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware.js";
 import type WhatsappService from "../../../estructure/whatsapp.service.js";
 import { fileURLToPath } from "node:url";
-import { delay } from "@itsliaaa/baileys";
 
 
 export default class PromoteCommand implements interfaceCommand {
@@ -18,7 +17,7 @@ export default class PromoteCommand implements interfaceCommand {
     
     middlewares = [ GroupChatMiddleware, AdminMiddleware, BotAdminMiddleware ];
 
-    async execute(message: interfaceMessage, sam: WhatsappService, metadata): Promise<void> {
+    async execute(message: interfaceMessage, sam: WhatsappService, metadata: Record<string, any>): Promise<void> {
         
         const { key, chatId, quoted, mentionedJid, captent, msg, sender } = message;
 

@@ -1,4 +1,4 @@
-import { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface";
+import type { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface.ts";
 
 
 export class ContactMiddleware implements SamMiddleware {

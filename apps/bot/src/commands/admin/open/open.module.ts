@@ -1,10 +1,10 @@
 import { fileURLToPath } from "node:url";
-import interfaceCommand from "../../../common/interfaces/command.interface";
+import type interfaceCommand from "../../../common/interfaces/command.interface.js";
 import path from "node:path";
-import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware";
-import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware";
-import interfaceMessage from "../../../common/interfaces/parsed-message.interface";
-import WhatsappService from "../../../estructure/whatsapp.service";
+import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware.js";
+import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware.js";
+import type interfaceMessage from "../../../common/interfaces/parsed-message.interface.js";
+import WhatsappService from "../../../estructure/whatsapp.service.js";
 
 
 export class OpenCommand implements interfaceCommand {

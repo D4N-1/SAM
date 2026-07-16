@@ -13,6 +13,7 @@ export class AdminMiddleware implements SamMiddleware {
 
         context.metadata.group = group;
 
+
         const isAdmin = group.participants.some( p => 
             (p.id === sender || p.lid === senderAlt) &&
             (p.admin === 'admin' || p.admin === 'superadmin')

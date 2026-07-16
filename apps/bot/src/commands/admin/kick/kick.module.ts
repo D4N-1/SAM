@@ -1,12 +1,12 @@
 import { fileURLToPath } from "node:url";
-import interfaceCommand from "../../../common/interfaces/command.interface";
-import interfaceMessage from "../../../common/interfaces/parsed-message.interface";
-import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware";
-import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware";
-import WhatsappService from "../../../estructure/whatsapp.service";
+import type interfaceCommand from "../../../common/interfaces/command.interface.js";
+import type interfaceMessage from "../../../common/interfaces/parsed-message.interface.js";
+import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware.js";
+import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware.js";
+import WhatsappService from "../../../estructure/whatsapp.service.js";
 import path from "node:path";
-import { enumError } from "../../../common/enums/error.enum";
-import { interfaceGroup } from "../../../common/interfaces/group.interface";
+import { enumError } from "../../../common/enums/error.enum.js";
+import type { interfaceGroup } from "../../../common/interfaces/group.interface.js";
 
 
 export class KickCommand implements interfaceCommand {

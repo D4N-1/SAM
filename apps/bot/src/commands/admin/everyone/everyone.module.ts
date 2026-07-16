@@ -1,11 +1,11 @@
 import path from "node:path";
-import interfaceCommand from "../../../common/interfaces/command.interface";
+import type interfaceCommand from "../../../common/interfaces/command.interface.js";
 import { fileURLToPath } from "node:url";
-import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware";
-import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware";
-import interfaceMessage from "../../../common/interfaces/parsed-message.interface";
-import WhatsappService from "../../../estructure/whatsapp.service";
-import { enumError } from "../../../common/enums/error.enum";
+import { GroupChatMiddleware } from "../../../common/middlewares/group-chat.middleware.js";
+import { AdminMiddleware, BotAdminMiddleware } from "../../../common/middlewares/admin.middleware.js";
+import type interfaceMessage from "../../../common/interfaces/parsed-message.interface.js";
+import WhatsappService from "../../../estructure/whatsapp.service.js";
+import { enumError } from "../../../common/enums/error.enum.js";
 
 
 export class EveryoneCommand implements interfaceCommand {
@@ -16,7 +16,7 @@ export class EveryoneCommand implements interfaceCommand {
 
     middlewares = [ GroupChatMiddleware, AdminMiddleware, BotAdminMiddleware ];
 
-    async execute(message: interfaceMessage, sam: WhatsappService, metadata): Promise<void> {
+    async execute(message: interfaceMessage, sam: WhatsappService, metadata: Record<string, any>): Promise<void> {
 
         const { key, chatId, quoted, captent, isGif } = message;
 
@@ -37,10 +37,6 @@ export class EveryoneCommand implements interfaceCommand {
         const document = await quoted.qDocument() || await message.document();
         const mimetype = quoted.qMimetype;
         const fileName = message.fileName || quoted.qFileName;
-
-        const group = metadata.group;
-
-        const participants = group.participants.map( p => p.phoneNumber || p.id || p.lid)
 
         if (!text && !image && !video && !sticker && !document && !audio) return await sam.sendMessage(chatId, { text: '@𝗧𝗢𝗗𝗢𝗦', mentionAll: true } );
 
