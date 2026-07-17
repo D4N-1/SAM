@@ -58,7 +58,7 @@ export class ContactController {
     @ApiOkResponse({ description: SWAGGER.OK.FIND('contacto'), type: ContactEntity })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto') , schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UID)
-    @Get('/uid/:uid')
+    @Get(':uid')
     async getUid(@Param('uid') uid: string): Promise<ContactEntity|null> {
         return this.contactService.findOneBy.uid(uid)
     }

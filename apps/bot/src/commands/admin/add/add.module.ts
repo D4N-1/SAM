@@ -29,9 +29,9 @@ export class AddCommand implements interfaceCommand {
         
         if (arg === enumError.ERROR) throw new Error(enumError.INTENTIONAL)
         
-        let user = quoted.qSender || mentionedJid || arg?.replace('@','');
+        let user:string|null|undefined = quoted.qSender || mentionedJid || arg?.replace('@','');
         
-        user = user?.endsWith('@s.whatsapp.net') || user?.endsWith('@lid') ? user : user + '@s.whatsapp.net'
+        user = ( user?.endsWith('@s.whatsapp.net') || user?.endsWith('@lid') ) ? user : user ? user + '@s.whatsapp.net' : null;
         
         if (!user) return sam.sendMessage(chatId, { text: 'Menciona a quien deseas añadir al grupo', reply: { msg, sender } })
         
@@ -39,7 +39,7 @@ export class AddCommand implements interfaceCommand {
         const exists = group.participants.find( p => p.id === user ||
             p.lid === user ||
             p.phoneNumber === user)
-        
+        debugger;
         if (exists) return sam.sendMessage(chatId, { text: 'Ese contacto ya está en este grupo', reply: { msg, sender } })
                 
         await sam.groupParticipantsUpdate(chatId, user, 'add');

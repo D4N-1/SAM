@@ -26,7 +26,7 @@ export async function getContact(id: string) {
 
 export async function count(type: 'communities' | 'groups') {
 
-    return ( await Api.get(`/${type}/all`) )?.data
+    return ( await Api.get(`/${type}/count`) )?.data
 }
 
 export default class WhatsappService {
@@ -235,6 +235,10 @@ export default class WhatsappService {
 
     async getMe() {
         return ( await Api.get('/auth/me') )?.data
+    }
+
+    async getGroup(chatId: string) {
+        return ( await Api.get(`/groups/${chatId}`) )?.data;
     }
 
     async countGroups() {

@@ -20,7 +20,7 @@ export class ContactMiddleware implements SamMiddleware {
             const lid = sender?.endsWith('@') ? sender?.split('@')[0] :
                 senderAlt?.split('@')[0];
 
-            const resUid = await Api.get(`/contacts/uid/${uid}`);
+            const resUid = await Api.get(`/contacts/${uid}`);
             const resLid = await Api.get(`/contacts/lid/${lid}`)
 
             if (resUid?.status === 200 || resLid?.status === 200) {

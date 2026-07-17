@@ -32,7 +32,7 @@ export class GroupController {
 
   @ApiOperation({ summary: SWAGGER.SUMMARY.COUNT('grupos') })
   @ApiOkResponse({ description: SWAGGER.OK.COUNT('grupos') } )
-  @Get('all')
+  @Get('count')
   async countAll() {
     return this.groupService.countAll()
   }
@@ -41,7 +41,7 @@ export class GroupController {
   @ApiOkResponse({ description: SWAGGER.OK.ALL('grupo'), type: GroupEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('grupo'), schema: { example: ERROR_CODE.NOT_FOUND('grupo') } })
   @ApiParam(API_PARAM.UUID)
-  @Get('/uuid/:uuid')
+  @Get('uuid/:uuid')
   async getUuid(@Param('uuid', pipeValidateUuid) uuid: string): Promise<GroupEntity> {
     return this.groupService.findOneBy.uuid(uuid)
   }
@@ -50,7 +50,7 @@ export class GroupController {
   @ApiOkResponse({ description: SWAGGER.OK.ALL('grupo'), type: GroupEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('grupo'), schema: { example: ERROR_CODE.NOT_FOUND('grupo') } })
   @ApiParam(API_PARAM.UID)
-  @Get('/uid/:uid')
+    @Get(':uid')
   async getUid(@Param('uid') uid: string): Promise<GroupEntity> {
     return this.groupService.findOneBy.uid(uid)
   }
@@ -67,7 +67,7 @@ export class GroupController {
   @ApiOkResponse({ description: SWAGGER.OK.EDIT('grupo'), type: GroupEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('grupo'), schema: { example: ERROR_CODE.NOT_FOUND('grupo') } })
   @ApiParam(API_PARAM.UID)
-  @Patch('/:uid')
+  @Patch(':uid')
   async edit(@Param('uid') uid: string, @Body() updateGroupDto: UpdateGroupDto): Promise<GroupEntity|null> {
       return this.groupService.update(uid, updateGroupDto)
   }
@@ -77,7 +77,7 @@ export class GroupController {
   @ApiOkResponse({ description: SWAGGER.OK.DELETE('grupo'), type: GroupEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('grupo'), schema: { example: ERROR_CODE.NOT_FOUND('grupo') } })
   @ApiParam(API_PARAM.UID)
-  @Delete('/:uid')
+  @Delete(':uid')
   async delete(@Param('uid') uid: string) {
       return this.groupService.delete(uid)
   }
@@ -86,7 +86,7 @@ export class GroupController {
   @ApiOkResponse({ description: SWAGGER.OK.RECOVER('grupo'), type: GroupEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('grupo'), schema: { example: ERROR_CODE.NOT_FOUND('grupo') } })
   @ApiParam(API_PARAM.UID)
-  @Patch('/recover/:uid')
+  @Patch('recover/:uid')
   async recover(@Param('uid') uid: string) {
       return this.groupService.recover(uid)
   }

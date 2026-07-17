@@ -42,4 +42,6 @@ export class RoleController {
   async get(@Param('name') name: enumRole) {
     return this.rolesService.findOneBy.name(name)
   }
+
+
 }

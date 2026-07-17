@@ -15,7 +15,7 @@ export class GroupLogMiddleware implements SamMiddleware {
 
         if (!chatId || !chatId.endsWith('@g.us')) return next();
 
-        const res = await Api.get(`/groups/uid/${chatId.split('@')[0]}`);
+        const res = await Api.get(`/groups/${chatId.split('@')[0]}`);
         if (res.status === 200) return next();
 
         Logger.log('GroupMiddleware', `Sincronizando grupo detectado: ${chatId}`);

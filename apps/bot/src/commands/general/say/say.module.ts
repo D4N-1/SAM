@@ -10,7 +10,7 @@ export default class SayCommand implements interfaceCommand {
     name = 'say';
     aliases = [ 'decir', 'di' ];
 
-    dirname = path.dirname( fileURLToPath( import.meta.url ) )
+    dirname = path.dirname( fileURLToPath( import.meta.url ) );
     
     async execute(message: interfaceMessage, sam: WhatsappService): Promise<void> {
         
@@ -18,7 +18,7 @@ export default class SayCommand implements interfaceCommand {
 
 
         await sam.readMessage( key );
-        await sam.sendPresenceUpdate('composing', message?.chatId);
+        await sam.sendPresenceUpdate('composing', chatId);
 
         if ( captent?.split(' ')[1] === enumError.ERROR ) throw new Error( enumError.INTENTIONAL )
 

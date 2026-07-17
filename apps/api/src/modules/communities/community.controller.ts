@@ -37,7 +37,7 @@ export class CommunityController {
     
     @ApiOperation({ summary: SWAGGER.SUMMARY.COUNT('comunidades') })
     @ApiOkResponse({ description: SWAGGER.OK.COUNT('comunidades') } )
-    @Get('all')
+    @Get('count')
     async countAll() {
       return this.communityService.countAll()
     }
@@ -47,7 +47,7 @@ export class CommunityController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('comunidad'), schema: { example: ERROR_CODE.NOT_FOUND('comunidad') } })
     @ApiParam(API_PARAM.UUID)
-    @Get('/uuid/:uuid')
+    @Get('uuid/:uuid')
     async getUuid(@Param('uuid', pipeValidateUuid) uuid: string): Promise<CommunityEntity|null> {
         return this.communityService.findOneBy.uuid(uuid)
     }
@@ -57,7 +57,7 @@ export class CommunityController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('comunidad'), schema: { example: ERROR_CODE.NOT_FOUND('comunidad') } })
     @ApiParam(API_PARAM.UID)
-    @Get('/uid/:uid')
+    @Get(':uid')
     async getUid(@Param('uid') uid: string): Promise<CommunityEntity|null> {
         return this.communityService.findOneBy.uid(uid)
     }
@@ -75,7 +75,7 @@ export class CommunityController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('comunidad'), schema: { example: ERROR_CODE.NOT_FOUND('comunidad') } })
     @ApiParam(API_PARAM.UID)
-    @Patch('/:uid')
+    @Patch(':uid')
     async edit(@Param('uid') uid: string, @Body() updateCommunityDto: UpdateCommunityDto): Promise<CommunityEntity|null> {
         return this.communityService.update(uid, updateCommunityDto)
     }
@@ -85,7 +85,7 @@ export class CommunityController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('comunidad'), schema: { example: ERROR_CODE.NOT_FOUND('comunidad') } })
     @ApiParam(API_PARAM.UID)
-    @Delete('/:uid')
+    @Delete(':uid')
     async delete(@Param('uid') uid: string) {
         return this.communityService.delete(uid)
     }
@@ -95,7 +95,7 @@ export class CommunityController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('comunidad'), schema: { example: ERROR_CODE.NOT_FOUND('comunidad') } })
     @ApiParam(API_PARAM.UID)
-    @Patch('/recover/:uid')
+    @Patch('recover/:uid')
     async recover(@Param('uid') uid: string): Promise<CommunityEntity|null> {
         return this.communityService.recover(uid)
     }
