@@ -39,7 +39,7 @@ export class AddCommand implements interfaceCommand {
         const exists = group.participants.find( p => p.id === user ||
             p.lid === user ||
             p.phoneNumber === user)
-        debugger;
+            
         if (exists) return sam.sendMessage(chatId, { text: 'Ese contacto ya está en este grupo', reply: { msg, sender } })
                 
         await sam.groupParticipantsUpdate(chatId, user, 'add');
