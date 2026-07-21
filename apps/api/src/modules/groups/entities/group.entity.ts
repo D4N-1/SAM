@@ -7,7 +7,6 @@ import { CommunityEntity } from "src/modules/communities/entities/community.enti
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { GroupCommandEntity } from "../../group-commands/entities/group-command.entity";
 
 export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner' ];
 export const GroupFullRelations = {
@@ -164,7 +163,4 @@ export class GroupEntity extends BaseEntity {
     ////////////////////////
 
 
-    @ApiHideProperty()
-    @OneToMany( () => GroupCommandEntity, (groupCommand) => groupCommand.group )
-    commands: GroupCommandEntity[];
 }

@@ -18,7 +18,7 @@ export async function GroupParticipantUpdate(samSocket: any, update: any) {
 
         for (const participant of participants) {
 
-            const authorUid = author.split('@')[0]
+            const authorUid = author?.split('@')[0]
             const participantUid = participant?.id?.split('@')[0]
 
             let text = `👑 @${authorUid} 𝗵𝗮 𝗮𝘀𝗰𝗲𝗻𝗱𝗶𝗱𝗼 𝗰𝗼𝗺𝗼 𝗮𝗱𝗺𝗶𝗻 𝗮\n\n@${participantUid}`
@@ -31,7 +31,7 @@ export async function GroupParticipantUpdate(samSocket: any, update: any) {
 
         for (const participant of participants) {
 
-            const authorUid = author.split('@')[0]
+            const authorUid = author?.split('@')[0]
             const participantUid = participant?.id?.split('@')[0]
 
             let text = `👑 @${authorUid} 𝗵𝗮 𝗿𝗲𝘃𝗼𝗰𝗮𝗱𝗼 𝗰𝗼𝗺𝗼 𝗮𝗱𝗺𝗶𝗻 𝗮\n\n@${participantUid} `
