@@ -1,14 +1,17 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
-import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
 import { BaseEntity } from "src/common/entities/base.entity";
 import { enumEphemeralDuration } from "src/common/enums/ephemeral-duration.enum";
 import { CommunityEntity } from "src/modules/communities/entities/community.entity";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { GroupMetadataDto } from "../dto/group-metadata.dto";
+import { GroupSettingsDto } from "../dto/group-settings.dto";
+import { Exclude } from "class-transformer";
 
 export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner' ];
+
 export const GroupFullRelations = {
     community: {
         realm: true
@@ -22,6 +25,7 @@ export const GroupFullRelations = {
 export class GroupEntity extends BaseEntity {
 
     @ApiHideProperty()
+    @Exclude()
     @ManyToOne( () => CommunityEntity, (community) => community.groups, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -57,6 +61,7 @@ export class GroupEntity extends BaseEntity {
 
 
     @ApiHideProperty()
+    @Exclude()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupNameOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -81,6 +86,7 @@ export class GroupEntity extends BaseEntity {
     creation: Date;
 
     @ApiHideProperty()
+    @Exclude()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -100,6 +106,7 @@ export class GroupEntity extends BaseEntity {
 
 
     @ApiHideProperty()
+    @Exclude()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupDescriptionOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -150,6 +157,7 @@ export class GroupEntity extends BaseEntity {
 
 
     @ApiHideProperty()
+    @Exclude()
     @ManyToOne( () => RealmEntity, (realm) => realm.groups, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
@@ -159,8 +167,14 @@ export class GroupEntity extends BaseEntity {
     realm?: RealmEntity | null;
 
 
+    @ApiHideProperty()
+    @Exclude()
+    @Column({ type: 'json', nullable: true })
+    metadata: GroupMetadataDto;
 
-    ////////////////////////
-
+    @ApiHideProperty()
+    @Exclude()
+    @Column({ type: 'json', nullable: true })
+    settings: GroupSettingsDto;
 
 }

@@ -204,6 +204,7 @@ export class GroupService {
     
     const updatedGroup = this.groupRepository.merge(group, updateGroupData);
 
+    console.log(updatedGroup)
     this.delCache(uid)
     return await this.groupRepository.save(updatedGroup);
 

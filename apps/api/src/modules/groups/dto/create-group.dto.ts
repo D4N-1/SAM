@@ -1,7 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 import { enumEphemeralDuration } from "src/common/enums/ephemeral-duration.enum";
+import { GroupMetadataDto } from "./group-metadata.dto";
+import { GroupSettingsDto } from "./group-settings.dto";
 
 export class CreateGroupDto {
 
@@ -136,5 +139,23 @@ export class CreateGroupDto {
     @IsString()
     @IsOptional()
     realmName?: string;
+    
+
+    @ApiProperty({
+        description: 'Metadata para el grupo obtenida por whatsapp'
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type( () => GroupMetadataDto)
+    metadata?: GroupMetadataDto;
+
+
+    @ApiProperty({
+        description: 'Configuraciones internas entre el grupo y el bot'
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type( () => GroupSettingsDto)
+    settings?: GroupSettingsDto;
     
 }
