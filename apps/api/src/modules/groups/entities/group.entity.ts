@@ -6,7 +6,7 @@ import { CommunityEntity } from "src/modules/communities/entities/community.enti
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { GroupMetadataDto } from "../dto/group-metadata.dto";
+import { ParticipantDto } from "../dto/group-participants.dto";
 import { GroupSettingsDto } from "../dto/group-settings.dto";
 
 export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner', 'realm' ];
@@ -154,7 +154,7 @@ export class GroupEntity extends BaseEntity {
 
 
     @Column({ type: 'json', nullable: true })
-    metadata: GroupMetadataDto;
+    participants: ParticipantDto[];
 
     @Column({ type: 'json', nullable: true })
     settings: GroupSettingsDto;

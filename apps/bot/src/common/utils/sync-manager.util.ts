@@ -106,9 +106,8 @@ export default async function syncGroups(sam: WhatsappService|any, chatId: strin
                 joinApprovalMode: !!group.joinApprovalMode,
                 memberAddMode: !!group.memberAddMode,
                 ephemeralDuration: group?.ephemeralDuration,
-                metadata: {
-                    participants: group.participants
-                }
+                participants: group.participants
+                
 
             })
 
