@@ -1,4 +1,4 @@
-import type { interfaceGroup } from "../interfaces/group.interface.js";
+import type { interfaceWsGroup } from "../interfaces/group.interface.js";
 import type { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface.js";
 
 
@@ -9,7 +9,7 @@ export class AdminMiddleware implements SamMiddleware {
         
         const { sender, senderAlt, chatId, msg } = context.message;
 
-        const group: interfaceGroup = context?.metadata?.group || await context.sam.groupMetadata(chatId);
+        const group: interfaceWsGroup = context?.metadata?.group || await context.sam.groupMetadata(chatId);
 
         context.metadata.group = group;
 
@@ -30,7 +30,7 @@ export class BotAdminMiddleware implements SamMiddleware {
         
         const { chatId, botNumber, msg, sender } = context.message;
 
-        const group: interfaceGroup = context.metadata?.group || await context.sam.groupMetadata(chatId);
+        const group: interfaceWsGroup = context.metadata?.group || await context.sam.groupMetadata(chatId);
 
         context.metadata.group = group;
 

@@ -4,6 +4,7 @@ import { prepareWAMessageMedia } from '@itsliaaa/baileys'
 import { Api } from "../common/utils/api.util.js";
 import { randomFooter } from "../common/messages/footer.message.js";
 import { simbolJADE } from "../common/constants/ascii.constant.js";
+import type { interfaceGroup, interfaceWsGroup } from "../common/interfaces/group.interface.ts";
 
 
 const url = 'https://sambot.live'
@@ -211,7 +212,7 @@ export default class WhatsappService {
         return this.sock.profilePictureUrl(uid)
     }
 
-    async groupMetadata(chatId: string) {
+    async groupMetadata(chatId: string): Promise<interfaceWsGroup> {
         return this.sock.groupMetadata(chatId)
     }
 
@@ -237,7 +238,7 @@ export default class WhatsappService {
         return ( await Api.get('/auth/me') )?.data
     }
 
-    async getGroup(chatId: string) {
+    async getGroup(chatId: string): Promise<interfaceGroup> {
         return ( await Api.get(`/groups/${chatId}`) )?.data;
     }
 

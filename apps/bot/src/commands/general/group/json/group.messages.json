@@ -1,0 +1,74 @@
+[
+  {
+    "title": "❀ *Información de Grupo* ❀\n\n",
+    "name": "• *{name}*\n",
+    "description": "• *Descripción:* _{description}_\n",
+    "community": "• *Comunidad:* {community}\n",
+    "members": "• *Miembros:* {members} [{admins}]\n",
+    "creation": "• *Creado:* {creation}"
+  },
+  {
+    "title": "*[ GRUPO - DETALLES ]*\n\n",
+    "name": "NAME        : {name}\n",
+    "description": "DESC        : {description}\n",
+    "community": "COMMUNITY   : {community}\n",
+    "members": "USERS       : {members} (Admins: {admins})\n",
+    "creation": "CREATED     : {creation}"
+  },
+  {
+    "title": "*INFORMACIÓN DEL GRUPO*\n",
+    "name": "> *Grupo:* {name}\n",
+    "description": "> *Descripción:* _{description}_\n",
+    "community": "> *Comunidad:* {community}\n",
+    "members": "> *Población:* {members} miembros ({admins} admins)\n",
+    "creation": "> *Fecha de creación:* _{creation}_"
+  },
+  {
+    "title": "╭━━━〔 *GRUPO* 〕━━━\n",
+    "name": "┃ 🏷️ *Nombre:* {name}\n",
+    "description": "┃ 📝 *Descripción:* {description}\n",
+    "community": "┃ 🌐 *Comunidad:* {community}\n",
+    "members": "┃ 👥 *Integrantes:* {members} [👑 {admins}]\n",
+    "creation": "┃ 📅 *Fundado:* {creation}\n╰━━━━━━━━━━━━━━━━━━━━"
+  },
+  {
+    "title": "⚔️ *GUILDA DE WHATSAPP* ⚔️\n=========================\n\n",
+    "name": "*Grupo:* {name}\n",
+    "description": "*Misión:* _{description}_\n",
+    "community": "*Reino:* {community}\n",
+    "members": "*Miembros:* {members} [Líderes: {admins}]\n\n",
+    "creation": "_Fundación: {creation}_"
+  },
+  {
+    "title": "*Grupo de WhatsApp*\n\n",
+    "name": "• *{name}*\n",
+    "description": "• *Descripción:* _{description}_\n",
+    "community": "• *Comunidad:* {community}\n",
+    "members": "• *Miembros:* {members} [{admins}]\n",
+    "creation": "• *Creado:* {creation}"
+  },
+  {
+    "title": "*[ WHATSAPP - GRUPO ]*\n\n",
+    "name": "NAME : {name}\n",
+    "description": "BIO/DESC : {description}\n",
+    "community": "COMMUNITY : {community}\n",
+    "members": "MEMBERS : {members} (Admins: {admins})\n",
+    "creation": "CREATED : {creation}"
+  },
+  {
+    "title": "*GRUPO DE WHATSAPP*\n",
+    "name": "> *Nombre:* {name}\n",
+    "description": "> *Estado/Info:* {description}\n",
+    "community": "> *Comunidad:* {community}\n",
+    "members": "> *Integrantes:* {members} ({admins} admins)\n",
+    "creation": "> *Creado:* _{creation}_"
+  },
+  {
+    "title": "*GRUPO*\n=========================\n\n",
+    "name": "*Nombre:* {name}\n",
+    "description": "*Descripción:* {description}\n",
+    "community": "*Comunidad:* {community}\n",
+    "members": "*Miembros:* {members} (Admins: {admins})\n\n",
+    "creation": "_Fecha de creación: {creation}_"
+  }
+]
