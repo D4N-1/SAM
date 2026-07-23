@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
@@ -21,12 +22,11 @@ class ParticipantDto {
 
 export class GroupMetadataDto {
 
-    @IsNumber()
-    @IsOptional()
-    participantsCount?: number;
-
+    @ApiProperty({
+        example: [ParticipantDto]
+    })
     @IsArray()
     @ValidateNested({ each: true })
     @Type( () => ParticipantDto)
-    participants: ParticipantDto[]
+    participants: ParticipantDto[] | []
 }

@@ -8,24 +8,14 @@ import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { GroupMetadataDto } from "../dto/group-metadata.dto";
 import { GroupSettingsDto } from "../dto/group-settings.dto";
-import { Exclude } from "class-transformer";
 
-export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner' ];
+export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner', 'realm' ];
 
-export const GroupFullRelations = {
-    community: {
-        realm: true
-    },
-    nameOwner: true,
-    descriptionOwner: true,
-    owner: true
-}
 
 @Entity('groups')
 export class GroupEntity extends BaseEntity {
 
     @ApiHideProperty()
-    @Exclude()
     @ManyToOne( () => CommunityEntity, (community) => community.groups, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -61,7 +51,6 @@ export class GroupEntity extends BaseEntity {
 
 
     @ApiHideProperty()
-    @Exclude()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupNameOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -86,7 +75,6 @@ export class GroupEntity extends BaseEntity {
     creation: Date;
 
     @ApiHideProperty()
-    @Exclude()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -106,7 +94,6 @@ export class GroupEntity extends BaseEntity {
 
 
     @ApiHideProperty()
-    @Exclude()
     @ManyToOne( () => ContactEntity, (contact) => contact.groupDescriptionOwner, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -157,7 +144,6 @@ export class GroupEntity extends BaseEntity {
 
 
     @ApiHideProperty()
-    @Exclude()
     @ManyToOne( () => RealmEntity, (realm) => realm.groups, {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
@@ -167,13 +153,9 @@ export class GroupEntity extends BaseEntity {
     realm?: RealmEntity | null;
 
 
-    @ApiHideProperty()
-    @Exclude()
     @Column({ type: 'json', nullable: true })
     metadata: GroupMetadataDto;
 
-    @ApiHideProperty()
-    @Exclude()
     @Column({ type: 'json', nullable: true })
     settings: GroupSettingsDto;
 

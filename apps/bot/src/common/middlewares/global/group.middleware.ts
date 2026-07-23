@@ -1,7 +1,7 @@
 import type { CommandContext, NextFunction, SamMiddleware } from "../../interfaces/middleware.interface.js";
 import { Api } from "../../utils/api.util.js";
 import Logger from "../../utils/logger.util.js";
-import { SyncManager } from "../../utils/sync-manager.util.js";
+import syncGroups from "../../utils/sync-manager.util.ts";
 
 
 export class GroupLogMiddleware implements SamMiddleware {
@@ -19,7 +19,7 @@ export class GroupLogMiddleware implements SamMiddleware {
         if (res.status === 200) return next();
 
         Logger.log('GroupMiddleware', `Sincronizando grupo detectado: ${chatId}`);
-        await SyncManager.syncGroups(sam, chatId);
+        await syncGroups(sam, chatId);
 
         next()
 

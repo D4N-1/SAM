@@ -1,6 +1,6 @@
 import { Api } from "./api.util.js";
 import Logger from "./logger.util.js";
-import { SyncManager } from "./sync-manager.util.js";
+import SyncGroups from "./sync-manager.util.js";
 
 
 export async function groupUpdate(sam: any, update: any) {
@@ -23,7 +23,7 @@ export async function groupUpdate(sam: any, update: any) {
       
         if (groupRes?.status !== 200) {
             Logger.log('GroupUpdate', `Sincronizando grupo detectado: ${id}`);
-            return await SyncManager.syncGroups(sam, id)
+            return await SyncGroups(sam, id)
         }
 
         const group = groupRes.data;

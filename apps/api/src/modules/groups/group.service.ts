@@ -1,7 +1,7 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GroupEntity, GroupFullRelations, GroupRelations } from './entities/group.entity';
+import { GroupEntity, GroupRelations } from './entities/group.entity';
 import { Repository } from 'typeorm';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { GetAllGroupQueryDto } from './dto/get-group.dto';
@@ -89,16 +89,16 @@ export class GroupService {
       return group
     },
 
-    uid: async(uid: string): Promise<GroupEntity> => {
+    uid: async(uid: string, noCache?: boolean): Promise<GroupEntity> => {
       const cacheKey = enumCACHE_KEYS.GROUP + uid;
 
       const cachedGroup = await this.cacheManager.get<GroupEntity>(cacheKey);
-      if (cachedGroup) return cachedGroup;
+      if (cachedGroup && !noCache) return cachedGroup;
 
 
       const group = await this.groupRepository.findOne({
           where: { uid },
-          relations: GroupFullRelations
+          relations: GroupRelations
       })
 
       if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
@@ -165,11 +165,19 @@ export class GroupService {
 
 
   async update(uid: string, updateGroupDto: UpdateGroupDto) {
-    const group = await this.findOneBy.uid( uid );
+    const group = await this.findOneBy.uid( uid, true );
 
-    const { communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, realmName, ...newData } = updateGroupDto;
+    const { uid: _, communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, realmName, ...newData } = updateGroupDto;
 
-    const updateGroupData: Partial<GroupEntity> = { ...newData };
+    // 2. LIMPIAR PROPIEDADES 'undefined' (Evita sobrescribir metadata/settings con NULL)
+    const updateGroupData: Partial<GroupEntity> = {};
+
+    Object.keys(newData).forEach((key) => {
+      if (newData[key] !== undefined) {
+        updateGroupData[key] = newData[key];
+      }
+    });
+
 
     if (communityUid !== undefined) {
       const community = await this.communityService.findOneBy.uid(communityUid)
@@ -200,13 +208,14 @@ export class GroupService {
     if (ownerUid ) updateGroupData.owner = validContacts.find( c => c.uid === ownerUid);
     if (descriptionOwnerUid ) updateGroupData.descriptionOwner = validContacts.find( c => c.uid === descriptionOwnerUid);
     if (nameTime !== undefined) updateGroupData.nameTime = new Date(nameTime * 1000);
-    if (creation !== undefined) updateGroupData.creation = new Date(creation * 1000)
+    if (creation !== undefined) updateGroupData.creation = new Date(creation * 1000);
     
-    const updatedGroup = this.groupRepository.merge(group, updateGroupData);
 
-    console.log(updatedGroup)
+    const entityToUpdate = this.groupRepository.merge(group, updateGroupData)
+    entityToUpdate.index = group.index;
+
     this.delCache(uid)
-    return await this.groupRepository.save(updatedGroup);
+    return await this.groupRepository.save(entityToUpdate);
 
   }
 

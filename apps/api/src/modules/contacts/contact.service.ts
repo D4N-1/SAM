@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ContactEntity } from "./entities/contact.entity";
-import { Repository } from "typeorm";
+import { QueryDeepPartialEntity, Repository } from "typeorm";
 import { CreateContactDto } from "./dto/create-contact.dto";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { UpdateContactDto } from "./dto/update-contact.dto";
@@ -100,30 +100,49 @@ export class ContactService {
     }
 
 
-    async bulk(createContactsDto: any) {
+async bulk(createContactsDto: any) {
+  if (!createContactsDto || (Array.isArray(createContactsDto) && createContactsDto.length === 0)) {
+    throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos'));
+  }
 
-        if (createContactsDto?.length === 0) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos') );
-        
-        const contactsArray = Array.isArray(createContactsDto) 
-        ? createContactsDto 
-        : Object.values(createContactsDto);
+  // 1. Normalizar entrada (Soporta array u objeto único de forma segura)
+  const contactsArray = Array.isArray(createContactsDto) 
+    ? createContactsDto 
+    : [createContactsDto];
 
-        const rawEntities = contactsArray.map(c => ({
-                uid: String(c.uid),
-                lid: c.lid ? String(c.lid) : undefined,
-        }));
+  // 2. Mapear y sanear la data
+const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
+      .filter((c) => c && c.uid)
+      .map((c) => ({
+        uid: String(c.uid),
+        lid: c.lid ? String(c.lid) : undefined, // Usar undefined en lugar de null para TypeORM
+      }));
 
-        await this.contactRepository.createQueryBuilder()
-            .insert()
-            .into(ContactEntity)
-            .values(rawEntities)
-            .orUpdate(['lid'], ['uid'])
-            .execute()
+  if (rawEntities.length === 0) {
+    throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'Ningún contacto válido contiene UID'));
+  }
 
-        return { status: 'OK', inserted: rawEntities.length }
-    
+  // 3. Procesar en bloques (chunks) de 500 registros para evitar sobrecargar la memoria/packet de MySQL
+  const chunkSize = 500;
+  for (let i = 0; i < rawEntities.length; i += chunkSize) {
+    const chunk = rawEntities.slice(i, i + chunkSize);
 
-    }
+    await this.contactRepository
+      .createQueryBuilder()
+      .insert()
+      .into(ContactEntity)
+      .values(chunk)
+      // Como ambos son UNIQUE, indicamos que si choca por 'uid', actualice 'lid'
+      // Si también quieres actualizar 'uid' en caso de que choque por 'lid', agregas 'uid' al array de campos a actualizar
+      .orUpdate(['lid'], ['uid']) 
+      .execute();
+  }
+
+  return { 
+    status: 'OK', 
+    processed: rawEntities.length 
+  };
+}
 
     async create(createContactDto: CreateContactDto): Promise<ContactEntity|null> {
 
