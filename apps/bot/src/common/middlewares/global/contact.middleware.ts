@@ -14,16 +14,15 @@ export class ContactMiddleware implements SamMiddleware {
             
             if ( ![ senderAlt, sender ].some( i => i?.endsWith('@s.whatsapp.net') ) ) return next();
 
-            const uid = senderAlt?.endsWith('@s.whatsapp.net') ? senderAlt?.split('@')[0] :
-                sender?.split('@')[0];
+            const uid = senderAlt?.endsWith('@s.whatsapp.net') ? senderAlt : sender;
 
-            const lid = sender?.endsWith('@') ? sender?.split('@')[0] :
-                senderAlt?.split('@')[0];
+            const lid = senderAlt?.endsWith('@s.whatsapp.net') ? sender : senderAlt;
+
 
             const resUid = await Api.get(`/contacts/${uid}`);
             const resLid = await Api.get(`/contacts/lid/${lid}`)
 
-            if (resUid?.status === 200 || resLid?.status === 200) {
+            if (resUid?.status === 404 && resLid?.status === 404) {
 
                 const contact = resUid.data;
 

@@ -112,7 +112,7 @@ export interface interfaceGroup {
     memberAddMode?: boolean;
     ephemeralDuration?: enumEphemeralDuration;
     realmName?: string;
-    participants?: interfaceGroupParticipant[] | [];
+    participants: interfaceGroupParticipant[] | [];
     settings?: GroupSettingsDto;
     createdAt: '2026-06-01T04:15:18.405Z',
     updatedAt: '2026-07-23T04:11:19.000Z'|null,

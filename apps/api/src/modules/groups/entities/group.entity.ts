@@ -159,7 +159,7 @@ export class GroupEntity extends BaseEntity {
     @Column({ type: 'json', nullable: true })
     settings: GroupSettingsDto;
 
-    @Column({ type: 'string', nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     image: string;
 
 }

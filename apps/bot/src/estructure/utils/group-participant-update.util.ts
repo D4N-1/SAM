@@ -1,4 +1,4 @@
-import type { interfaceGroup } from "../../common/interfaces/group.interface.js";
+import type { interfaceWsGroup } from "../../common/interfaces/group.interface.js";
 import syncGroups from "../../common/utils/sync-manager.util.ts";
 import WhatsappService from "../whatsapp.service.js";
 
@@ -11,7 +11,7 @@ export async function GroupParticipantUpdate(samSocket: any, update: any) {
     await sam.sendPresenceUpdate('composing', id)
 
     syncGroups(sam, id)
-    const group: interfaceGroup = await sam.groupMetadata(id);
+    const group: interfaceWsGroup = await sam.groupMetadata(id);
     const admins = group.participants
         .filter(p => p.admin === 'admin' || p.admin === 'superadmin')
         .map(p => p.phoneNumber || p.id || p.lid);

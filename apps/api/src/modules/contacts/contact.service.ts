@@ -66,6 +66,9 @@ export class ContactService {
         uid: async (uid: string, text?: string): Promise<ContactEntity> => {
             const cacheKey = enumCACHE_KEYS.CONTACT + uid;
 
+            if ( uid.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @lid' )
+                uid = uid.split('@')[0]
+
             const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
             if (cachedContact) return cachedContact;
 
@@ -80,11 +83,22 @@ export class ContactService {
         },
 
         lid: async (lid: string): Promise<ContactEntity> => {
+            const cacheKey = enumCACHE_KEYS.COMMAND + lid;
+
+            if ( lid.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @s.whatsapp.net' );
+                lid = lid.split('@')[0]
+
+            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            if (cachedContact) return cachedContact;
 
             const contact = await this.contactRepository.findOneBy({ lid })
+            
+            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
 
-            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
-                return contact;
+            const plainContact = Object.assign({}, contact);
+            await this.cacheManager.set(cacheKey, plainContact);
+
+            return contact;
         }
     }
 
@@ -105,24 +119,21 @@ async bulk(createContactsDto: any) {
     throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos'));
   }
 
-  // 1. Normalizar entrada (Soporta array u objeto único de forma segura)
   const contactsArray = Array.isArray(createContactsDto) 
     ? createContactsDto 
     : [createContactsDto];
 
-  // 2. Mapear y sanear la data
 const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
       .filter((c) => c && c.uid)
       .map((c) => ({
         uid: String(c.uid),
-        lid: c.lid ? String(c.lid) : undefined, // Usar undefined en lugar de null para TypeORM
+        lid: c.lid ? String(c.lid) : undefined,
       }));
 
   if (rawEntities.length === 0) {
     throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'Ningún contacto válido contiene UID'));
   }
 
-  // 3. Procesar en bloques (chunks) de 500 registros para evitar sobrecargar la memoria/packet de MySQL
   const chunkSize = 500;
   for (let i = 0; i < rawEntities.length; i += chunkSize) {
     const chunk = rawEntities.slice(i, i + chunkSize);
@@ -132,10 +143,9 @@ const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
       .insert()
       .into(ContactEntity)
       .values(chunk)
-      // Como ambos son UNIQUE, indicamos que si choca por 'uid', actualice 'lid'
-      // Si también quieres actualizar 'uid' en caso de que choque por 'lid', agregas 'uid' al array de campos a actualizar
       .orUpdate(['lid'], ['uid']) 
       .execute();
+
   }
 
   return { 
