@@ -22,15 +22,17 @@ export class ContactMiddleware implements SamMiddleware {
             const resUid = await Api.get(`/contacts/${uid}`);
             const resLid = await Api.get(`/contacts/lid/${lid}`)
 
-            if (resUid?.status === 404 && resLid?.status === 404) {
 
-                const contact = resUid.data;
+            if ( resUid?.status !== 404 && resLid?.status !== 404 ) {
 
-                if (contact.name !== pushName) await Api.patch(`/contacts/${uid}`, {
+                const contact = resLid?.data || resUid?.data;
+
+                if (pushName && contact.name !== pushName) await Api.patch(`/contacts/${uid}`, {
                     name: pushName
                 });
 
                 if (!pushName) context.message.pushName = contact.name;
+
                 return next();
 
             }

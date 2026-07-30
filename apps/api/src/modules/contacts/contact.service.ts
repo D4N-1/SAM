@@ -102,6 +102,58 @@ export class ContactService {
         }
     }
 
+
+    findOrNull = {
+
+        uuid: async (uuid: string, text?: string): Promise<ContactEntity|null> => {
+            const cacheKey = enumCACHE_KEYS.CONTACT + uuid;
+
+            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            if (cachedContact) return cachedContact;
+
+            const contact = await this.contactRepository.findOneBy({ uuid })
+
+            const plainContact = Object.assign({}, contact);
+            await this.cacheManager.set(cacheKey, plainContact)
+
+            return contact
+        },
+
+        uid: async (uid: string|undefined): Promise<ContactEntity|null> => {
+            const cacheKey = enumCACHE_KEYS.CONTACT + uid;
+
+            if ( uid?.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @lid' )
+                uid = uid?.split('@')[0]
+
+            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            if (cachedContact) return cachedContact;
+
+            const contact = await this.contactRepository.findOneBy({ uid })
+
+            const plainContact = Object.assign({}, contact)
+            await this.cacheManager.set(cacheKey, plainContact)
+
+            return contact
+        },
+
+        lid: async (lid: string|undefined): Promise<ContactEntity|null> => {
+            const cacheKey = enumCACHE_KEYS.COMMAND + lid;
+
+            if ( lid?.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @s.whatsapp.net' );
+                lid = lid?.split('@')[0]
+
+            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            if (cachedContact) return cachedContact;
+
+            const contact = await this.contactRepository.findOneBy({ lid })
+            
+            const plainContact = Object.assign({}, contact);
+            await this.cacheManager.set(cacheKey, plainContact);
+
+            return contact;
+        }
+    }
+
     async findIn(uids: string[]) {
         
         if (!uids || uids.length === 0) return [];
@@ -159,15 +211,15 @@ const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
         const { lid, uid, ...newData } = createContactDto
 
         const newContactData: Partial<ContactEntity> = { ...newData }
-        const contact = await this.contactRepository.findOneBy({ uid })
-        if (contact) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa UID') )
 
-        if (lid) {
-            const contact = await this.contactRepository.findOneBy({ lid })
+        const contactUid = await this.findOrNull.uid(uid);
+        if (contactUid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa UID') );
 
-            if (contact) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa LID') )
-            newContactData.lid = lid;
-        }
+        const contactLid = await this.findOrNull.lid(lid);
+        if (contactLid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa LID') );
+
+        newContactData.uid = uid?.split('@')[0]
+        newContactData.lid = lid?.split('@')[0]
 
         const newContact = this.contactRepository.create(newContactData)
         return this.contactRepository.save(newContact)
