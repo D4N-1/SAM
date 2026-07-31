@@ -66,7 +66,7 @@ export class ContactService {
         uid: async (uid: string, text?: string): Promise<ContactEntity> => {
             const cacheKey = enumCACHE_KEYS.CONTACT + uid;
 
-            if ( uid.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @lid' )
+            if ( uid.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
                 uid = uid.split('@')[0]
 
             const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
@@ -85,7 +85,7 @@ export class ContactService {
         lid: async (lid: string): Promise<ContactEntity> => {
             const cacheKey = enumCACHE_KEYS.COMMAND + lid;
 
-            if ( lid.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @s.whatsapp.net' );
+            if ( lid.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
                 lid = lid.split('@')[0]
 
             const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
@@ -122,7 +122,7 @@ export class ContactService {
         uid: async (uid: string|undefined): Promise<ContactEntity|null> => {
             const cacheKey = enumCACHE_KEYS.CONTACT + uid;
 
-            if ( uid?.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @lid' )
+            if ( uid?.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
                 uid = uid?.split('@')[0]
 
             const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
@@ -139,7 +139,7 @@ export class ContactService {
         lid: async (lid: string|undefined): Promise<ContactEntity|null> => {
             const cacheKey = enumCACHE_KEYS.COMMAND + lid;
 
-            if ( lid?.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY'), 'El contacto NO puede terminar en @s.whatsapp.net' );
+            if ( lid?.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
                 lid = lid?.split('@')[0]
 
             const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
@@ -183,7 +183,7 @@ const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
       }));
 
   if (rawEntities.length === 0) {
-    throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'Ningún contacto válido contiene UID'));
+    throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'Ningún contacto válido contiene UID') );
   }
 
   const chunkSize = 500;

@@ -5,14 +5,21 @@ export const API_PARAM = {
     name: 'uuid',
     required: true,
     description: 'El identificador unico asignado',
-    example: '550e8400-e29b-41d4-a716-446655440000',
+    example: DTO.UUID,
+    type: 'string'
+  },
+  LID: {
+    name: 'lid',
+    required: true,
+    description: 'El identificador unico asignado por Whatsapp',
+    example: DTO.LID,
     type: 'string'
   },
   OPT_UUID: {
     name: 'uuid',
     required: false,
     description: 'El identificador unico asignado',
-    example: '550e8400-e29b-41d4-a716-446655440000',
+    example: DTO.UUID,
     type: 'string'
   },
 
