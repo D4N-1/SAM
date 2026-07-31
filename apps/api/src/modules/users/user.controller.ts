@@ -12,9 +12,10 @@ import { GetAllUserQueryDto } from "./dto/get-user.dto";
 import { Private } from "src/decorators/private.decorator";
 import { Roles } from "src/decorators/roles-user.decorator";
 import { enumRole } from "src/common/enums/role.enum";
+import { FullPublic } from "src/common/utils/FullPublic.util";
 
 
-//@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
+@Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
@@ -33,7 +34,17 @@ export class UserController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
     @ApiParam(API_PARAM.UUID)
-    @Get('/:uuid')
+    @Get('/:uid')
+    async getUid(@Param('uid') uid: string): Promise<UserEntity|null> {
+        return this.userService.findOneBy.contactUid(uid)
+    }
+
+    @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('usuario') })
+    @ApiOkResponse({ description: SWAGGER.OK.FIND('usuario'), type: UserEntity })
+    @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
+    @ApiParam(API_PARAM.UUID)
+    @Get('/uuid/:uuid')
     async getUuid(@Param('uuid', pipeValidateUuid) uuid: string): Promise<UserEntity|null> {
         return this.userService.findOneBy.uuid(uuid)
     }
@@ -52,7 +63,7 @@ export class UserController {
     @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('usuario'), type: UserEntity })
     @ApiConflictResponse({ description: SWAGGER.CONFLICT('usuario'), schema: { example: ERROR_CODE.CONFLICT('usuario') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
-    @Post()
+    @Post() @FullPublic()
     async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity|null> {
         return this.userService.create(createUserDto)
     }

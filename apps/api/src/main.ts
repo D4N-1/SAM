@@ -7,13 +7,17 @@ import 'dotenv/config';
 import { AppModule } from './app.module';
 import { ThrottlerExceptionFilter } from './filters/throttler-exception.filter';
 import logRegister from './common/utils/logger.util';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.enableCors()
+  app.enableCors({
+    origin: '*',
+    credentials: true
+  })
 
-  app.useGlobalPipes(new ValidationPipe({
+  app.useGlobalPipes( new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true
@@ -22,9 +26,10 @@ async function bootstrap() {
 
   app.use( json({ limit: '10mb' } ) )
   app.use( urlencoded({ extended: true, limit: '10mb' } ) )
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.useGlobalFilters(new ThrottlerExceptionFilter());
-  app.set('trust proxy', 'loopback')
+  app.useGlobalInterceptors( new ClassSerializerInterceptor( app.get(Reflector) ) );
+  app.useGlobalFilters( new ThrottlerExceptionFilter() );
+  app.set('trust proxy', 'loopback');
+  app.use( cookieParser() );
 
   const config = new DocumentBuilder()
     .setTitle('Sam - API')

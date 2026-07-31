@@ -2,8 +2,7 @@
   "name": "sam",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-  },
+  "scripts": {},
   "workspaces": [
     "apps/*"
   ],
@@ -12,8 +11,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
     "@types/node": "^25.6.0",
     "@types/passport-jwt": "^4.0.1",
+    "cookie-parser": "^1.4.7",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"

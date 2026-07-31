@@ -99,7 +99,7 @@ export class UserService {
 
         const newUserData: Partial<UserEntity> = { ...newData }
 
-        newUserData.role = await this.roleService.findOneBy.name( roleName ?? enumRole.USER );
+        newUserData.role = await this.roleService.findOneBy.name( enumRole.USER );
 
         const contact = await this.contactService.findOneBy.uid( contactUid );
 
