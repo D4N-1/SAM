@@ -159,5 +159,12 @@ export class CreateGroupDto {
     @ValidateNested()
     @Type( () => GroupSettingsDto)
     settings?: GroupSettingsDto;
+
+    @ApiProperty({
+        description: 'URL de la imagen del grupo'
+    })
+    @IsOptional()
+    @IsString()
+    image?: string | null;
     
 }

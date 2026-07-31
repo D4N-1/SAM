@@ -61,18 +61,30 @@ export class GroupService {
     return await this.groupRepository.count()
   }
 
-  delCache(uid: string) {
+  cache = {
 
-    this.cacheManager.del(enumCACHE_KEYS.GROUP + uid)
+    key: enumCACHE_KEYS.GROUP,
+
+    set: (id: string, group: Record<string,any>) => {
+      this.cacheManager.set( this.cache.key + id, group )
+    },
+
+    get: async(id: string): Promise<GroupEntity|undefined> => {
+      return await this.cacheManager.get<GroupEntity>( this.cache.key + id )
+    },
+
+    del: (id: string) => {
+      this.cacheManager.del( this.cache.key + id )
+    }
+
   }
 
 
   findOneBy = {
 
     uuid: async(uuid: string): Promise<GroupEntity> => {
-      const cacheKey = enumCACHE_KEYS.GROUP + uuid;
 
-      const cachedGroup = await this.cacheManager.get<GroupEntity>(cacheKey);
+      const cachedGroup = await this.cache.get(uuid);
       if (cachedGroup) return cachedGroup;
 
 
@@ -84,15 +96,15 @@ export class GroupService {
       if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
 
       const plainGroup = instanceToPlain(group)
-      await this.cacheManager.set(cacheKey, plainGroup);
+      this.cache.set(uuid, plainGroup);
 
       return group
     },
 
     uid: async(uid: string, noCache?: boolean): Promise<GroupEntity> => {
-      const cacheKey = enumCACHE_KEYS.GROUP + uid;
+      if ( uid.endsWith('@g.us') ) uid = uid.split('@')[0]
 
-      const cachedGroup = await this.cacheManager.get<GroupEntity>(cacheKey);
+      const cachedGroup = await this.cache.get(uid);
       if (cachedGroup && !noCache) return cachedGroup;
 
 
@@ -104,7 +116,7 @@ export class GroupService {
       if (!group) throw new NotFoundException( ERROR_CODE.NOT_FOUND('grupo') )
 
       const plainGroup = instanceToPlain(group)
-      await this.cacheManager.set(cacheKey, plainGroup);
+      this.cache.set(uid, plainGroup);
       
       return group
     },
@@ -214,7 +226,7 @@ export class GroupService {
     const entityToUpdate = this.groupRepository.merge(group, updateGroupData)
     entityToUpdate.index = group.index;
 
-    this.delCache(uid)
+    this.cache.del(uid)
     return await this.groupRepository.save(entityToUpdate);
 
   }
@@ -225,7 +237,8 @@ export class GroupService {
     const group = await this.findOneBy.uid(uid)
 
 
-    this.delCache(uid)
+    this.cache.del(uid)
+
     return {
         message: 'Grupo ELIMINADO',
         data: await this.groupRepository.softRemove(group)

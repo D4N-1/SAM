@@ -2,11 +2,12 @@ import type WhatsappService from "../../estructure/whatsapp.service.js";
 import { Api } from "./api.util.js";
 import Logger from "./logger.util.js";
 
-export default async function syncGroups(sam: WhatsappService|any, chatId: string): Promise<void> {
+export default async function syncGroups(sam: WhatsappService, chatId: string): Promise<void> {
 
     try {
 
         const group = await sam.groupMetadata(chatId);
+        const image = await sam.profilePictureUrl(chatId)
         if (!group) return;
 
         const linkedParent = group?.linkedParent;
@@ -41,7 +42,7 @@ export default async function syncGroups(sam: WhatsappService|any, chatId: strin
         if (bulkContacts.length > 0) await Api.post(`/contacts/bulk`, bulkContacts).catch(() => null);
             
 
-        if (community && communityRes?.status !== 200) {
+        if (community && communityRes?.status === 404) {
 
             const communityPost = await Api.post(`/communities`, {
                 uid: community.id.split('@')[0],
@@ -70,9 +71,9 @@ export default async function syncGroups(sam: WhatsappService|any, chatId: strin
             console.log('COMMUNITY UPDATE')
         }
 
-        const groupRes = await Api.get(`/groups/${group.id.split('@')[0]}`)
+        const groupRes = await Api.get(`/groups/${group}`)
 
-        if (groupRes.status !== 200) {
+        if (groupRes.status === 404) {
             const groupPost = await Api.post(`/groups`, {
 
                 communityUid: linkedParent?.split('@')[0] || null,
@@ -86,8 +87,9 @@ export default async function syncGroups(sam: WhatsappService|any, chatId: strin
                 announce: !!group.announce,
                 joinApprovalMode: !!group.joinApprovalMode,
                 memberAddMode: !!group.memberAddMode,
-                ephemeralDuration: group?.ephemeralDuration
-            }).catch(() => null);
+                ephemeralDuration: group?.ephemeralDuration,
+                image
+            })
             
             console.log('GROUP INSERTION:', groupPost?.data?.group?.subject);
 
@@ -106,8 +108,8 @@ export default async function syncGroups(sam: WhatsappService|any, chatId: strin
                 joinApprovalMode: !!group.joinApprovalMode,
                 memberAddMode: !!group.memberAddMode,
                 ephemeralDuration: group?.ephemeralDuration,
-                participants: group.participants
-                
+                participants: group.participants,
+                image
 
             })
 

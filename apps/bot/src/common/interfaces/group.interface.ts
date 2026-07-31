@@ -6,18 +6,21 @@ export interface interfaceWsGroup {
     addressingMode: string,
     subject: string,
     subjectOwner: '573208201009@s.whatsapp.net',
+    subjectOwnerPn: string,
     subjectOwnerLid: '159893176774698@lid',
     subjectTime: 1766598618,
     size: 5,
     creation: 1748903190,
-    owner: undefined,
-    ownerLid: undefined,
-    ownerCountry: undefined,
+    owner: string | undefined,
+    ownerPn: string | undefined,
+    ownerLid: string | undefined,
+    ownerCountry: string | undefined,
     desc: string,
     descId: '65BD42D4CF87C563',
     descOwner: '573208201009@s.whatsapp.net',
+    descOwnerPn: string,
     descOwnerLid: '159893176774698@lid',
-    linkedParent: undefined,
+    linkedParent: string | undefined,
     restrict: false,
     announce: false,
     isCommunity: true,
@@ -25,7 +28,7 @@ export interface interfaceWsGroup {
     joinApprovalMode: false,
     memberAddMode: false,
     participants: interfaceGroupParticipant[],
-    ephemeralDuration: undefined
+    ephemeralDuration: string | undefined
 }
 
 /*

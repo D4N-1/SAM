@@ -160,6 +160,6 @@ export class GroupEntity extends BaseEntity {
     settings: GroupSettingsDto;
 
     @Column({ type: 'varchar', nullable: true })
-    image: string;
+    image?: string | null;
 
 }

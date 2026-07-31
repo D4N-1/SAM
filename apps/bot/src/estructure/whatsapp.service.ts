@@ -209,7 +209,7 @@ export default class WhatsappService {
     }
 
     async profilePictureUrl(uid: string) {
-        return this.sock.profilePictureUrl(uid)
+        return this.sock.profilePictureUrl(uid, 'image')
     }
 
     async groupMetadata(chatId: string): Promise<interfaceWsGroup> {
