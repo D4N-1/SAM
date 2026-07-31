@@ -9,6 +9,7 @@ import { AllResponse } from "src/common/interfaces/response.type";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import type { Cache } from "cache-manager";
 import { enumCACHE_KEYS } from "src/common/enums/cache-keys.enum";
+import { plainToInstance } from "class-transformer";
 
 @Injectable()
 export class ContactService {
@@ -70,14 +71,13 @@ export class ContactService {
         uuid: async (uuid: string, text?: string): Promise<ContactEntity> => {
 
             const cachedContact = await this.cache.get(uuid);
-            if (cachedContact) return cachedContact;
+            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ uuid })
 
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
 
-            const plainContact = Object.assign({}, contact);
-            this.cache.set(uuid, plainContact);
+            this.cache.set(uuid, contact);
 
             return contact
         },
@@ -88,14 +88,13 @@ export class ContactService {
                 uid = uid.split('@')[0]
 
             const cachedContact = await this.cache.get(uid);
-            if (cachedContact) return cachedContact;
+            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ uid })
 
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
 
-            const plainContact = Object.assign({}, contact)
-            this.cache.set(uid, plainContact)
+            this.cache.set(uid, contact)
 
             return contact
         },
@@ -106,14 +105,13 @@ export class ContactService {
                 lid = lid.split('@')[0]
 
             const cachedContact = await this.cache.get(lid);
-            if (cachedContact) return cachedContact;
+            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ lid })
             
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
 
-            const plainContact = Object.assign({}, contact);
-            this.cache.set(lid, plainContact);
+            this.cache.set(lid, contact);
 
             return contact;
         }
@@ -122,50 +120,44 @@ export class ContactService {
 
     findOrNull = {
 
-        uuid: async (uuid: string, text?: string): Promise<ContactEntity|null> => {
-            const cacheKey = enumCACHE_KEYS.CONTACT + uuid;
+        uuid: async (uuid: string): Promise<ContactEntity|null> => {
 
-            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
-            if (cachedContact) return cachedContact;
+            const cachedContact = await this.cache.get(uuid);
+            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ uuid })
 
-            const plainContact = Object.assign({}, contact);
-            await this.cacheManager.set(cacheKey, plainContact)
+            if (contact) this.cache.set(uuid, contact)
 
             return contact
         },
 
-        uid: async (uid: string|undefined): Promise<ContactEntity|null> => {
-            const cacheKey = enumCACHE_KEYS.CONTACT + uid;
+        uid: async (uid: string): Promise<ContactEntity|null> => {
 
             if ( uid?.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
                 uid = uid?.split('@')[0]
 
-            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
-            if (cachedContact) return cachedContact;
+            const cachedContact = await this.cache.get(uid);
+            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ uid })
 
-            const plainContact = Object.assign({}, contact)
-            await this.cacheManager.set(cacheKey, plainContact)
+            if (contact) this.cache.set(uid, contact)
 
             return contact
         },
 
-        lid: async (lid: string|undefined): Promise<ContactEntity|null> => {
-            const cacheKey = enumCACHE_KEYS.COMMAND + lid;
+        lid: async (lid: string): Promise<ContactEntity|null> => {
 
             if ( lid?.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
                 lid = lid?.split('@')[0]
 
-            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
-            if (cachedContact) return cachedContact;
+            const cachedContact = await this.cache.get(lid);
+            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ lid })
             
-            const plainContact = Object.assign({}, contact);
-            await this.cacheManager.set(cacheKey, plainContact);
+            if (contact) this.cache.set(lid, contact);
 
             return contact;
         }
@@ -220,10 +212,10 @@ export class ContactService {
 
         const newContactData: Partial<ContactEntity> = { ...newData }
 
-        const contactUid = await this.findOrNull.uid(uid);
+        const contactUid = uid ? await this.findOrNull.uid(uid) : null;
         if (contactUid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa UID') );
 
-        const contactLid = await this.findOrNull.lid(lid);
+        const contactLid = lid ? await this.findOrNull.lid(lid) : null;
         if (contactLid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa LID') );
 
         newContactData.uid = uid?.split('@')[0]

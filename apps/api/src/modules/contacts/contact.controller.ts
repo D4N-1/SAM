@@ -12,7 +12,7 @@ import { GetAllQueryDto } from "src/common/dto/get.dto";
 import { Private } from "src/decorators/private.decorator";
 import { Roles } from "src/decorators/roles-user.decorator";
 import { enumRole } from "src/common/enums/role.enum";
-import { ApiPublic } from "src/common/utils/ApiPublic.util";
+import { FullPublic } from "src/common/utils/FullPublic.util";
 
 
 @Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
@@ -32,7 +32,7 @@ export class ContactController {
     @ApiOperation({ summary: SWAGGER.SUMMARY.CREATE('contacto') })
     @ApiCreatedResponse({ description: SWAGGER.OK.CREATE('contacto'), type: ContactEntity })
     @ApiConflictResponse({ description: SWAGGER.CONFLICT('contacto'), schema: { example: ERROR_CODE.CONFLICT('usuario') } })
-    @Post() @ApiPublic()
+    @Post() @FullPublic()
     async create(@Body() createContactDto: CreateContactDto): Promise<ContactEntity|null> {
         return this.contactService.create(createContactDto)
     }
@@ -58,7 +58,7 @@ export class ContactController {
     @ApiOkResponse({ description: SWAGGER.OK.FIND('contacto'), type: ContactEntity })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto') , schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UID)
-    @Get(':uid')
+    @Get(':uid') @FullPublic()
     async getUid(@Param('uid') uid: string): Promise<ContactEntity|null> {
         return this.contactService.findOneBy.uid(uid)
     }

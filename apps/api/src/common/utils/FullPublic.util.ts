@@ -1,10 +1,11 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiSecurity } from "@nestjs/swagger";
+import { ApiOperation } from "@nestjs/swagger";
 import { Public } from "src/decorators/public.decorator";
-import { Roles } from "src/decorators/roles-user.decorator";
 
-
-export function ApiPublic() {
+/**
+ * Decorador que **ANULA** cualquier **SEGURIDAD** y la fija en **PUBLICA**
+ */
+export function FullPublic() {
     return applyDecorators(
         Public(),
         ApiOperation({ security: [] })
