@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ContactEntity } from "./entities/contact.entity";
-import { QueryDeepPartialEntity, Repository } from "typeorm";
+import { Not, QueryDeepPartialEntity, Repository } from "typeorm";
 import { CreateContactDto } from "./dto/create-contact.dto";
 import { ERROR_CODE } from "src/common/utils/error.utils";
 import { UpdateContactDto } from "./dto/update-contact.dto";
@@ -45,12 +45,31 @@ export class ContactService {
         }
     }
 
+
+    
+    cache = {
+
+        key: enumCACHE_KEYS.CONTACT,
+
+        set: (id: string, group: Record<string,any>) => {
+            this.cacheManager.set( this.cache.key + id, group )
+        },
+
+        get: async(id: string): Promise<ContactEntity|undefined> => {
+            return await this.cacheManager.get<ContactEntity>( this.cache.key + id )
+        },
+
+        del: (id: string) => {
+            this.cacheManager.del( this.cache.key + id )
+        }
+
+    }
+
     findOneBy = {
 
         uuid: async (uuid: string, text?: string): Promise<ContactEntity> => {
-            const cacheKey = enumCACHE_KEYS.CONTACT + uuid;
 
-            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            const cachedContact = await this.cache.get(uuid);
             if (cachedContact) return cachedContact;
 
             const contact = await this.contactRepository.findOneBy({ uuid })
@@ -58,18 +77,17 @@ export class ContactService {
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
 
             const plainContact = Object.assign({}, contact);
-            await this.cacheManager.set(cacheKey, plainContact)
+            this.cache.set(uuid, plainContact);
 
             return contact
         },
 
         uid: async (uid: string, text?: string): Promise<ContactEntity> => {
-            const cacheKey = enumCACHE_KEYS.CONTACT + uid;
 
             if ( uid.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
                 uid = uid.split('@')[0]
 
-            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            const cachedContact = await this.cache.get(uid);
             if (cachedContact) return cachedContact;
 
             const contact = await this.contactRepository.findOneBy({ uid })
@@ -77,18 +95,17 @@ export class ContactService {
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
 
             const plainContact = Object.assign({}, contact)
-            await this.cacheManager.set(cacheKey, plainContact)
+            this.cache.set(uid, plainContact)
 
             return contact
         },
 
         lid: async (lid: string): Promise<ContactEntity> => {
-            const cacheKey = enumCACHE_KEYS.COMMAND + lid;
 
             if ( lid.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
                 lid = lid.split('@')[0]
 
-            const cachedContact = await this.cacheManager.get<ContactEntity>(cacheKey);
+            const cachedContact = await this.cache.get(lid);
             if (cachedContact) return cachedContact;
 
             const contact = await this.contactRepository.findOneBy({ lid })
@@ -96,7 +113,7 @@ export class ContactService {
             if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
 
             const plainContact = Object.assign({}, contact);
-            await this.cacheManager.set(cacheKey, plainContact);
+            this.cache.set(lid, plainContact);
 
             return contact;
         }
@@ -166,45 +183,43 @@ export class ContactService {
     }
 
 
-async bulk(createContactsDto: any) {
-  if (!createContactsDto || (Array.isArray(createContactsDto) && createContactsDto.length === 0)) {
-    throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos'));
-  }
+    async bulk(createContactsDto: any) {
+        if (!createContactsDto || (Array.isArray(createContactsDto) && createContactsDto.length === 0)) throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos'));
+    
 
-  const contactsArray = Array.isArray(createContactsDto) 
-    ? createContactsDto 
-    : [createContactsDto];
+        const contactsArray = Array.isArray(createContactsDto) 
+            ? createContactsDto 
+            : [createContactsDto];
 
-const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
-      .filter((c) => c && c.uid)
-      .map((c) => ({
-        uid: String(c.uid),
-        lid: c.lid ? String(c.lid) : undefined,
-      }));
+        const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
+            .filter((c) => c && c.uid)
+            .map((c) => ({
+                uid: String(c.uid),
+                lid: c.lid ? String(c.lid) : undefined,
+            }));
 
-  if (rawEntities.length === 0) {
-    throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'Ningún contacto válido contiene UID') );
-  }
+        if (rawEntities.length === 0) throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'Ningún contacto válido contiene UID') );
+  
 
-  const chunkSize = 500;
-  for (let i = 0; i < rawEntities.length; i += chunkSize) {
-    const chunk = rawEntities.slice(i, i + chunkSize);
+        const chunkSize = 500;
+        for (let i = 0; i < rawEntities.length; i += chunkSize) {
+            const chunk = rawEntities.slice(i, i + chunkSize);
 
-    await this.contactRepository
-      .createQueryBuilder()
-      .insert()
-      .into(ContactEntity)
-      .values(chunk)
-      .orUpdate(['lid'], ['uid']) 
-      .execute();
+            await this.contactRepository
+              .createQueryBuilder()
+              .insert()
+              .into(ContactEntity)
+              .values(chunk)
+              .orUpdate(['lid'], ['uid']) 
+              .execute();
 
-  }
+        }
 
-  return { 
-    status: 'OK', 
-    processed: rawEntities.length 
-  };
-}
+        return { 
+          status: 'OK', 
+          processed: rawEntities.length 
+        };
+    }
 
     async create(createContactDto: CreateContactDto): Promise<ContactEntity|null> {
 
@@ -225,26 +240,45 @@ const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
         return this.contactRepository.save(newContact)
     }
 
-    async update(uid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
+    update = {
 
-        const contact = await this.findOneBy.uid(uid)
+        uid: async(uid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> => {
 
-        if (updateContactDto.lid) {
-            const exist = await this.contactRepository.findOneBy({ lid: updateContactDto.lid })
+            const contact = await this.findOneBy.uid(uid)
 
-            if (exist && exist.uid !== uid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+            if (updateContactDto.lid) {
+                const exist = await this.contactRepository.findOne({
+                    where: { lid: updateContactDto.lid, index: Not(contact.index) }
+                })
 
-        } else if (updateContactDto.uid) {
-            const exist = await this.contactRepository.findOneBy({ uid: updateContactDto.uid })
+                if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
-            if (exist && exist.uid !== uid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+            }
 
+            const editContact = this.contactRepository.merge(contact, updateContactDto)
+
+            this.cache.del(uid)
+            return await this.contactRepository.save(editContact)
+        },
+
+        lid: async(lid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> => {
+
+            const contact = await this.findOneBy.lid(lid)
+
+            if (updateContactDto.uid) {
+                const exist = await this.contactRepository.findOne({
+                    where: { uid: updateContactDto.uid, index: Not(contact.index) }
+                })
+            
+                if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+
+            }
+
+            const editContact = this.contactRepository.merge(contact, updateContactDto)
+
+            this.cache.del(lid)
+            return await this.contactRepository.save(editContact)
         }
-
-        const editContact = this.contactRepository.merge(contact, updateContactDto)
-
-        await this.cacheManager.del(enumCACHE_KEYS.CONTACT + uid)
-        return await this.contactRepository.save(editContact)
     }
 
 

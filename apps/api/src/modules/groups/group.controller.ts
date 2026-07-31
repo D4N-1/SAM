@@ -50,7 +50,7 @@ export class GroupController {
   @ApiOkResponse({ description: SWAGGER.OK.ALL('grupo'), type: GroupEntity })
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('grupo'), schema: { example: ERROR_CODE.NOT_FOUND('grupo') } })
   @ApiParam(API_PARAM.UID)
-    @Get(':uid')
+  @Get(':uid')
   async getUid(@Param('uid') uid: string): Promise<GroupEntity> {
     return this.groupService.findOneBy.uid(uid)
   }

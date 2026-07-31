@@ -74,7 +74,7 @@ export class CommunityService {
 
     cache = {
 
-        key: enumCACHE_KEYS.GROUP,
+        key: enumCACHE_KEYS.COMMUNITY,
 
         set: (id: string, community: Record<string,any>) => {
           this.cacheManager.set( this.cache.key + id, community )
