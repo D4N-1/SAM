@@ -7,6 +7,7 @@ import { BotService } from 'src/modules/bots/bot.service';
 import { ClientRequest } from 'src/common/interfaces/req-client.type';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { enumClients } from 'src/common/enums/role.enum';
+import { Request } from 'express';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -16,7 +17,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly botService: BotService
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          let data = request?.cookies?.['access_token'];
+          if (!data) return ExtractJwt.fromAuthHeaderAsBearerToken()
+            else return data
+        }
+      ]),
       ignoreExpiration: false,
       secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
     });

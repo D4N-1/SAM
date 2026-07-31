@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { SignInUserDto } from './dto/sign-user.dto';
@@ -9,6 +9,7 @@ import { msgWRONG_PASSWORD } from 'src/common/messages/error.message';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import type { ClientRequest } from 'src/common/interfaces/req-client.type';
 import { SignInBotDto } from './dto/sign-bot.dto';
+import type { Request, Response } from 'express';
 
 @ApiTags('Autenticación')
 @Controller('auth')
@@ -20,14 +21,26 @@ export class AuthController {
   @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('usuario'), schema: { example: ERROR_CODE.NOT_FOUND('usuario') } })
   @ApiUnauthorizedResponse({ description: msgWRONG_PASSWORD, schema: { example: ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) } })
   @Post('user/login')
-  userLogin(@Body() signInDto: SignInUserDto) {
-    return this.authService.signIn.user(signInDto)
+  async userLogin(@Res({ passthrough: true }) response: Response, @Body() signInDto: SignInUserDto) {
+    const result = await this.authService.signIn.user(signInDto)
+
+
+    response.cookie('access_token', result?.access_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 60_000 * 60 * 24
+    })
+
+    return result
+    
   }
 
   @ApiOperation({ summary: 'Obtienes tu información de contacto o de bot' })
   @ApiOkResponse({ description: 'Datos encontrados con exito' })
   @Get('me') @ApiBearerAuth() @Private()
   profile(@CurrentUser() user: ClientRequest) {
+
     return this.authService.profile(user.uuid)
   }
 

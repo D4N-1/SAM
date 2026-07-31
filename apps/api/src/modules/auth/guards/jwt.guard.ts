@@ -44,7 +44,7 @@ export class JwtGuard extends AuthGuard('jwt') {
 
         if (client) {
             this.cls.set('userType', client.type);
-            this.cls.set('userId', client.uuid); // Basado en tu payload que usa uuid
+            this.cls.set('userId', client.uuid);
         }
 
         return canActivate as boolean
