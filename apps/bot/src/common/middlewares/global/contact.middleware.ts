@@ -23,7 +23,7 @@ export class ContactMiddleware implements SamMiddleware {
             const resLid = await Api.get(`/contacts/lid/${lid}`)
 
 
-            if ( resUid?.status !== 404 && resLid?.status !== 404 ) {
+            if ( resUid?.status !== 404 || resLid?.status !== 404 ) {
 
                 const contact = resLid?.data || resUid?.data;
 

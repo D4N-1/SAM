@@ -114,6 +114,19 @@ export async function registerMessagesEvent(samSocket: any) {
             if (!data.messages || data.messages.length === 0) return;
 
             const msg = data.messages[0];
+            if (msg.messageStubType === 22) {
+
+                const data = [
+                    {
+                        id : msg?.key?.remoteJid,
+                        author: msg?.key?.participant,
+                        image: true
+                    }
+                ]
+
+                samSocket.ev.emit('groups.update', data)
+                console.log( JSON.stringify( msg, null, 2) )
+            }
 
             if (!msg.key) return;
 

@@ -7,7 +7,7 @@ export default async function syncGroups(sam: WhatsappService, chatId: string): 
     try {
 
         const group = await sam.groupMetadata(chatId);
-        const image = await sam.profilePictureUrl(chatId)
+        const image = await sam.profilePictureUrl(chatId);
         if (!group) return;
 
         const linkedParent = group?.linkedParent;
@@ -71,7 +71,7 @@ export default async function syncGroups(sam: WhatsappService, chatId: string): 
             console.log('COMMUNITY UPDATE')
         }
 
-        const groupRes = await Api.get(`/groups/${group}`)
+        const groupRes = await Api.get(`/groups/${group.id}`)
 
         if (groupRes.status === 404) {
             const groupPost = await Api.post(`/groups`, {

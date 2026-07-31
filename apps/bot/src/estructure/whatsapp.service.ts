@@ -11,15 +11,13 @@ const url = 'https://sambot.live'
 
 export async function getContact(id: string) {
 
-    id = id?.split('@')[0]!
-
     if ( id.endsWith('@lid') ) {
-        const res = await Api.get(`/contacts/lid/${id.split('@')[0]}`)
+        const res = await Api.get(`/contacts/lid/${id}`)
 
         return res?.data
 
     } else {
-        const res = await Api.get(`/contacts/uid/${id.split('@')[0]}`)
+        const res = await Api.get(`/contacts/${id}`)
 
         return res?.data
     }
@@ -209,7 +207,7 @@ export default class WhatsappService {
     }
 
     async profilePictureUrl(uid: string) {
-        return this.sock.profilePictureUrl(uid, 'image')
+        return this.sock.profilePictureUrl(uid)
     }
 
     async groupMetadata(chatId: string): Promise<interfaceWsGroup> {
@@ -230,8 +228,8 @@ export default class WhatsappService {
         return this.sock.groupParticipantsUpdate(chatId, [contact], action);
     }
 
-    async getContact(uid: string): Promise<{uid: string, name: string }> {
-        return getContact(uid)
+    async getContact(id: string): Promise<{uid: string, name: string }> {
+        return getContact(id)
     }
 
     async getMe() {
