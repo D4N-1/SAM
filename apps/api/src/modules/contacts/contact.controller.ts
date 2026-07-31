@@ -40,7 +40,7 @@ export class ContactController {
     @ApiOperation({ summary: 'Crea desde un array de contactos' })
     @ApiCreatedResponse({ description: 'Todos los contactos han sido creados', type: ContactEntity })
     @Post('/bulk')
-    async createBulk(@Body() createContactDto: CreateContactDto[]) {
+    async createBulk(@Body() createContactDto: { id: string, phoneNumber: string, admin: boolean }[]) {
         return this.contactService.bulk(createContactDto)
     }
 

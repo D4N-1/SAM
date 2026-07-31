@@ -7,43 +7,25 @@ export default async function syncGroups(sam: WhatsappService, chatId: string): 
     try {
 
         const group = await sam.groupMetadata(chatId);
-        let image;
-        try {
-            image = await sam.profilePictureUrl(chatId);
-        } catch {}
+        let image = await sam.profilePictureUrl(chatId).catch( () => null)
+
+        console.log(group)
 
         if (!group) return;
 
         const linkedParent = group?.linkedParent;
-        const uniqueContacts = new Map<string, { uid: string; lid?: string }>();
-
-        if (group.participants) {
-            group.participants.forEach((p: any) => {
-                const uid = p?.id?.split('@')[0];
-                if (uid) uniqueContacts.set(uid, { uid, lid: p?.lid?.split('@')[0] });
-            });
-        }
 
         let community: any = null;
         let communityRes: any = null;
 
         if (linkedParent) {
-            communityRes = await Api.get(`/communities/${linkedParent.split('@')[0]}`).catch(() => null);
+            communityRes = await Api.get(`/communities/${linkedParent.split('@')[0]}`);
 
-            if (!communityRes || communityRes.status !== 200) {
-                community = await sam.groupMetadata(linkedParent).catch(() => null);
-
-                if (community && community.participants) {
-                    community.participants.forEach((p: any) => {
-                        const uid = p?.id?.split('@')[0];
-                        if (uid) uniqueContacts.set(uid, { uid, lid: p?.lid?.split('@')[0] });
-                    });
-                }
-            }
+            if (communityRes.status === 404) community = await sam.groupMetadata(linkedParent).catch(() => null);
         }
 
-        const bulkContacts = Array.from(uniqueContacts.values());
-        if (bulkContacts.length > 0) await Api.post(`/contacts/bulk`, bulkContacts).catch(() => null);
+        const contacts = group?.participants;
+        if (contacts.length > 0) await Api.post(`/contacts/bulk`, { contacts });
             
 
         if (community && communityRes?.status === 404) {
@@ -55,14 +37,13 @@ export default async function syncGroups(sam: WhatsappService, chatId: string): 
                 size: community.size,
                 creation: community.creation,
                 description: community.desc
-
-            }).catch(() => null);
+            });
 
             console.log('COMMUNITY INSERTION:', communityPost?.data?.community.subject);
 
-        } else if (community && communityRes?.status === 200) {
+        } else if (community) {
 
-            await Api.patch(`/communities/${community.id.split('@')[0]}`, {
+            await Api.patch(`/communities/${community?.id.split('@')[0]}`, {
                 uid: community.id.split('@')[0],
                 name: community.subject,
                 nameTime: community.subjectTime,
@@ -97,9 +78,10 @@ export default async function syncGroups(sam: WhatsappService, chatId: string): 
             
             console.log('GROUP INSERTION:', groupPost?.data?.group?.subject);
 
-        } else if (groupRes?.status === 200) {
+        } else {
 
-            Api.patch(`/groups/${group.id.split('@')[0]}`, {
+            Api.patch(`/groups/${group.id}`, {
+
                 communityUid: linkedParent?.split('@')[0] || null,
                 uid: group.id.split('@')[0],
                 name: group.subject,

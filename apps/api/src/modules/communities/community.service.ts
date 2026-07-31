@@ -120,7 +120,7 @@ export class CommunityService {
         },
 
         uid: async (uid: string, noCache?: boolean): Promise<CommunityEntity> => {
-            if ( uid.endsWith('@g.us') ) uid = uid.split('@')[0];
+            if ( uid?.endsWith('@g.us') ) uid = uid.split('@')[0];
 
             const cachedCommunity = await this.cache.get(uid);
             if (cachedCommunity && !noCache) return cachedCommunity;

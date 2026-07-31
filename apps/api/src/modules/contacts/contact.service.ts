@@ -183,37 +183,30 @@ export class ContactService {
     }
 
 
-    async bulk(createContactsDto: any) {
-        if (!createContactsDto || (Array.isArray(createContactsDto) && createContactsDto.length === 0)) throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos'));
+    async bulk(Dto) {
+
+        const createContactsDto = Array.isArray(Dto) ? Dto : Dto.contacts
+        if (!createContactsDto || createContactsDto.length === 0) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'No se proporcionaron contactos') );
     
 
-        const contactsArray = Array.isArray(createContactsDto) 
-            ? createContactsDto 
-            : [createContactsDto];
-
-        const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = contactsArray
-            .filter((c) => c && c.uid)
+        const rawEntities: QueryDeepPartialEntity<ContactEntity>[] = createContactsDto
+            .filter( (c) => Boolean(c.phoneNumber) )
             .map((c) => ({
-                uid: String(c.uid),
-                lid: c.lid ? String(c.lid) : undefined,
+                uid: String(c.phoneNumber),
+                lid: c.id ? String(c.id) : undefined,
             }));
 
         if (rawEntities.length === 0) throw new BadRequestException(ERROR_CODE.BAD_REQUEST('BODY', 'Ningún contacto válido contiene UID') );
-  
 
-        const chunkSize = 500;
-        for (let i = 0; i < rawEntities.length; i += chunkSize) {
-            const chunk = rawEntities.slice(i, i + chunkSize);
 
-            await this.contactRepository
-              .createQueryBuilder()
-              .insert()
-              .into(ContactEntity)
-              .values(chunk)
-              .orUpdate(['lid'], ['uid']) 
-              .execute();
+        await this.contactRepository
+          .createQueryBuilder()
+          .insert()
+          .into('contacts')
+          .values(rawEntities)
+          .orIgnore() 
+          .execute();
 
-        }
 
         return { 
           status: 'OK', 
@@ -253,6 +246,8 @@ export class ContactService {
 
                 if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
+                updateContactDto.lid = updateContactDto.lid?.split('@')[0]
+
             }
 
             const editContact = this.contactRepository.merge(contact, updateContactDto)
@@ -271,6 +266,8 @@ export class ContactService {
                 })
             
                 if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
+
+                updateContactDto.uid = updateContactDto.uid?.split('@')[0]
 
             }
 

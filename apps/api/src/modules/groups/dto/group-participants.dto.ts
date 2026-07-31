@@ -16,4 +16,8 @@ export class ParticipantDto {
     @IsString()
     @IsOptional()
     admin?: 'admin'|'superadmin'|null;
+
+    @IsString()
+    @IsOptional()
+    username?: string|undefined;
 }

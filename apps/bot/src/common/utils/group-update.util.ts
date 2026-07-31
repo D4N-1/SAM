@@ -19,10 +19,9 @@ export async function groupUpdate(sam: any, update: any) {
         const contact = contactRes.data;
 
       
-        if (groupRes?.status !== 200) {
-            Logger.log('GroupUpdate', `Sincronizando grupo detectado: ${id}`);
-            return await SyncGroups(sam, id)
-        }
+        Logger.log('GroupUpdate', `Sincronizando grupo detectado: ${id}`);
+        SyncGroups(sam, id)
+        
 
         const group = groupRes.data;
 

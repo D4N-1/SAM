@@ -16,6 +16,7 @@ import { SetNameCommand } from "./admin/set-name/set-name.module.js";
 import { SetDescriptionCommand } from "./admin/set-description/set-description.module.js";
 import { EveryoneAdminCommand } from "./admin/everyone-admin/everyone-admin.module.js";
 import { GroupCommand } from "./general/group/group.module.ts";
+import { ReloadCommand } from "./general/reload/reload.module.ts";
 
 
 export const ALL_COMMANDS = [
@@ -33,7 +34,8 @@ export const ALL_COMMANDS = [
     OpenCommand,
     SetNameCommand,
     SetDescriptionCommand,
-    GroupCommand
+    GroupCommand,
+    ReloadCommand
 ]
 
 

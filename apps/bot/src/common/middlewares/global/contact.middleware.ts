@@ -19,48 +19,51 @@ export class ContactMiddleware implements SamMiddleware {
             const lid = senderAlt?.endsWith('@s.whatsapp.net') ? sender : senderAlt;
 
 
-            const resUid = await Api.get(`/contacts/${uid}`);
-            const resLid = await Api.get(`/contacts/lid/${lid}`)
+            const [ resUid, resLid ] = await Promise.all([
+                uid ? Api.get(`/contacts/${uid}`).catch(() => null) : null,
+                lid ? Api.get(`/contacts/lid/${lid}`).catch(() => null) : null
+            ])
 
 
-            if ( resUid?.status !== 404 || resLid?.status !== 404 ) {
+            const contactLid = resLid?.data;
+            const contactUid = resUid?.data;
 
-                const contactLid = resLid?.data;
-                const contactUid = resUid?.data;
+            if ( contactLid || contactUid) {
 
-                if (contactLid) {
+
+                if (contactLid && lid) {
 
                     if ( (pushName && contactLid.name !== pushName) || (contactLid.uid !== uid) ) {
                         await Api.patch(`/contacts/lid/${lid}`, {
                             name: pushName,
-                            uid
+                            uid: uid?.split('@')[0]
                         })
                     }
 
                 }
 
                 
-                if (contactUid) {
+                if (contactUid && uid) {
 
                     if ( (pushName && contactUid.name !== pushName) || (contactUid.lid !== lid) ) {
                         await Api.patch(`/contacts/${uid}`, {
                             name: pushName,
-                            lid
+                            lid: lid?.split('@')[0]
                         })
                     }
 
                 }
 
 
-                if (!pushName) context.message.pushName = contactLid?.name || contactUid.name;
+                if (!pushName) context.message.pushName = contactLid?.name || contactUid?.name;
 
                 return next();
 
             }
 
             await Api.post(`/contacts`, {
-                uid,
-                lid,
+                uid: uid?.split('@')[0],
+                lid: uid?.split('@')[0],
                 name: pushName
             });
 
@@ -68,7 +71,9 @@ export class ContactMiddleware implements SamMiddleware {
             next();
 
         } catch (error) {
-            Logger.error('ContactMiddleware', 'Error al obtener /contacts/uid');
+            Logger.error('ContactMiddleware', 'Error al obtener sincronizar');
+            console.log(error)
+            return next();
         }
     }
 }

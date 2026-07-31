@@ -181,7 +181,6 @@ export class GroupService {
 
     const { uid: _, communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, realmName, ...newData } = updateGroupDto;
 
-    // 2. LIMPIAR PROPIEDADES 'undefined' (Evita sobrescribir metadata/settings con NULL)
     const updateGroupData: Partial<GroupEntity> = {};
 
     Object.keys(newData).forEach((key) => {
