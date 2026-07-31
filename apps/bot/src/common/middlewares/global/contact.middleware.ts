@@ -25,10 +25,10 @@ export class ContactMiddleware implements SamMiddleware {
             ])
 
 
-            const contactLid = resLid?.data;
-            const contactUid = resUid?.data;
+            const contactLid = resLid?.status !== 404 ? resLid?.data : null;
+            const contactUid = resUid?.status !== 404 ? resUid?.data : null;
 
-            if ( contactLid || contactUid) {
+            if (contactLid || contactUid) {
 
 
                 if (contactLid && lid) {
