@@ -27,7 +27,7 @@ const Logger = {
 
     const logTag = chalk.cyanBright("LOG");
 
-    const ctx = chalk.yellow(`[${context}]`);
+    const ctx = chalk.whiteBright(`[${context}]`);
 
     const msg = chalk.greenBright(message);
     let timeDiff = "";
