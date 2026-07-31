@@ -7,7 +7,11 @@ export default async function syncGroups(sam: WhatsappService, chatId: string): 
     try {
 
         const group = await sam.groupMetadata(chatId);
-        const image = await sam.profilePictureUrl(chatId);
+        let image;
+        try {
+            image = await sam.profilePictureUrl(chatId);
+        } catch {}
+
         if (!group) return;
 
         const linkedParent = group?.linkedParent;
