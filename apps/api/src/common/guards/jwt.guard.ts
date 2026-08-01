@@ -22,8 +22,6 @@ export default class JwtGuard extends AuthGuard('jwt') {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
 
-        console.log('Metodo:', context.getHandler().name);
-        console.log('esPrivado?:', Private);
 
         const isPublic = this.reflector.getAllAndOverride(Public, [
             context.getHandler(),

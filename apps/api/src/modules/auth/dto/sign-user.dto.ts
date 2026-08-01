@@ -1,18 +1,41 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 
-export class SignInUserDto {
 
+export class ReqCodeUserDto {
     @ApiProperty({
         example: DTO.UID
     })
     @IsString()
-    contactUid: string;
+    @IsOptional()
+    contactUid?: string|undefined;
+
+    @ApiProperty({
+        example: DTO.EMAIL
+    })
+    @IsString()
+    @IsOptional()
+    email?: string|undefined;
+
+
+}
+
+
+export class SignInUserDto extends ReqCodeUserDto {
 
     @ApiProperty({
         example: DTO.PASSWORD
     })
     @IsString()
-    password: string;
+    @IsOptional()
+    password?: string|undefined;
+
+    @ApiProperty({
+        example: DTO.CODE
+    })
+    @IsString()
+    @IsOptional()
+    code?: string|undefined;
+
 }

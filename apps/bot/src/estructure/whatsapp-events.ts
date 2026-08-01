@@ -24,7 +24,6 @@ export async function registerConnectionEvent(uid: string, code: string, sam: an
 
             let { connection, qr, lastDisconnect } = data
 
-            console.log(data)
             if (qr) console.log( await qrcode.toString(qr, { type: "terminal", small: true }) )
 
             if (connection) {

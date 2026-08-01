@@ -40,5 +40,12 @@ export const ERROR_CODE = {
             error: 'Conflict',
             message: text || `No se puede crear, ya existe un ${type} con esos datos`
         }
+    ),
+    SERVICE_UNAVAILABLE: (text?: string) => (
+        {
+            statusCode: 503,
+            error: 'Service Unavailable',
+            message: text || `Servicio no disponible temporalmente`
+        }
     )
 }

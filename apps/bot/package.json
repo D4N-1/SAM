@@ -15,6 +15,10 @@
     "@hapi/boom": "^10.0.1",
     "@itsliaaa/baileys": "^0.3.16",
     "pino": "^10.3.1",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6"
   }
 }

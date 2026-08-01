@@ -42,9 +42,14 @@ export class LoggerMiddleware implements NestMiddleware {
 
             const logMessage = `[${method}] ${originalUrl} | ${statusCode} | ${ip} | Time: ${duration} ms`;
 
-            if (statusCode >= 400) {
+            if (statusCode > 400 && statusCode < 500) {
                 logRegister.warn(logMessage, logData)
-            } else logRegister.info(logMessage)
+            } else if (statusCode > 500) {
+                logRegister.error(logMessage, logData)
+            } else {
+                logRegister.info(logMessage)
+            }
+
 
         })
 

@@ -4,8 +4,8 @@ import { wait } from "../common/utils/function.util.js";
 import Logger from "../common/utils/logger.util.js";
 
 export class ApiLoginService {
-    private readonly MAX_RETRIES = 15;
-    private readonly DELAY = 10_000;
+    private readonly MAX_RETRIES = 25;
+    private readonly DELAY = 5_000;
 
 
     public async getApiStatus(): Promise<boolean> {
@@ -52,7 +52,7 @@ export class ApiLoginService {
         }
     }
 
-    async signIn(uid: string, code: string): Promise<boolean> {
+    async signIn(uid: string, code: string): Promise<string|undefined> {
         try {
             let isOnline: boolean = false;
             let ATTEMPTS = 0;
@@ -64,7 +64,7 @@ export class ApiLoginService {
                 if (!isOnline) {
                     if (ATTEMPTS >= this.MAX_RETRIES) {
                         Logger.error(enumContext.WhatsappLoginService, 'API sin respuesta definitiva')
-                        return false;
+                        return;
                     } else {
                         Logger.error(enumContext.WhatsappLoginService, 'API sin respuesta, reintentando...')
                         await wait(this.DELAY)
@@ -72,23 +72,24 @@ export class ApiLoginService {
                 }
             }
 
-            Logger.log(enumContext.WhatsappLoginService, 'Generando un nuevo TOKEN')
+            Logger.log(enumContext.WhatsappLoginService, 'Generando TOKEN')
             const newToken = await this.getAuthToken(uid, code);
             
-            if (!newToken) return false;
+            if (!newToken) return;
 
+            
             Api.setToken(newToken);
             
             const me = await this.getMe(uid)
-            if (!me) return false;
+            if (!me) return;
 
-            Logger.log(enumContext.WhatsappLoginService, 'Token generado con éxito en los Headers');
+            Logger.log(enumContext.WhatsappLoginService, 'Token generado con éxito');
 
-            return true;
+            return newToken;
 
         } catch (error) {
             Logger.error(enumContext.WhatsappLoginService, 'SignIn')
-            return false;
+            return;
         }
     }
 };

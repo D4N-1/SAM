@@ -1,17 +1,19 @@
 import P from "pino"
-import { makeWASocket, useMultiFileAuthState } from "@itsliaaa/baileys";
-import { registerCredsEvents, registerConnectionEvent, registerMessagesEvent, sendAliveInterval, registerGroupsEvent, registerGroupParticipantsEvent } from "./whatsapp-events.js";
+import { makeWASocket } from "@itsliaaa/baileys";
+import { registerCredsEvents, registerConnectionEvent } from "./whatsapp-events.js";
 import apiLoginService from "./whatsapp-login.service.js";
 import Logger from "../common/utils/logger.util.js";
 import enumContext from "../common/enums/context.enum.js";
 import { useApiAuthState } from "./utils/whatsapp-auth.util.js";
+import { startApiSocket } from "./api-events.ts";
 
 
 
 export async function startWhatsappBot(uid: string, code: string) {
 
     
-    if ( !await apiLoginService.signIn(uid, code) ) {
+    const token = await apiLoginService.signIn(uid, code)
+    if (!token) {
 
         Logger.error(enumContext.WhatsappClient, 'No se pudo iniciar sesion')
         process.exit(0)
@@ -19,7 +21,6 @@ export async function startWhatsappBot(uid: string, code: string) {
 
     
     const { state, saveCreds } = await useApiAuthState(uid);
-    
 
     const sam:any = makeWASocket({
         //version: [2, 3000, 1037076227],
@@ -44,7 +45,10 @@ export async function startWhatsappBot(uid: string, code: string) {
     });
 
 
+
     registerCredsEvents(sam, saveCreds);
     registerConnectionEvent(uid, code, sam);
+
+    startApiSocket(token, sam);
 
 }

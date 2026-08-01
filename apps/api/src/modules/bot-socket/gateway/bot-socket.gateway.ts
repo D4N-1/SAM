@@ -2,11 +2,14 @@ import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, OnGatewayIni
 import { Server, Socket } from "socket.io"
 import { CORS_config } from "src/main";
 import { AuthService } from "src/modules/auth/auth.service";
+import { BotSocketService } from "../bot-socket.service";
+import { enumBotRole } from "src/common/enums/bot-role.enum";
+import { forwardRef, Inject } from "@nestjs/common";
 
 
 const SocketCORS_config = {
     ...CORS_config,
-    path: '/socket.io'
+    path: '/bots/socket.io'
 }
 
 
@@ -15,6 +18,10 @@ export class BotSocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
 
     constructor(
 
+        @Inject(forwardRef( () => BotSocketService))
+        private readonly botSocketService: BotSocketService,
+
+        @Inject( forwardRef( () => AuthService) )
         private readonly authService: AuthService
 
     ) {}
@@ -34,10 +41,11 @@ export class BotSocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
                 const token = client?.handshake?.headers?.cookie ||
                     client?.handshake?.auth?.cookie;
             
+
                 if (!token) return next( new Error('No se proporcionó un token de acceso') )
             
 
-                client.data.user = await this.authService.verifyToken(token)
+                client.data.user = await this.authService.verifyToken(token);
 
                 next();
 
@@ -49,10 +57,20 @@ export class BotSocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     }
 
     async handleConnection(client: Socket, ...args: any[]) {
-        console.log(`Cliente conectado`)
+        console.log(`Cliente conectado: ${client.id}`)
+
+        const user = this.botSocketService.getSocketUser(client);
+        console.log(user)
+
+        if (user.role === enumBotRole.BOT) client.join('BOT')
+
 
         setTimeout(() => {
+
             client.emit('system', { statusCode: 200, message: 'Conexión establecida' } )
+
+            if (user.role === enumBotRole.BOT) client.emit('system', { statusCode: 201, message: 'Se te ha unido a la SALA "BOT"' })
+
         }, 1_000)
 
     }
@@ -65,5 +83,7 @@ export class BotSocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
     @SubscribeMessage('start')
     event(@ConnectedSocket() socket: Socket) {
         console.log(socket.data?.user)
+
+        socket.emit('start', { message: `Hola ${socket?.data?.user?.name}` })
     }
 }
