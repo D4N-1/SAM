@@ -71,11 +71,26 @@ export class AuthService {
 
   }
 
-    async profile(uuid: string) {
+  async profile(uuid: string) {
 
-      const user = await this.userService.findOrNull.uuid(uuid)
-      const bot = await this.botService.findOrNull.uuid(uuid)
+    const user = await this.userService.findOrNull.uuid(uuid)
+    const bot = await this.botService.findOrNull.uuid(uuid)
 
-      return user || bot;
-    }
+    if (!user && !bot) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED('No existe algún usuario o bot ligado a este token') )
+
+    return user || bot;
+  }
+
+
+  async verifyToken(token: string) {
+
+    if ( token?.startsWith('Bearer') ) token = token?.replace('Bearer ', '').trim()
+
+    const payload = await this.jwtService.verify(token)
+    
+    await this.profile(payload?.uuid)
+
+    return payload
+  }
+
 }

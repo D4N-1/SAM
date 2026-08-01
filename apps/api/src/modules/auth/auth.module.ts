@@ -30,5 +30,6 @@ import { ClsModule } from 'nestjs-cls';
     UserModule,
     BotModule,
   ],
+  exports: [ AuthService ]
 })
 export class AuthModule {}

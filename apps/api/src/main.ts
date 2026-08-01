@@ -9,23 +9,29 @@ import { ThrottlerExceptionFilter } from './filters/throttler-exception.filter';
 import logRegister from './common/utils/logger.util';
 import cookieParser from 'cookie-parser';
 
+export const CORS_config = {
+  origin: [
+    /\.sambot\.com$/,
+    'https://sambot.live',
+    'http://localhost:81',
+    'http://127.0.0.1:81'
+
+  ],
+  credentials: true,
+  allowedHeaders: [ 'Content-Type', 'Authorization', 'Accept', 'bot-uid' ],
+  maxAge: 3_600,
+  optionsSuccessStatus: 200
+}
+
 async function bootstrap() {
 
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.enableCors({
-    origin: [
-      /\.sambot\.com$/,
-      'https://sambot.live',
-      'http://localhost:81',
-      'http://127.0.0.1:81'
 
-    ],
-    credentials: true,
+  const NestCORS_config = {
+    ...CORS_config,
     methods: [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS' ],
-    allowedHeaders: [ 'Content-Type', 'Authorization', 'Accept', 'bot-uid' ],
-    maxAge: 3_600,
-    optionsSuccessStatus: 200
-  })
+  }
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors(CORS_config)
 
   app.useGlobalPipes( new ValidationPipe({
     whitelist: true,

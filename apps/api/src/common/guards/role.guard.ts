@@ -7,7 +7,7 @@ import { Public } from "src/decorators/public.decorator";
 import { Roles } from "src/decorators/roles-user.decorator";
 
 @Injectable()
-export class RolesGuard implements CanActivate {
+export default class RolesGuard implements CanActivate {
     constructor(private reflector: Reflector) {}
 
     canActivate(context: ExecutionContext): boolean {

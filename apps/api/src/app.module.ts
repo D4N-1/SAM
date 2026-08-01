@@ -18,11 +18,12 @@ import { CommunityModule } from './modules/communities/community.module';
 import { GroupModule } from './modules/groups/group.module';
 import { BotModule } from './modules/bots/bot.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtGuard } from './modules/auth/guards/jwt.guard';
-import { RolesGuard } from './modules/auth/guards/role.guard';
+import JwtGuard from './common/guards/jwt.guard';
+import RolesGuard from './common/guards/role.guard';
 import { RealmModule } from './modules/realms/realm.module';
 import { AuditLogModule } from './modules/audit_logs/audit-log.module';
 import { ClsModule } from 'nestjs-cls';
+import { BotSocketModule } from './modules/bot-socket/bot-socket.module';
 
 @Module({
   imports: [
@@ -70,7 +71,8 @@ import { ClsModule } from 'nestjs-cls';
     UserModule, AuthModule, CommunityModule,
     GroupModule, BotModule, RealmModule,
     QuotesModule,
-    AuditLogModule
+    AuditLogModule,
+    BotSocketModule
     ],
   controllers: [AppController],
   providers: [
