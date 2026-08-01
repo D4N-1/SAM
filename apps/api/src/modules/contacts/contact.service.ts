@@ -82,30 +82,30 @@ export class ContactService {
             return contact
         },
 
-        uid: async (uid: string, text?: string): Promise<ContactEntity> => {
+        uid: async (uid: string, noCache?: boolean): Promise<ContactEntity> => {
 
             if ( uid.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
                 uid = uid.split('@')[0]
 
             const cachedContact = await this.cache.get(uid);
-            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
+            if (cachedContact && !noCache) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ uid })
 
-            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto', text) )
+            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') )
 
             this.cache.set(uid, contact)
 
             return contact
         },
 
-        lid: async (lid: string): Promise<ContactEntity> => {
+        lid: async (lid: string, noCache?: boolean): Promise<ContactEntity> => {
 
             if ( lid.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
                 lid = lid.split('@')[0]
 
             const cachedContact = await this.cache.get(lid);
-            if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
+            if (cachedContact && !noCache) return plainToInstance(ContactEntity, cachedContact);
 
             const contact = await this.contactRepository.findOneBy({ lid })
             
@@ -229,7 +229,7 @@ export class ContactService {
 
         uid: async(uid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> => {
 
-            const contact = await this.findOneBy.uid(uid)
+            const contact = await this.findOneBy.uid(uid, true)
 
             if (updateContactDto.lid) {
                 const exist = await this.contactRepository.findOne({
@@ -250,7 +250,7 @@ export class ContactService {
 
         lid: async(lid: string, updateContactDto: UpdateContactDto): Promise<ContactEntity|null> => {
 
-            const contact = await this.findOneBy.lid(lid)
+            const contact = await this.findOneBy.lid(lid, true)
 
             if (updateContactDto.uid) {
                 const exist = await this.contactRepository.findOne({

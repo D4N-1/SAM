@@ -13,8 +13,18 @@ async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
-    origin: '*',
-    credentials: true
+    origin: [
+      /\.sambot\.com$/,
+      'https://sambot.live',
+      'http://localhost:81',
+      'http://127.0.0.1:81'
+
+    ],
+    credentials: true,
+    methods: [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS' ],
+    allowedHeaders: [ 'Content-Type', 'Authorization', 'Accept', 'bot-uid' ],
+    maxAge: 3_600,
+    optionsSuccessStatus: 200
   })
 
   app.useGlobalPipes( new ValidationPipe({
@@ -58,7 +68,7 @@ async function bootstrap() {
   const PORT = process.env.PORT ?? 3000;
   const LOCAL = `http://127.0.0.1:${PORT}`
   const DNS = 'https://api.sambot.live'
-  await app.listen(PORT);
+  await app.listen(PORT, '0.0.0.0');
 
   console.log(`Servicio escuchando en ${LOCAL} - ${DNS}`)
   console.log(`Documentación disponible en ${LOCAL}/docs - ${DNS}/docs`)

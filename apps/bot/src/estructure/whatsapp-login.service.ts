@@ -41,7 +41,7 @@ export class ApiLoginService {
         try {
             if (!uid) return null;
 
-            const res = await Api.get('/auth/me', { headers: { 'x-bot-uid': uid } });
+            const res = await Api.get('/auth/me', { headers: { 'bot-uid': uid } });
 
             if ([200, 201].includes(res.status)) return true;
             return null;

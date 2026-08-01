@@ -1,10 +1,8 @@
-import { ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import { ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
 import { ClsService } from "nestjs-cls";
-import { enumClients } from "src/common/enums/role.enum";
 import { ClientRequest } from "src/common/interfaces/req-client.type";
-import { ERROR_CODE } from "src/common/utils/error.utils";
 import { Private } from "src/decorators/private.decorator";
 import { Public } from "src/decorators/public.decorator";
 

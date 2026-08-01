@@ -1,5 +1,4 @@
 import axios from "axios";
-import Logger from "./logger.util.js";
 
 
 declare module "axios" {
@@ -23,6 +22,9 @@ export const Api = {
     patch: (url: string, data: any, config?: any) => apiInstance.patch(url, data, config),
     del: (url: string, config?: any) => apiInstance.delete(url, config),
 
-    setToken: (token: string) => apiInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    setToken: (token: string) => {
+        apiInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        //apiInstance.defaults.headers.common['Cookie'] = `access_token=${token}`
+    }
     
 }

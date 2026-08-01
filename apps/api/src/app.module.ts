@@ -78,16 +78,17 @@ import { ClsModule } from 'nestjs-cls';
 
     {
       provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    },
+    {
+      provide: APP_GUARD,
       useClass: JwtGuard
     },
     {
       provide: APP_GUARD,
       useClass: RolesGuard
     },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+
   ],
 })
 export class AppModule implements NestModule {

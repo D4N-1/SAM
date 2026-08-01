@@ -104,7 +104,7 @@ export class BotService {
     newBotData.role = enumBotRole[role] || 'BEEBOT'
 
     if (ownerContactUid) {
-      const contact = await this.contactService.findOneBy.uid( ownerContactUid, 'No se encontró ese contacto del dueño' )
+      const contact = await this.contactService.findOneBy.uid( ownerContactUid )
 
       const isOwner = await this.botRepository.findOne({
         where: { ownerContact: { index: contact.index } }
@@ -128,7 +128,7 @@ export class BotService {
     const editBotData: Partial<BotEntity> = {}
 
     if (ownerContactUid) {
-      const contact = await this.contactService.findOneBy.uid( ownerContactUid, 'No se encontro ese contacto del dueño' )
+      const contact = await this.contactService.findOneBy.uid( ownerContactUid )
 
       const isOwner = await this.botRepository.findOne({
         where: { ownerContact: { index: contact.index } }

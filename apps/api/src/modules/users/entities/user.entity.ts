@@ -55,11 +55,8 @@ export class UserEntity extends BaseEntity {
     })
     email?: string;
 
-    @ApiProperty({
-        description: 'Contraseña del usuario',
-        example: DTO.PASSWORD,
-        type: String
-    })
+    @ApiHideProperty()
+    @Exclude()
     @Column({ name: 'password_hash', type: 'varchar', length: 255, nullable: true })
     passwordHash?: string;
 
