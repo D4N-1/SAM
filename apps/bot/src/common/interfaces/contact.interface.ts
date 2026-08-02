@@ -5,5 +5,6 @@ export interface interfaceContact {
     deletedAt: string,
     uid: '573208201009',
     lid: '159893176774698',
-    name: 'D4N1.'
+    name: 'D4N1.',
+    username: string
 }

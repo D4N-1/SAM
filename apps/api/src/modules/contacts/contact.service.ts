@@ -113,6 +113,20 @@ export class ContactService {
             this.cache.set(lid, contact);
 
             return contact;
+        },
+
+        username: async (username: string, noCache?: boolean): Promise<ContactEntity> => {
+
+            const cachedContact = await this.cache.get(username);
+            if (cachedContact && !noCache) return plainToInstance(ContactEntity, cachedContact);
+
+            const contact = await this.contactRepository.findOneBy({ username })
+            
+            if (!contact) throw new NotFoundException( ERROR_CODE.NOT_FOUND('contacto') );
+
+            this.cache.set(username, contact);
+
+            return contact;
         }
     }
 

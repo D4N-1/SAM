@@ -40,7 +40,7 @@ export const ALL_COMMANDS = [
 
 
 export const GLOBAL_MIDDLEWARES = [
-    LogMiddleware,
     ContactMiddleware,
-    GroupLogMiddleware
+    GroupLogMiddleware,
+    LogMiddleware
 ]

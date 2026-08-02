@@ -1,12 +1,20 @@
 import enumMessage from "../../enums/type-mesage.enum.js";
+import type { interfaceContact } from "../../interfaces/contact.interface.ts";
 import type { CommandContext, NextFunction, SamMiddleware } from "../../interfaces/middleware.interface.js";
 
 
 export class LogMiddleware implements SamMiddleware {
     async use(context: CommandContext, next: NextFunction): Promise<void> {
         
+        const { uid=null, lid=null, username=null } = context?.metadata?.contact as interfaceContact;
+
+        if (uid) context.message.sender = uid + '@s.whatsapp.net';
+        if (lid) context.message.senderAlt = lid + '@lid';
+        if (username) context.message.username = username;
+
         const { sender, senderAlt, contentType, isGif, chatId, isFromMe, captent,
             isGroup, pushName, timestampDate, quoted, mentionedJid } = context.message;
+        
 
         //console.log(context.message)
 
@@ -24,7 +32,7 @@ export class LogMiddleware implements SamMiddleware {
         const qText: string | undefined = Number(quoted?.qCaptent?.length) > 15 ? quoted?.qCaptent?.slice(0,15) + '..' : quoted?.qCaptent;
 
         console.log(`\n─────────────── [ MESSAGE ] ───────────────`);
-        console.log(`[${type}] 🆔  ${chatId} - ${isFromMe ? "🤖" : "👤"} ${senderAlt||sender}: ${text||''}`); 
+        console.log(`[${type}] 🆔  ${chatId} - ${isFromMe ? "🤖" : "👤"} ${sender||username||senderAlt}: ${text||''}`); 
         console.log(`${isGroup? '🔰' : ''} - - ${pushName} - ⏳ ${timestampDate}`);
 
         console.log(contentType)

@@ -1,3 +1,4 @@
+import type { interfaceContact } from "../../interfaces/contact.interface.ts";
 import type { CommandContext, NextFunction, SamMiddleware } from "../../interfaces/middleware.interface.js";
 import { Api } from "../../utils/api.util.js";
 import Logger from "../../utils/logger.util.js";
@@ -12,10 +13,7 @@ export class ContactMiddleware implements SamMiddleware {
 
         try {
             
-            if ( ![ senderAlt, sender ].some( i => i?.endsWith('@s.whatsapp.net') ) ) return next();
-
             const uid = senderAlt?.endsWith('@s.whatsapp.net') ? senderAlt : sender;
-
             const lid = senderAlt?.endsWith('@s.whatsapp.net') ? sender : senderAlt;
 
 
@@ -25,8 +23,8 @@ export class ContactMiddleware implements SamMiddleware {
             ])
 
 
-            const contactLid = resLid?.status !== 404 ? resLid?.data : null;
-            const contactUid = resUid?.status !== 404 ? resUid?.data : null;
+            const contactLid: interfaceContact = resLid?.status !== 404 ? resLid?.data : null;
+            const contactUid: interfaceContact = resUid?.status !== 404 ? resUid?.data : null;
 
             if (contactLid || contactUid) {
 
@@ -67,6 +65,7 @@ export class ContactMiddleware implements SamMiddleware {
 
                 if (!pushName) context.message.pushName = contactLid?.name || contactUid?.name;
 
+                context.metadata.contact = contactLid || contactUid;
                 return next();
 
             }

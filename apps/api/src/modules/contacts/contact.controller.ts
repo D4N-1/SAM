@@ -72,6 +72,15 @@ export class ContactController {
         return this.contactService.findOneBy.lid(lid)
     }
 
+    @ApiOperation({ summary: SWAGGER.SUMMARY.FIND('contacto') })
+    @ApiOkResponse({ description: SWAGGER.OK.FIND('contacto'), type: ContactEntity })
+    @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto') , schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
+    @ApiParam(API_PARAM.NAME)
+    @Get('/username/:username')
+    async getUsername(@Param('username') username: string): Promise<ContactEntity|null> {
+        return this.contactService.findOneBy.username(username)
+    }
+
     @ApiOperation({ summary: SWAGGER.SUMMARY.EDIT('contacto') })
     @ApiOkResponse({ description: SWAGGER.OK.EDIT('contacto'), type: ContactEntity })
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
