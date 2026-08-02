@@ -16,6 +16,9 @@ export class ContactMiddleware implements SamMiddleware {
             const uid = senderAlt?.endsWith('@s.whatsapp.net') ? senderAlt : sender;
             const lid = senderAlt?.endsWith('@s.whatsapp.net') ? sender : senderAlt;
 
+            console.log('uid: ' + uid)
+            console.log('lid: ' + lid)
+
 
             const [ resUid, resLid ] = await Promise.all([
                 uid ? Api.get(`/contacts/${uid}`).catch(() => null) : null,
