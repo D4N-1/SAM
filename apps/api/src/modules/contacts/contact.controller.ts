@@ -87,8 +87,8 @@ export class ContactController {
     @ApiBadRequestResponse({ description: SWAGGER.BAD_RQUEST(), schema: { example: ERROR_CODE.BAD_REQUEST('PATH') } })
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UID)
-    @Patch('lid/:uid')
-    async editLid(@Param('uid') lid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
+    @Patch('lid/:lid')
+    async editLid(@Param('lid') lid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
         return this.contactService.update.lid(lid, updateContactDto)
     }
     

@@ -44,7 +44,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
             if (statusCode > 400 && statusCode < 500) {
                 logRegister.warn(logMessage, logData)
-            } else if (statusCode > 500) {
+            } else if (statusCode >= 500) {
                 logRegister.error(logMessage, logData)
             } else {
                 logRegister.info(logMessage)

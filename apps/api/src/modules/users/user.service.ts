@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity, UserRelations } from "./entities/user.entity";
 import { Not, Repository } from "typeorm";
@@ -11,6 +11,10 @@ import { RoleService } from "../roles/role.service";
 import { AllResponse } from "src/common/interfaces/response.type";
 import { enumRole } from "src/common/enums/role.enum";
 import { GetAllUserQueryDto } from "./dto/get-user.dto";
+import { enumCACHE_KEYS } from "src/common/enums/cache-keys.enum";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import type { Cache } from "cache-manager";
+import { plainToInstance } from "class-transformer";
 
 
 @Injectable()
@@ -19,6 +23,9 @@ export class UserService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
+
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache,
 
         private readonly roleService: RoleService,
         private readonly contactService: ContactService,
@@ -51,51 +58,166 @@ export class UserService {
         }
     }
 
+
+    cache = {
+
+        key: enumCACHE_KEYS.USER,
+
+        set: (id: string, user: Record<string,any>) => {
+            this.cacheManager.set( this.cache.key + id, user )
+        },
+
+        get: async(id: string): Promise<UserEntity|undefined> => {
+            return await this.cacheManager.get<UserEntity>( this.cache.key + id )
+        },
+
+        del: (id: string) => {
+            this.cacheManager.del( this.cache.key + id )
+        }
+
+    }
+
     findOneBy = {
 
-        uuid: async (uuid: string): Promise <UserEntity> => {
+        uuid: async(uuid: string): Promise <UserEntity> => {
+
+            const cachedUser = await this.cache.get(uuid);
+            if (cachedUser) return plainToInstance(UserEntity, cachedUser);
+
             const user = await this.userRepository.findOne({
                 where: { uuid },
                 relations: UserRelations
             })
 
-            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
+            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') );
+
+            this.cache.set(uuid, user);
+
             return user
         },
         
-        contactUid: async (uid: string): Promise<UserEntity> => {
+        contactUid: async(uid: string, noCache?: boolean): Promise<UserEntity> => {
+
+            const cachedUser = await this.cache.get(uid);
+            if (cachedUser && !noCache) return plainToInstance(UserEntity, cachedUser);
+
             const user = await this.userRepository.findOne({
                 where: { contact: { uid } },
                 relations: UserRelations
             })
 
             if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
+            
+            this.cache.set(uid, user);
+            
             return user
         },
 
+        email: async(email: string, noCache?: boolean): Promise<UserEntity> => {
+
+            const cachedUser = await this.cache.get(email);
+            if (cachedUser && !noCache) return plainToInstance(UserEntity, cachedUser);
+
+            const user = await this.userRepository.findOne({
+                where: { email },
+                relations: UserRelations
+            })
+
+            if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') );
+
+            this.cache.set(email, user);
+
+            return user
+
+        },
+
         name: async (name: string): Promise<UserEntity> => {
+
+            const cachedUser = await this.cache.get(name);
+            if (cachedUser) return plainToInstance(UserEntity, cachedUser);
+
+
             const user = await this.userRepository.findOne({
                 where: { name },
                 relations: UserRelations
             })
 
             if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') );
+
+            this.cache.set(name, user)
+
             return user
         }
     };
 
     findOrNull = {
-        uuid: async (uuid: string): Promise <UserEntity|null> => {
-            return await this.userRepository.findOne({
+
+        uuid: async(uuid: string): Promise <UserEntity|null> => {
+
+            const cachedUser = await this.cache.get(uuid);
+            if (cachedUser) return plainToInstance(UserEntity, cachedUser);
+
+            const user = await this.userRepository.findOne({
                 where: { uuid },
                 relations: UserRelations
             })
+
+            if (user) this.cache.set(uuid, user);
+
+            return user
         },
+        
+        contactUid: async(uid: string, noCache?: boolean): Promise<UserEntity|null> => {
+
+            const cachedUser = await this.cache.get(uid);
+            if (cachedUser && !noCache) return plainToInstance(UserEntity, cachedUser);
+
+            const user = await this.userRepository.findOne({
+                where: { contact: { uid } },
+                relations: UserRelations
+            })
+            
+            if (user) this.cache.set(uid, user);
+            
+            return user
+        },
+
+        email: async(email: string, noCache?: boolean): Promise<UserEntity|null> => {
+
+            const cachedUser = await this.cache.get(email);
+            if (cachedUser && !noCache) return plainToInstance(UserEntity, cachedUser);
+
+            const user = await this.userRepository.findOne({
+                where: { email },
+                relations: UserRelations
+            })
+
+            if (user) this.cache.set(email, user);
+
+            return user
+
+        },
+
+        name: async (name: string): Promise<UserEntity|null> => {
+
+            const cachedUser = await this.cache.get(name);
+            if (cachedUser) return plainToInstance(UserEntity, cachedUser);
+
+
+            const user = await this.userRepository.findOne({
+                where: { name },
+                relations: UserRelations
+            })
+
+            if (user) this.cache.set(name, user)
+
+            return user
+        }
     }
 
     async create(createUserDto: CreateUserDto): Promise<UserEntity> {
 
-        const { name, contactUid, password, roleName, ...newData } = createUserDto;
+        const { name, contactUid, password, ...newData } = createUserDto;
 
         const newUserData: Partial<UserEntity> = { ...newData }
 

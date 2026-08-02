@@ -46,14 +46,13 @@ export class ContactService {
         }
     }
 
-
     
     cache = {
 
         key: enumCACHE_KEYS.CONTACT,
 
-        set: (id: string, group: Record<string,any>) => {
-            this.cacheManager.set( this.cache.key + id, group )
+        set: (id: string, contact: Record<string,any>) => {
+            this.cacheManager.set( this.cache.key + id, contact )
         },
 
         get: async(id: string): Promise<ContactEntity|undefined> => {

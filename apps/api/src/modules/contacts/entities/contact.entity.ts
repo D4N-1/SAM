@@ -31,6 +31,14 @@ export class ContactEntity extends BaseEntity {
 
 
     @ApiProperty({
+        description: 'El nombre de usuario del contacto',
+        example: DTO.NAME,
+        type: String
+    })
+    @Column({ type: 'varchar', length: 25, unique: true, nullable: true })
+    username?: string;
+
+    @ApiProperty({
         description: 'Nombre del contacto',
         example: DTO.NAME + DTO.OPTIONAL,
         type: String

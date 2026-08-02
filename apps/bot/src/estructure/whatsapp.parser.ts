@@ -8,9 +8,9 @@ import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import enumContext from "../common/enums/context.enum.js";
 import { getContact } from "./whatsapp.service.js";
 
-const parseUid = (uid: string|undefined) => {
+const parseUid = (uid: string|null) => {
 
-    if (!uid) return undefined;
+    if (!uid) return null;
     if (!uid.includes(':')) return uid
     const arrUid = uid.split(':');
 
@@ -85,12 +85,28 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
         if (!msg || !msg.message) return null;
 
         
-        //console.log( JSON.stringify(msg,null,2) )
+        console.log( JSON.stringify(msg,null,2) )
 
         
         const chatId: string = msg.key?.remoteJid || '';
-        let sender: string | undefined = parseUid(msg.key?.participant || msg.key?.remoteJid);
-        let senderAlt: string | undefined = parseUid(msg.key?.participantAlt || msg.key?.remoteJidAlt);
+        const gus = msg.key?.participant.endsWith('@s.whatsapp.net') ?
+            msg.key?.participant :
+            chatId.endsWith('@s.whatsapp.net') ?
+            chatId : null;
+
+        const lid = msg.key?.participantAlt?.endsWith('@lid') ?
+            msg.key?.participantAlt :
+
+            msg.key?.remoteJidAlt?.endsWith('@lid') ?
+            msg.key?.remoteJidAlt :
+
+            msg.key?.participant?.endsWith('@lid') ?
+            msg.key?.participant :
+            null;
+
+        let sender: string | null = parseUid(gus);
+        let senderAlt: string | null = parseUid(lid);
+        let username: string | null = msg.key?.participantUsername;
 
         const isFromMe: boolean = !!msg.key?.fromMe;
         const pushName: string = isFromMe ? sock?.user?.name : msg.pushName;
@@ -110,7 +126,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
         const buttonDisplay: string | undefined = actualMessage?.templateButtonReplyMessage?.selectedDisplayText
 
 
-        const botNumber: string|undefined = parseUid(sock.user!.id);
+        const botNumber: string|null = parseUid(sock.user!.id);
         const botUid: string|undefined = botNumber?.split('@')[0]
         const botName = async(): Promise<string> => (await getContact(botUid!))?.name;
 
@@ -165,7 +181,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
             quotedMessage?.documentMessage?.caption ||
             quotedMessage?.documentWithCaptionMessage?.message?.documentMessage?.caption;
 
-        const qSender: string|undefined = parseUid( msg.message?.videoMessage?.contextInfo?.participant ||
+        const qSender: string|null = parseUid( msg.message?.videoMessage?.contextInfo?.participant ||
             msg.message?.imageMessage?.contextInfo?.participant ||
             msg.message?.extendedTextMessage?.contextInfo?.participant ||
             msg.message?.imageMessage?.contextInfo?.participants || 
@@ -189,6 +205,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
             chatId,
             sender,
             senderAlt,
+            username,
             pushName,
             content,
             caption,
@@ -251,6 +268,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
         };
     } catch (error) {
         Logger.error(enumContext.MessageParser, 'Crear ParsedMessage')
+        console.error(error)
     }
 }
 

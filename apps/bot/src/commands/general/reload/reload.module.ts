@@ -14,7 +14,7 @@ export class ReloadCommand implements interfaceCommand {
 
     dirname = path.dirname( fileURLToPath( import.meta.url ) );
 
-    middlewares = [ GroupChatMiddleware, AdminMiddleware ];
+    middlewares = [ GroupChatMiddleware ];
 
     async execute(message: interfaceMessage, sam: WhatsappService, metadata: Record<string, any>): Promise<void> {
         

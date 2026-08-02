@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 import { enumRole } from "src/common/enums/role.enum";
@@ -22,22 +22,6 @@ export class CreateUserDto {
     name: string;
 
     @ApiProperty({
-        example: DTO.DESCRIPTION + DTO.OPTIONAL
-    })
-    @IsOptional()
-    @IsString()
-    @MaxLength(255)
-    description?: string;
-
-    @ApiProperty({
-        example: DTO.PHOTO + DTO.OPTIONAL
-    })
-    @IsOptional()
-    @IsString()
-    @MaxLength(255)
-    imageUrl?: string;
-
-    @ApiProperty({
         example: DTO.EMAIL + DTO.OPTIONAL
     })
     @IsString()
@@ -53,7 +37,25 @@ export class CreateUserDto {
     @MaxLength(15)
     password: string;
 
+    @ApiProperty({
+        example: DTO.DESCRIPTION
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(255)
+    description?: string;
+
+    @ApiProperty({
+        example: DTO.PHOTO + DTO.OPTIONAL
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(255)
+    imageUrl?: string;
+
+    @ApiHideProperty()
     @IsOptional()
     @IsEnum(enumRole)
-    roleName?: enumRole;
+    roleName?: enumRole = enumRole.USER;
+
 }

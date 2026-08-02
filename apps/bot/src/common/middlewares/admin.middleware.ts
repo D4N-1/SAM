@@ -1,5 +1,6 @@
 import type { interfaceWsGroup } from "../interfaces/group.interface.js";
 import type { CommandContext, NextFunction, SamMiddleware } from "../interfaces/middleware.interface.js";
+import syncGroups from "../utils/sync-manager.util.ts";
 
 
 
@@ -9,13 +10,17 @@ export class AdminMiddleware implements SamMiddleware {
         
         const { sender, senderAlt, chatId, msg } = context.message;
 
-        const group: interfaceWsGroup = context?.metadata?.group || await context.sam.groupMetadata(chatId);
+        console.log("sender: " + sender)
+        console.log("senderAlt: " + senderAlt)
+        
+        const group: interfaceWsGroup = context?.metadata?.group || await context.sam.getGroup(chatId);
+        if (!group) await syncGroups(context.sam, chatId)
 
         context.metadata.group = group;
 
 
-        const isAdmin = group.participants.some( p => 
-            (p.id === sender || p.lid === senderAlt) &&
+        const isAdmin = group.participants?.some( p => 
+            (p.id === sender || p.lid === senderAlt || p.phoneNumber === sender) &&
             (p.admin === 'admin' || p.admin === 'superadmin')
         );
 
@@ -30,11 +35,17 @@ export class BotAdminMiddleware implements SamMiddleware {
         
         const { chatId, botNumber, msg, sender } = context.message;
 
-        const group: interfaceWsGroup = context.metadata?.group || await context.sam.groupMetadata(chatId);
+        console.log(botNumber)
+
+        const group: interfaceWsGroup = context.metadata?.group || await context.sam.getGroup(chatId);
+        if (!group) await syncGroups(context.sam, chatId)
+
 
         context.metadata.group = group;
 
-        const botAdmin = group.participants.some( p => 
+        console.log(group.participants)
+
+        const botAdmin = group.participants?.some( p => 
             (p.id === botNumber || p.lid === botNumber || p.phoneNumber === botNumber) &&
             (p.admin === 'admin' || p.admin === 'superadmin')
         );

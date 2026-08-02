@@ -20,7 +20,15 @@ export class CreateContactDto {
     @IsOptional()
     @MaxLength(35)
     lid?: string;
-    
+     
+    @ApiProperty({
+        example: DTO.NAME + DTO.OPTIONAL
+    })
+    @IsString()
+    @IsOptional()
+    @MaxLength(25)
+    username?: string;
+
     @ApiProperty({
         example: DTO.NAME + DTO.OPTIONAL
     })

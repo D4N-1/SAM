@@ -181,13 +181,7 @@ export class GroupService {
 
     const { uid: _, communityUid, nameOwnerUid, ownerUid, descriptionOwnerUid, nameTime, creation, realmName, ...newData } = updateGroupDto;
 
-    const updateGroupData: Partial<GroupEntity> = {};
-
-    Object.keys(newData).forEach((key) => {
-      if (newData[key] !== undefined) {
-        updateGroupData[key] = newData[key];
-      }
-    });
+    const updateGroupData: Partial<GroupEntity> = { ...newData };
 
 
     if (communityUid !== undefined) {
@@ -223,7 +217,6 @@ export class GroupService {
     
 
     const entityToUpdate = this.groupRepository.merge(group, updateGroupData)
-    entityToUpdate.index = group.index;
 
     this.cache.del(uid)
     return await this.groupRepository.save(entityToUpdate);

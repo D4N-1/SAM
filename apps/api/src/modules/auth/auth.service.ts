@@ -31,17 +31,22 @@ export class AuthService {
       const { contactUid, password, code, email } = signInUserDto;
 
       let user;
-      if (contactUid) user = await this.userService.findOneBy.contactUid(contactUid);
-        //else if (email) user = await this.userService.findOneBy.
+      if (contactUid) user = await this.userService.findOneBy.contactUid(contactUid, true);
+        else if (email) user = await this.userService.findOneBy.email(email, true);
 
       if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
 
+        console.log(user)
+        console.log(signInUserDto)
+
       let match;
 
-      if (password) match = await compare(password, user.passwordHash);
+      if (password && password.length > 0) match = await compare(password, user.passwordHash);
         else if (code === 'R00252') match = true
 
       if ( !match && password ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) )
+        else if ( !match && code ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( 'Codigo de un solo uso inválido' ) )
+          else if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( 'Para ingresar, se debe proporcionar PASSWORD o CODIGO de un solo uso' ) )
 
 
       const payload: ClientRequest = {
@@ -91,10 +96,12 @@ export class AuthService {
 
     let user;
 
-    if (contactUid) user = await this.userService.findOneBy.contactUid(contactUid)
-      //else if (email) user = await this.userService.findOneBy
+    if (contactUid) user = await this.userService.findOrNull.contactUid(contactUid)
+      else if (email) user = await this.userService.findOrNull.email(email)
 
-    if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario') )
+    if (!user && contactUid) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario', 'No se encontró el usuario por contactUid') )
+      else if (!user && email) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario', 'No se encontró el usuario por correo') )
+        else if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario', 'Para poder solicitar codigo, se debe ingresar su contactUid o Correo') )
 
     return this.botSocketService.sendVerificationCode('R00252', contactUid!)
 

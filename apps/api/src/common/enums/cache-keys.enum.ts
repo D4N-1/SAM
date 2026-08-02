@@ -1,5 +1,6 @@
 export enum enumCACHE_KEYS {
     CONTACT = 'sam:contacts:',
+    USER = 'sam:users:',
     GROUP = 'sam:groups:',
     COMMAND = 'sam:commands:',
     COMMUNITY = 'sam:communities:'

@@ -1,17 +1,18 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class ParticipantDto {
+
     @IsString()
     @IsNotEmpty()
     id: string;
 
     @IsString()
     @IsOptional()
-    lid?: string;
+    lid?: string|undefined;
 
     @IsString()
     @IsOptional()
-    phoneNumber?: string;
+    phoneNumber?: string|undefined;
 
     @IsString()
     @IsOptional()

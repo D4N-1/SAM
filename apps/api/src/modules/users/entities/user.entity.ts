@@ -2,7 +2,6 @@ import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { DTO } from "src/common/constants/generic.dto";
 import { BaseEntity } from "src/common/entities/base.entity";
-import { enumRole } from "src/common/enums/role.enum";
 import { ContactEntity } from "src/modules/contacts/entities/contact.entity";
 import { RoleEntity } from "src/modules/roles/entities/role.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
@@ -57,8 +56,8 @@ export class UserEntity extends BaseEntity {
 
     @ApiHideProperty()
     @Exclude()
-    @Column({ name: 'password_hash', type: 'varchar', length: 255, nullable: true })
-    passwordHash?: string;
+    @Column({ name: 'password_hash', type: 'varchar', length: 255 })
+    passwordHash: string;
 
 
     @ApiHideProperty()

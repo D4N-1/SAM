@@ -8,7 +8,7 @@ export class ContactMiddleware implements SamMiddleware {
     async use(context: CommandContext, next: NextFunction): Promise<void> {
         
         const { message } = context;
-        const { sender, senderAlt, pushName } = message;
+        const { sender, senderAlt, pushName, username } = message;
 
         try {
             
@@ -33,8 +33,13 @@ export class ContactMiddleware implements SamMiddleware {
 
                 if (contactLid && lid) {
 
-                    if ( (pushName && contactLid.name !== pushName) || (contactLid.uid !== uid) ) {
+                    if (
+                        (pushName && contactLid.name !== pushName) ||
+                        (contactLid.uid !== uid) ||
+                        (username && contactLid.username !== username)
+                    ) {
                         await Api.patch(`/contacts/lid/${lid}`, {
+                            username,
                             name: pushName,
                             uid: uid?.split('@')[0]
                         })
@@ -45,8 +50,13 @@ export class ContactMiddleware implements SamMiddleware {
                 
                 if (contactUid && uid) {
 
-                    if ( (pushName && contactUid.name !== pushName) || (contactUid.lid !== lid) ) {
+                    if (
+                        (pushName && contactUid.name !== pushName) ||
+                        (contactUid.lid !== lid) ||
+                        (username && contactUid.username !== username)
+                    ) {
                         await Api.patch(`/contacts/${uid}`, {
+                            username,
                             name: pushName,
                             lid: lid?.split('@')[0]
                         })
@@ -64,7 +74,8 @@ export class ContactMiddleware implements SamMiddleware {
             await Api.post(`/contacts`, {
                 uid: uid?.split('@')[0],
                 lid: uid?.split('@')[0],
-                name: pushName
+                name: pushName,
+                username
             });
 
             console.log('[] - NUEVO CONTACTO CREADO');
