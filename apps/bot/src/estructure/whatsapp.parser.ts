@@ -85,7 +85,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
         if (!msg || !msg.message) return null;
 
         
-        console.log( JSON.stringify(msg,null,2) )
+        //console.log( JSON.stringify(msg,null,2) )
 
         
         const chatId: string = msg.key?.remoteJid || '';

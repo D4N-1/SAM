@@ -13,6 +13,7 @@ import { Private } from "src/decorators/private.decorator";
 import { Roles } from "src/decorators/roles-user.decorator";
 import { enumRole } from "src/common/enums/role.enum";
 import { FullPublic } from "src/common/utils/FullPublic.util";
+import { pipeParseIdWhatsapp } from "src/pipes/id-whatsapp.pipe";
 
 
 @Private() @Roles([ enumRole.ADMIN ]) @ApiBearerAuth()
@@ -87,7 +88,7 @@ export class ContactController {
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UID)
     @Patch('/:uid')
-    async edit(@Param('uid') uid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
+    async edit(@Param('uid', pipeParseIdWhatsapp) uid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
         return this.contactService.update.uid(uid, updateContactDto)
     }
 
@@ -97,7 +98,7 @@ export class ContactController {
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UID)
     @Patch('lid/:lid')
-    async editLid(@Param('lid') lid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
+    async editLid(@Param('lid', pipeParseIdWhatsapp) lid: string, @Body() updateContactDto: UpdateContactDto): Promise<ContactEntity|null> {
         return this.contactService.update.lid(lid, updateContactDto)
     }
     
@@ -107,7 +108,7 @@ export class ContactController {
     @ApiNotFoundResponse({ description: SWAGGER.NOT_FOUND('contacto'), schema: { example: ERROR_CODE.NOT_FOUND('contacto') } })
     @ApiParam(API_PARAM.UUID)
     @Delete('/:uid')
-    async delete(@Param('uid') uuid: string) {
+    async delete(@Param('uid', pipeParseIdWhatsapp) uuid: string) {
         return this.contactService.delete(uuid)
     }
 

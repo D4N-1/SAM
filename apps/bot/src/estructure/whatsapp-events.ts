@@ -124,7 +124,7 @@ export async function registerMessagesEvent(samSocket: any) {
                 ]
 
                 samSocket.ev.emit('groups.update', data)
-                console.log( JSON.stringify( msg, null, 2) )
+                //console.log( JSON.stringify( msg, null, 2) )
             }
 
             if (!msg.key) return;
