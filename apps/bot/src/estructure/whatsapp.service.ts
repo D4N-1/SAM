@@ -5,6 +5,7 @@ import { Api } from "../common/utils/api.util.js";
 import { randomFooter } from "../common/messages/footer.message.js";
 import { simbolJADE } from "../common/constants/ascii.constant.js";
 import type { interfaceGroup, interfaceWsGroup } from "../common/interfaces/group.interface.ts";
+import { parseUid } from "./whatsapp.parser.ts";
 
 
 const url = 'https://sambot.live'
@@ -234,6 +235,10 @@ export default class WhatsappService {
 
     async getMe() {
         return ( await Api.get('/auth/me') )?.data
+    }
+
+    getMeNumber() {
+        return parseUid(this.sock.user.id)?.split('@')[0]
     }
 
     async getGroup(chatId: string): Promise<interfaceGroup> {

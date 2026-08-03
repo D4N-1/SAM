@@ -3,6 +3,7 @@ import { Socket } from "socket.io";
 import { ClientRequest } from "src/common/interfaces/req-client.type";
 import { BotSocketGateway } from "./gateway/bot-socket.gateway";
 import { ERROR_CODE } from "src/common/utils/error.utils";
+import { WsException } from "@nestjs/websockets";
 
 
 @Injectable()
@@ -25,18 +26,22 @@ export class BotSocketService {
 
       try {
 
+        const active = await this.botSocketGateway.server.in('BOT').fetchSockets();
+
+        if (active.length === 0) throw new WsException('No hay bots disponibles para el envio del codigo')
+          
         const response = await this.botSocketGateway.server
           .to('BOT')
           .timeout(5_000)
           .emitWithAck('code.upsert', { uid, code } )
 
-        console.log(response)
+        console.log(response[0])
 
-        return { success: true, message: response?.message }
+        return { statusCode: response[0]?.statusCode, success: true, bot: response?.[0]?.bot, message: response?.[0]?.message }
 
       } catch (error) {
 
-        throw new ServiceUnavailableException( ERROR_CODE.SERVICE_UNAVAILABLE('No se puede enviar el codigo, servicio no disponible temporalmente') ) 
+        throw new ServiceUnavailableException( ERROR_CODE.SERVICE_UNAVAILABLE(error?.message || 'No se puede enviar el codigo por número, servicio no disponible temporalmente') ) 
       }
     }
 

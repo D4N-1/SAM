@@ -12,7 +12,10 @@ export async function startApiSocket(token: string, samSocket:any) {
     const socket: Socket = startApi(token)
     const localEvent: EventEmitter = new EventEmitter();
 
-    registerConnectionEvents(localEvent, socket, sam)
+    registerConnectionEvents(localEvent, socket, sam);
+    registerCodeEvent(socket, sam)
+    registerSystemEvent(socket, sam)
+
     
 
     socket.on('connect', () => {
@@ -40,8 +43,6 @@ async function registerConnectionEvents(localEvent: EventEmitter, socket: Socket
         if (data?.statusCode === 200) {
             Logger.log(enumContext.ApiClient, 'SocketApi en ACTIVO')
 
-            registerCodeEvent(socket, sam)
-            registerSystemEvent(socket, sam)
 
         } else if (data?.statusCode === 410) Logger.error(enumContext.ApiClient, 'SocketApi DESCONECTADO')
                 else if (data?.statusCode === 412) Logger.error(enumContext.ApiClient, 'SocketApi Precondition Failed')
@@ -82,7 +83,8 @@ async function registerCodeEvent(socket: Socket, sam: WhatsappService) {
 
             ack({
                 statusCode: 200,
-                message: 'Se envió el codigo con exito'
+                message: 'Se envió el codigo con exito',
+                bot: sam.getMeNumber()
             })
         })
 

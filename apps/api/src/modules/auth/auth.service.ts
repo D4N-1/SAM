@@ -1,4 +1,4 @@
-import { ForbiddenException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject, Injectable, NotFoundException, NotImplementedException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../users/user.service';
 import { ERROR_CODE } from 'src/common/utils/error.utils';
 import { JwtService } from '@nestjs/jwt';
@@ -10,6 +10,9 @@ import { BotService } from '../bots/bot.service';
 import { ClientRequest } from 'src/common/interfaces/req-client.type';
 import { enumClients } from 'src/common/enums/role.enum';
 import { BotSocketService } from '../bot-socket/bot-socket.service';
+import { randomBytes } from 'crypto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 
 
 @Injectable()
@@ -19,6 +22,9 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly botService: BotService,
+
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
 
     @Inject( forwardRef( () => BotSocketService))
     private readonly botSocketService: BotSocketService
@@ -42,11 +48,14 @@ export class AuthService {
       let match;
 
       if (password && password.length > 0) match = await compare(password, user.passwordHash);
-        else if (code === 'R00252') match = true
+        else if (code && code.length === 6) {
+          match = await this.cacheManager.get(`code:${contactUid}`) || await this.cacheManager.get(`code:${email}`)
+          this.cacheManager.del(`code:${contactUid}`) || await this.cacheManager.del(`code:${email}`)
+        }
 
       if ( !match && password ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( msgWRONG_PASSWORD ) )
         else if ( !match && code ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( 'Codigo de un solo uso inválido' ) )
-          else if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( 'Para ingresar, se debe proporcionar PASSWORD o CODIGO de un solo uso' ) )
+          else if ( !match ) throw new UnauthorizedException( ERROR_CODE.UNAUTHORIZED( 'Para ingresar, se debe proporcionar PASSWORD o CODIGO de 6 digitos' ) )
 
 
       const payload: ClientRequest = {
@@ -90,6 +99,8 @@ export class AuthService {
 
   }
 
+  codeTtl = 5 * 60_000;
+
   async reqUserCode(reqCodeUserDto: ReqCodeUserDto) {
     const { contactUid, email } = reqCodeUserDto
 
@@ -97,15 +108,38 @@ export class AuthService {
     let user;
 
     if (contactUid) user = await this.userService.findOrNull.contactUid(contactUid)
-      else if (email) user = await this.userService.findOrNull.email(email)
+      else if (email) throw new NotImplementedException('El codigo via EMAIL aun no ha sido implementado') // user = await this.userService.findOrNull.email(email)
 
     if (!user && contactUid) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario', 'No se encontró el usuario por contactUid') )
       else if (!user && email) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario', 'No se encontró el usuario por correo') )
         else if (!user) throw new NotFoundException( ERROR_CODE.NOT_FOUND('usuario', 'Para poder solicitar codigo, se debe ingresar su contactUid o Correo') )
 
-    return this.botSocketService.sendVerificationCode('R00252', contactUid!)
+    
+    const code = this.generateCode();
+
+    if (contactUid) {
+      const sent = await this.botSocketService.sendVerificationCode(code, contactUid);
+
+      if (sent.success) this.cacheManager.set(`code:${contactUid}`, code, this.codeTtl)
+
+      return sent
+    }
 
 
+  }
+
+  generateCode(): string {
+
+    const chars = 'ABCDEFGHJKLMNPQRSTUVW23456789';
+    const bytes = randomBytes(6);
+    let code = '';
+
+    for (let i = 0; i < 6; i++) {
+      code += chars[ bytes[i] % chars.length]
+    }
+
+    console.log(`CODIGO generado: ${code}`)
+    return code;
   }
 
 

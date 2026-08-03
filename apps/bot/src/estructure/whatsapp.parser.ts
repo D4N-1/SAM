@@ -8,7 +8,7 @@ import { enumMessage } from "../common/enums/type-mesage.enum.js";
 import enumContext from "../common/enums/context.enum.js";
 import { getContact } from "./whatsapp.service.js";
 
-const parseUid = (uid: string|null) => {
+export const parseUid = (uid: string|null) => {
 
     if (!uid) return null;
     if (!uid.includes(':')) return uid
