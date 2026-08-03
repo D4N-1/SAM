@@ -34,39 +34,47 @@ export class ContactMiddleware implements SamMiddleware {
 
                 if (contactLid && lid) {
 
-                    if (
-                        (pushName && contactLid.name !== pushName) ||
-                        (contactLid.uid !== uid) ||
-                        (username && contactLid.username !== username)
-                    ) {
-                        await Api.patch(`/contacts/lid/${lid}`, {
-                            username,
-                            name: pushName,
-                            uid: uid?.split('@')[0]
-                        })
+                    const toUpdate: Record<string, any> = {};
+                    const parsedUid = uid ? uid.split('@')[0] : undefined;
+
+                    if ( pushName && contactLid.name !== pushName) toUpdate.name = pushName;
+
+                    if (contactLid.uid !== parsedUid) toUpdate.uid = parsedUid;
+
+                    if (username && contactLid.username !== username) toUpdate.username = username;
+
+
+                    if (Object.keys(toUpdate).length > 0) {
+                        console.log('[contactLID]  -  Actualización')
+                        console.log(toUpdate)
+                        await Api.patch(`/contacts/lid/${lid}`, toUpdate)
                     }
+                    
 
                 }
 
                 
                 if (contactUid && uid) {
 
-                    if (
-                        (pushName && contactUid.name !== pushName) ||
-                        (contactUid.lid !== lid) ||
-                        (username && contactUid.username !== username)
-                    ) {
-                        await Api.patch(`/contacts/${uid}`, {
-                            username,
-                            name: pushName,
-                            lid: lid?.split('@')[0]
-                        })
+                    const toUpdate: Record<string, any> = {};
+                    const parsedLid = lid ? lid.split('@')[0] : undefined;
+
+
+                    if ( pushName && contactUid.name !== pushName) toUpdate.name = pushName;
+                    
+                    if (contactUid.lid !== parsedLid) toUpdate.lid = parsedLid;
+
+                    if (username && contactUid.username !== username) toUpdate.username = username;
+
+                    
+                    if ( Object.keys(toUpdate).length > 0) {
+                        console.log('[contactUID]  -  Actualización')
+                        console.log(toUpdate)
+                        await Api.patch(`/contacts/${uid}`, toUpdate)
                     }
 
                 }
 
-
-                if (!pushName) context.message.pushName = contactLid?.name || contactUid?.name;
 
                 context.metadata.contact = contactLid || contactUid;
                 return next();
