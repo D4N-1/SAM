@@ -89,7 +89,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
 
         
         const chatId: string = msg.key?.remoteJid || '';
-        const gus = msg.key?.participant.endsWith('@s.whatsapp.net') ?
+        const gus = msg.key?.participant?.endsWith('@s.whatsapp.net') ?
             msg.key?.participant :
             chatId.endsWith('@s.whatsapp.net') ?
             chatId :
