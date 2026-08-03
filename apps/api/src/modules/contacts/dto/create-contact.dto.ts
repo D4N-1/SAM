@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsOptional, IsString, MaxLength } from "class-validator";
 import { DTO } from "src/common/constants/generic.dto";
 
 
@@ -8,6 +9,7 @@ export class CreateContactDto {
     @ApiProperty({
         example: DTO.UID
     })
+    @Transform( ({ value }) => typeof value === 'string' ? value.split('@')[0] : value)
     @IsString()
     @IsOptional()
     @MaxLength(35)
@@ -16,6 +18,7 @@ export class CreateContactDto {
     @ApiProperty({
         example: DTO.LID
     })
+    @Transform( ({ value }) => typeof value === 'string' ? value.split('@')[0] : value)
     @IsString()
     @IsOptional()
     @MaxLength(35)

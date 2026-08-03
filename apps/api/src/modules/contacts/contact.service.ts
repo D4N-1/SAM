@@ -234,6 +234,8 @@ export class ContactService {
         newContactData.uid = uid?.split('@')[0]
         newContactData.lid = lid?.split('@')[0]
 
+        if (!uid && !lid) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'El contacto debe tener UID o LID') )
+
         const newContact = this.contactRepository.create(newContactData)
         return this.contactRepository.save(newContact)
     }
