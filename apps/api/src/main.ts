@@ -8,7 +8,11 @@ import { AppModule } from './app.module';
 import { ThrottlerExceptionFilter } from './filters/throttler-exception.filter';
 import logRegister from './common/utils/logger.util';
 import cookieParser from 'cookie-parser';
+import { apiReference } from '@scalar/nestjs-api-reference';
+import helmet from "helmet";
 
+
+///// CORS global /////
 export const CORS_config = {
   origin: [
     /\.sambot\.com$/,
@@ -23,21 +27,40 @@ export const CORS_config = {
   optionsSuccessStatus: 200
 }
 
+
+//// MAIN /////
 async function bootstrap() {
 
 
+  /////// CORS NESJT /////
   const NestCORS_config = {
     ...CORS_config,
     methods: [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS' ],
   }
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.enableCors(CORS_config)
 
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors(NestCORS_config)
+
+  /////// GLOBAL CONFIGS //////////
   app.useGlobalPipes( new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true
   }))
+
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          connectSrc: ["'self'", 'https://cdn.jsdelivr.net', 'https:'],
+          scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
+          styleSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
+          imgSrc: ["'self'", 'data:', 'https:'],
+        },
+      },
+    }),
+  );
 
 
   app.use( json({ limit: '10mb' } ) )
@@ -47,11 +70,15 @@ async function bootstrap() {
   app.set('trust proxy', 'loopback');
   app.use( cookieParser() );
 
+
+
+  //// SWAGGER / SCALAR ////////
   const config = new DocumentBuilder()
     .setTitle('Sam - API')
     .addBearerAuth()
     .setDescription('Documentacion basica sobre el uso de esta API')
-    .setVersion('1.0')
+    .setVersion('0.5')
+    .addCookieAuth()
     .build()
 
   
@@ -69,8 +96,18 @@ async function bootstrap() {
     `,
   }
 
+  app.use(
+    '/scalar',
+    apiReference({
+        content: document,
+      theme: 'purple',
+      darkMode: true,
+    }),
+  );
   SwaggerModule.setup('docs', app, document, SwaggerOptions)
   
+
+  /////// LISTEN ///////
   const PORT = process.env.PORT ?? 3000;
   const LOCAL = `http://127.0.0.1:${PORT}`
   const DNS = 'https://api.sambot.live'
@@ -79,6 +116,8 @@ async function bootstrap() {
   console.log(`Servicio escuchando en ${LOCAL} - ${DNS}`)
   console.log(`Documentación disponible en ${LOCAL}/docs - ${DNS}/docs`)
 
+
+  ////// PROCESS //////
   process.on('SIGINT', async () => {
     logRegister.end();
 

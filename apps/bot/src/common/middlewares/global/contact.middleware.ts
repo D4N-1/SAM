@@ -81,14 +81,16 @@ export class ContactMiddleware implements SamMiddleware {
 
             }
 
-            await Api.post(`/contacts`, {
+            const contact = { 
                 uid: uid?.split('@')[0],
-                lid: uid?.split('@')[0],
+                lid: lid?.split('@')[0],
                 name: pushName,
                 username
-            });
+            }
+            await Api.post(`/contacts`, contact);
 
             console.log('[] - NUEVO CONTACTO CREADO');
+            console.log(contact)
             next();
 
         } catch (error) {

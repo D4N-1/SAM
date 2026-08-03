@@ -1,58 +1,78 @@
 import { NestMiddleware, Injectable } from "@nestjs/common";
 import logRegister from "src/common/utils/logger.util";
 
-
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
+  private readonly sensitiveKeys = ['password', 'token', 'authorization', 'secret', 'refresh_token'];
 
-    use(req: any, res: any, next: (error?: any) => void) {
+  use(req: any, res: any, next: (error?: any) => void) {
+    const startTime = Date.now();
+    const { method, originalUrl, body, ip } = req;
 
-        const startTime = Date.now();
+    // Interceptamos la respuesta de forma segura
+    const originalSend = res.send;
+    let responseBody: any = null;
 
-        const { method, originalUrl, body, ip } = req;
+    res.send = function (chunk: any) {
+      if (chunk) {
+        try {
+          const stringData = Buffer.isBuffer(chunk) ? chunk.toString('utf8') : chunk;
+          responseBody = typeof stringData === 'string' ? JSON.parse(stringData) : stringData;
+        } catch {
+          responseBody = '[Non-JSON Response]';
+        }
+      }
+      return originalSend.apply(res, arguments as any);
+    };
 
-        const originalSend = res.send;
-        let responseBody: any;
+    res.on('finish', () => {
+      const duration = Date.now() - startTime;
+      const { statusCode } = res;
 
-        res.send = function (chunk: any) {
-            try {
-                responseBody = JSON.parse(chunk);
-            } catch (e) {
-                responseBody = chunk;
-            }
-            return originalSend.apply(res, arguments);
-        };
+      // Sanitizar Payload (REQ)
+      const sanitizedPayload = body && Object.keys(body).length > 0 ? this.sanitize(body) : null;
 
-        res.on('finish', () => {
+      // Sanitizar Response (RES)
+      const sanitizedResponse = responseBody ? this.sanitize(responseBody) : null;
 
-            const duration = Date.now() - startTime;
-            const { statusCode } = res;
+      // Unificar datos contextuales
+      const meta: Record<string, any> = {};
+      if (sanitizedPayload) meta.payload = sanitizedPayload;
+      if (sanitizedResponse && (statusCode >= 400 || ['POST', 'PUT', 'PATCH'].includes(method))) {
+        meta.response = sanitizedResponse;
+      }
 
-            const sanitizeBody = { ...body };
-            if (sanitizeBody.password) sanitizeBody.password = '***';
+      // Estructura limpia de log
+      const logMessage = `[${method}] ${originalUrl} -> ${statusCode} (${duration}ms) - ${ip}`;
+      const hasMeta = Object.keys(meta).length > 0;
 
-            const logData = {
-                method,
-                url: originalUrl,
-                status: statusCode,
-                duration: `${duration}ms`,
-                payload: Object.keys(sanitizeBody).length > 0 ? sanitizeBody : null,
-                response: responseBody
-            }
+      if (statusCode >= 500) {
+        logRegister.error(logMessage, hasMeta ? meta : undefined);
+      } else if (statusCode >= 400) {
+        logRegister.warn(logMessage, hasMeta ? meta : undefined);
+      } else {
+        // Ahora pasa meta en POST/PUT/PATCH exitosos
+        logRegister.info(logMessage);
+      }
+    });
 
-            const logMessage = `[${method}] ${originalUrl} | ${statusCode} | ${ip} | Time: ${duration} ms`;
+    next();
+  }
 
-            if (statusCode > 400 && statusCode < 500) {
-                logRegister.warn(logMessage, logData)
-            } else if (statusCode >= 500) {
-                logRegister.error(logMessage, logData)
-            } else {
-                logRegister.info(logMessage)
-            }
+  private sanitize(obj: any): any {
+    if (!obj || typeof obj !== 'object') return obj;
+    if (Array.isArray(obj)) return obj.map((item) => this.sanitize(item));
 
-
-        })
-
-        next()
+    const cleanObj: Record<string, any> = {};
+    for (const key of Object.keys(obj)) {
+      if (this.sensitiveKeys.includes(key.toLowerCase())) {
+        cleanObj[key] = '***';
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        cleanObj[key] = this.sanitize(obj[key]);
+      } else {
+        cleanObj[key] = obj[key];
+      }
     }
+    return cleanObj;
+  }
 }

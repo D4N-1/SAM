@@ -14,7 +14,7 @@ export class ContactMiddleware implements SamMiddleware {
         
         user = user?.endsWith('@s.whatsapp.net') || user?.endsWith('@lid') ? user : user + '@s.whatsapp.net'
         
-        const contact = await sam.onWhatsApp(user!);
+        const contact = await sam.onWhatsApp(user);
         const apiContact = await sam.getContact(user);
         context.metadata = {
             user,
