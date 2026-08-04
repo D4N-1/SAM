@@ -179,7 +179,8 @@ class GreetingsDto {
 
 export interface interfaceGroupParticipant {
     id: string,
-    lid: string,
-    phoneNumber: string,
+    lid: string|undefined,
+    phoneNumber: string|undefined,
+    username: string|undefined,
     admin: 'admin'|'superadmin'|null;
 }

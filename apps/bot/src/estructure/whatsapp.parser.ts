@@ -129,8 +129,8 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
         const buttonDisplay: string | undefined = actualMessage?.templateButtonReplyMessage?.selectedDisplayText
 
 
-        const botNumber: string|null = parseUid(sock.user!.id);
-        const botUid: string|undefined = botNumber?.split('@')[0]
+        const botNumber: string = parseUid(sock.user.id) as string;
+        const botUid: string = botNumber?.split('@')[0] as string;
         const botName = async(): Promise<string> => (await getContact(botUid!))?.name;
 
         const isGroup: boolean = chatId.endsWith('@g.us');
@@ -216,6 +216,7 @@ export function parseMessage(sock: any, msg: any): interfaceMessage|null|undefin
             buttonContent,
             buttonDisplay,
             captent: content ?? caption ?? buttonContent,
+            bot: async() => getContact(botNumber),
             botNumber,
             botUid,
             botName,

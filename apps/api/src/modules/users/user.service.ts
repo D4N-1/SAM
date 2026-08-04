@@ -221,21 +221,25 @@ export class UserService {
 
         const newUserData: Partial<UserEntity> = { ...newData }
 
-        newUserData.role = await this.roleService.findOneBy.name( enumRole.USER );
+        const [ role, contact, existingName ] = await Promise.all([
+            this.roleService.findOneBy.name( enumRole.USER ),
+            this.contactService.findOneBy.uid( contactUid ),
+            this.userRepository.findOne( { where: { name } } )
+        ])
 
-        const contact = await this.contactService.findOneBy.uid( contactUid );
 
         const isContactUsed = await this.userRepository.findOne({
             where: { contact: { index: contact.index } }
         });
         if (isContactUsed) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Este contacto ya está vinculado a otro usuario') );
-        newUserData.contact = contact;
 
-        const exists = await this.userRepository.findOneBy({ name })
-        if (exists) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
-        newUserData.name = name
+        if (existingName) throw new ConflictException( ERROR_CODE.CONFLICT('usuario', 'Ya existe un usuario con ese nombre') )
         
         newUserData.passwordHash = await bcrypt.hash( createUserDto.password, 10 )
+        newUserData.role = role;
+        newUserData.name = name;
+        newUserData.contact = contact;
+
 
         const newUser = this.userRepository.create( newUserData );
 

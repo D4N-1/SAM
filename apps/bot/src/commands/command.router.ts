@@ -7,6 +7,7 @@ import enumContext from "../common/enums/context.enum.js";
 import GetErrorMessage from "../common/messages/error-status.message.js";
 import { MiddlewarePipeline } from "../common/utils/middleware-pipeline.util.js";
 import { enumError } from "../common/enums/error.enum.js";
+import type { interfaceMetadataContext } from "../common/interfaces/middleware.interface.ts";
 
 
 export class CommandRouter {
@@ -53,7 +54,7 @@ export class CommandRouter {
             const context = {
                 message,
                 sam,
-                metadata: {}
+                metadata: {} as interfaceMetadataContext
             }
 
             const globalPipeline = new MiddlewarePipeline();

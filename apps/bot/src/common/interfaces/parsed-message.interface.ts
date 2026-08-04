@@ -1,4 +1,5 @@
 import type typeDevice from "../types/device.type.js";
+import type { interfaceContact } from "./contact.interface.ts";
 import type interfaceKey from "./key-message.interface.js";
 
 export default interface interfaceMessage {
@@ -13,6 +14,7 @@ export default interface interfaceMessage {
     buttonContent: string|undefined,
     buttonDisplay: string|undefined,
     captent: string|undefined,
+    bot: () => Promise<interfaceContact>
     botNumber: string|null,
     botUid: string|undefined,
     botName: () => Promise<string>,

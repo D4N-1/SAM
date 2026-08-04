@@ -18,6 +18,7 @@ import { EveryoneAdminCommand } from "./admin/everyone-admin/everyone-admin.modu
 import { GroupCommand } from "./general/group/group.module.ts";
 import { ReloadCommand } from "./general/reload/reload.module.ts";
 import TestCommand from "./general/test/test.module.ts";
+import { ParserContactMiddleware } from "../common/middlewares/global/parser-contact.middleware.ts";
 
 
 export const ALL_COMMANDS = [
@@ -43,6 +44,7 @@ export const ALL_COMMANDS = [
 
 export const GLOBAL_MIDDLEWARES = [
     ContactMiddleware,
+    ParserContactMiddleware,
     GroupLogMiddleware,
     LogMiddleware
 ]

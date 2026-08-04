@@ -8,6 +8,7 @@ import { RealmEntity } from "src/modules/realms/entities/realm.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { ParticipantDto } from "../dto/group-participants.dto";
 import { GroupSettingsDto } from "../dto/group-settings.dto";
+import { transformerJson } from "src/common/transformers/json.transformer";
 
 export const GroupRelations = [ 'community', 'nameOwner', 'descriptionOwner', 'owner', 'realm' ];
 
@@ -153,10 +154,20 @@ export class GroupEntity extends BaseEntity {
     realm?: RealmEntity | null;
 
 
-    @Column({ type: 'json', nullable: true })
+    @Column({
+        type: 'longtext',
+        nullable: true,
+        transformer: transformerJson,
+        default: '[]'
+    })
     participants: ParticipantDto[];
 
-    @Column({ type: 'json', nullable: true })
+    @Column({
+        type: 'longtext',
+        nullable: true,
+        transformer: transformerJson,
+        default: '{}'
+    })
     settings: GroupSettingsDto;
 
     @Column({ type: 'varchar', nullable: true })

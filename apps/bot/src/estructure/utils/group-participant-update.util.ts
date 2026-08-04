@@ -14,7 +14,8 @@ export async function GroupParticipantUpdate(samSocket: any, update: any) {
     const group: interfaceWsGroup = await sam.groupMetadata(id);
     const admins = group.participants
         .filter(p => p.admin === 'admin' || p.admin === 'superadmin')
-        .map(p => p.phoneNumber || p.id || p.lid);
+        .map(p => p.phoneNumber || p.id || p.lid)
+        .filter(p => p !== undefined||null)
 
     if (action === 'promote') {
 

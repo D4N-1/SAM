@@ -6,19 +6,9 @@ import type { CommandContext, NextFunction, SamMiddleware } from "../../interfac
 export class LogMiddleware implements SamMiddleware {
     async use(context: CommandContext, next: NextFunction): Promise<void> {
 
-        if (context?.metadata?.contact) {
-            const { uid=null, lid=null, username=null } = context?.metadata?.contact as interfaceContact;
-
-            if (uid) context.message.sender = uid + '@s.whatsapp.net';
-            if (lid) context.message.senderAlt = lid + '@lid';
-            if (username) context.message.username = username;
-        }
-
         const { sender, senderAlt, username, contentType, isGif, chatId, isFromMe, captent,
             isGroup, pushName, timestampDate, quoted, mentionedJid } = context.message;
-        
 
-        //console.log(context.message)
 
         let type: string;
         if (contentType === enumMessage.imageMessage) type = "📷";

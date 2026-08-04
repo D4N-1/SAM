@@ -39,7 +39,7 @@ export class ContactMiddleware implements SamMiddleware {
 
                     if ( pushName && contactLid.name !== pushName) toUpdate.name = pushName;
 
-                    if (contactLid.uid !== parsedUid) toUpdate.uid = parsedUid;
+                    if ( parsedUid && contactLid.uid !== parsedUid) toUpdate.uid = parsedUid;
 
                     if (username && contactLid.username !== username) toUpdate.username = username;
 
@@ -62,7 +62,7 @@ export class ContactMiddleware implements SamMiddleware {
 
                     if ( pushName && contactUid.name !== pushName) toUpdate.name = pushName;
                     
-                    if (contactUid.lid !== parsedLid) toUpdate.lid = parsedLid;
+                    if ( parsedLid && contactUid.lid !== parsedLid) toUpdate.lid = parsedLid;
 
                     if (username && contactUid.username !== username) toUpdate.username = username;
 
@@ -91,7 +91,9 @@ export class ContactMiddleware implements SamMiddleware {
 
             console.log('[] - NUEVO CONTACTO CREADO');
             console.log(contact)
-            next();
+
+            context.metadata.contact = contact as interfaceContact;
+            return next();
 
         } catch (error) {
             Logger.error('ContactMiddleware', 'Error al obtener sincronizar');
