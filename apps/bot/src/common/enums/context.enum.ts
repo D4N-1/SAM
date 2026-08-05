@@ -5,7 +5,8 @@ enum enumContext {
     WhatsappEvents = 'WhatsappEvents',
     MessageParser = 'MessageParser',
     CommandRouter = 'CommandRouter',
-    ApiClient = 'ApiClient'
+    ApiClient = 'ApiClient',
+    ApiEvents = 'ApiEvents'
 }
 
 export default enumContext

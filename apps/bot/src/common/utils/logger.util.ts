@@ -39,7 +39,7 @@ const Logger = {
     console.log(`${appName} ${pid} - ${formattedDate}  ${logTag} ${ctx} ${msg} ${timeDiff}`);
   },
 
-  error: (context: enumContext|string, message: string) => {
+  error: (context: enumContext|string, message: string, stack?: Error) => {
     const appName = chalk.cyanBright("[Sam]");
 
     const pid = chalk.greenBright(process.pid);
@@ -62,6 +62,7 @@ const Logger = {
     const msg = chalk.greenBright(message);
 
     console.log(`${appName} ${pid}  - ${formattedDate}     ${logTag} ${ctx} ${msg}`);
+    if (stack) console.error(stack)
   }
 
 }

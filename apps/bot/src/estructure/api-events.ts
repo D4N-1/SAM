@@ -9,7 +9,9 @@ import WhatsappService from "./whatsapp.service.ts";
 export async function startApiSocket(token: string, samSocket:any) {
 
     const sam = new WhatsappService(samSocket)
-    const socket: Socket = startApi(token)
+    const socket: Socket|undefined = startApi(token)
+    if (!socket) throw new Error('No se pudo inicializar el SOCKET client');
+    
     const localEvent: EventEmitter = new EventEmitter();
 
     registerConnectionEvents(localEvent, socket, sam);
@@ -19,16 +21,25 @@ export async function startApiSocket(token: string, samSocket:any) {
     
 
     socket.on('connect', () => {
-        localEvent.emit("connection.update", { statusCode: 200, message: `🟢 [Socket.io Client] Conectado al Gateway NestJS con ID: ${socket.id}` })
+        localEvent.emit("connection.update", {
+            statusCode: 200,
+            message: `[ API CLIENT ] Conectado al Gateway NestJS con ID: ${socket.id}`
+        })
     });
 
 
     socket.on('disconnect', (reason) => {
-        localEvent.emit("connection.update", { statusCode: 410, message: `🔴 [Socket.io Client] Desconectado del Gateway: ${reason}` })
+        localEvent.emit("connection.update", {
+            statusCode: 410,
+            error: new Error(`[ API CLIENT ] Desconectado del Gateway: ${reason}`),
+        })
     });
 
     socket.on('connect_error', (error) => {
-        localEvent.emit("connection.update", { statusCode: 412, message: `⚠️ [Socket.io Client] Error de conexión: ${error.message}` });
+        localEvent.emit("connection.update", {
+            statusCode: 412,
+            error
+        });
     });
 
 
@@ -36,18 +47,25 @@ export async function startApiSocket(token: string, samSocket:any) {
 
 
 async function registerConnectionEvents(localEvent: EventEmitter, socket: Socket, sam: any) {
+
+    try {
     
-    localEvent.on("connection.update", async(data: any) => {
+        localEvent.on("connection.update", async(data: { statusCode: number, message?: string, error: Error }) => {
 
 
-        if (data?.statusCode === 200) {
-            Logger.log(enumContext.ApiClient, 'SocketApi en ACTIVO')
+            if (data?.statusCode === 200) Logger.log(enumContext.ApiClient, 'SocketApi en ACTIVO')
+                else if (data?.statusCode === 410 || data?.statusCode === 412) {
+                    const err = data?.error ?? new Error(data.message ?? 'Error de conexión desconocido');
+
+                    Logger.error(enumContext.ApiEvents, err.message, err)
+                }
+
+        })
 
 
-        } else if (data?.statusCode === 410) Logger.error(enumContext.ApiClient, 'SocketApi DESCONECTADO')
-                else if (data?.statusCode === 412) Logger.error(enumContext.ApiClient, 'SocketApi Precondition Failed')
-
-    })
+    } catch (error: any) {
+        console.error(error)
+    }
 
 }
 
@@ -63,7 +81,7 @@ async function registerSystemEvent(socket: Socket, sam: WhatsappService) {
 
 
     } catch (error) {
-        Logger.error(enumContext.ApiClient, 'Systemvent Internal')
+        Logger.error(enumContext.ApiEvents, 'Systemevent Internal')
         console.error(error)
 
     }
@@ -90,7 +108,7 @@ async function registerCodeEvent(socket: Socket, sam: WhatsappService) {
 
 
     } catch (error) {
-        Logger.error(enumContext.ApiClient, 'CodeEvent Internal')
+        Logger.error(enumContext.ApiEvents, 'CodeEvent Internal')
         console.error(error)
     }
 }
