@@ -23,7 +23,7 @@ export class ApiLoginService {
         try {
 
         const res = await Api.post(`/auth/bot/login`, {
-            contactUid: number,
+            contactUid: number.includes('@') ? number : number + '@s.whatsapp.net',
             code: code
         });
 

@@ -4,6 +4,7 @@ import path from "node:path";
 import type interfaceMessage from "../../../common/interfaces/parsed-message.interface.ts";
 import type WhatsappService from "../../../estructure/whatsapp.service.ts";
 import { getText } from "./utils/group.messages.ts";
+import { downloadImage } from "../../../common/utils/image.util.ts";
 
 
 
@@ -24,9 +25,11 @@ export class GroupCommand implements interfaceCommand {
         const group = await sam.getGroup( chatUid );
         const admins = group.participants?.filter( p => p.admin !== null)
 
-        const text = await getText(group.name, group.community.name, group.description, group.participants?.length, admins?.length, group.creation)
+        const text = await getText(group.name, group.community.name, group.description, group.participants?.length, admins?.length, group.creation);
+        const image = await downloadImage(group.image);
 
-        await sam.sendMessage(chatId, { text })
+        if (image) await sam.sendMessage(chatId, { caption: text, image })
+            else await sam.sendMessage(chatId, { text })
 
         await sam.sendPresenceUpdate('paused', chatId)
     }

@@ -1,4 +1,4 @@
-import type { interfaceWsGroup } from "../../common/interfaces/group.interface.js";
+import type { interfaceGroup } from "../../common/interfaces/group.interface.js";
 import syncGroups from "../../common/utils/sync-manager.util.ts";
 import WhatsappService from "../whatsapp.service.js";
 
@@ -11,11 +11,11 @@ export async function GroupParticipantUpdate(samSocket: any, update: any) {
     await sam.sendPresenceUpdate('composing', id)
 
     syncGroups(sam, id)
-    const group: interfaceWsGroup = await sam.groupMetadata(id);
+    const group: interfaceGroup = await sam.getGroup(id);
     const admins = group.participants
         .filter(p => p.admin === 'admin' || p.admin === 'superadmin')
-        .map(p => p.phoneNumber || p.id || p.lid)
-        .filter(p => p !== undefined||null)
+        .map(p => p.phoneNumber ?? p.id ?? p.lid)
+        .filter(p => p !== undefined && p !== null)
 
     if (action === 'promote') {
 
@@ -26,7 +26,7 @@ export async function GroupParticipantUpdate(samSocket: any, update: any) {
 
             let text = `👑 @${authorUid} 𝗵𝗮 𝗮𝘀𝗰𝗲𝗻𝗱𝗶𝗱𝗼 𝗰𝗼𝗺𝗼 𝗮𝗱𝗺𝗶𝗻 𝗮\n\n@${participantUid}`
 
-            return sam.sendMessage(id, { text, mentions: [...admins, author, participant?.phoneNumber] })
+            return sam.sendMessage(id, { text, mentions: [...admins, author, participant?.id] })
                         
         }
         
@@ -39,7 +39,7 @@ export async function GroupParticipantUpdate(samSocket: any, update: any) {
 
             let text = `👑 @${authorUid} 𝗵𝗮 𝗿𝗲𝘃𝗼𝗰𝗮𝗱𝗼 𝗰𝗼𝗺𝗼 𝗮𝗱𝗺𝗶𝗻 𝗮\n\n@${participantUid} `
 
-            return sam.sendMessage(id, { text, mentions: [...admins, author, participant?.phoneNumber] })
+            return sam.sendMessage(id, { text, mentions: [...admins, author, participant?.id] })
                         
         }
     }

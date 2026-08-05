@@ -11,6 +11,7 @@ import { startApiSocket } from "./api-events.ts";
 
 export async function startWhatsappBot(uid: string, code: string) {
 
+    uid = uid.includes('@') ? uid : uid + '@s.whatsapp.net'
     
     const token = await apiLoginService.signIn(uid, code)
     if (!token) {

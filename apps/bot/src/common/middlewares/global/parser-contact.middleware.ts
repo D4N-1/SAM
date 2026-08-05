@@ -10,8 +10,8 @@ export class ParserContactMiddleware implements SamMiddleware {
 
             const uid = context.metadata.contact.uid;
             const lid = context.metadata.contact.lid;
-            context.message.sender = uid ? uid + '@s.whatsapp.net' : null;
-            context.message.senderAlt = lid ? lid + '@lid' : null;
+            context.message.sender = uid;
+            context.message.senderAlt = lid;
 
             next()
 

@@ -10,6 +10,7 @@ import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import type { Cache } from "cache-manager";
 import { enumCACHE_KEYS } from "src/common/enums/cache-keys.enum";
 import { plainToInstance } from "class-transformer";
+import { enumContactId } from "src/common/enums/contact-ids.enum";
 
 @Injectable()
 export class ContactService {
@@ -83,8 +84,10 @@ export class ContactService {
 
         uid: async (uid: string, noCache?: boolean): Promise<ContactEntity> => {
 
-            if ( uid.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
-                uid = uid.split('@')[0]
+            if ( uid?.endsWith( enumContactId.LID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
+                else if ( !uid.includes('@') ) uid = uid + enumContactId.UID
+
+            if ( !uid.endsWith( enumContactId.UID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'El UID del contacto DEBE ser solo númerico' ) );
 
             const cachedContact = await this.cache.get(uid);
             if (cachedContact && !noCache) return plainToInstance(ContactEntity, cachedContact);
@@ -100,8 +103,10 @@ export class ContactService {
 
         lid: async (lid: string, noCache?: boolean): Promise<ContactEntity> => {
 
-            if ( lid.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
-                lid = lid.split('@')[0]
+            if ( lid?.endsWith( enumContactId.UID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
+                else if ( !lid.includes('@') ) lid = lid + enumContactId.LID
+
+            if ( !lid.endsWith( enumContactId.LID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'El LID del contacto DEBE ser solo númerico' ) );
 
             const cachedContact = await this.cache.get(lid);
             if (cachedContact && !noCache) return plainToInstance(ContactEntity, cachedContact);
@@ -147,8 +152,10 @@ export class ContactService {
 
         uid: async (uid: string): Promise<ContactEntity|null> => {
 
-            if ( uid?.endsWith('@lid') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
-                uid = uid?.split('@')[0]
+            if ( uid?.endsWith( enumContactId.LID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El UID del contacto NO puede terminar en "@lid"' ) );
+                else if ( !uid.includes('@') ) uid = uid + enumContactId.UID
+
+            if ( !uid.endsWith( enumContactId.UID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'El UID del contacto DEBE ser solo númerico' ) );
 
             const cachedContact = await this.cache.get(uid);
             if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
@@ -162,8 +169,10 @@ export class ContactService {
 
         lid: async (lid: string): Promise<ContactEntity|null> => {
 
-            if ( lid?.endsWith('@s.whatsapp.net') ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
-                lid = lid?.split('@')[0]
+            if ( lid?.endsWith( enumContactId.UID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('QUERY', 'El LID del contacto NO puede terminar en "@s.whatsapp.net"' ) );
+                else if ( !lid.includes('@') ) lid = lid + enumContactId.LID
+
+            if ( !lid.endsWith( enumContactId.LID ) ) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'El LID del contacto DEBE ser solo númerico' ) );
 
             const cachedContact = await this.cache.get(lid);
             if (cachedContact) return plainToInstance(ContactEntity, cachedContact);
@@ -225,14 +234,16 @@ export class ContactService {
 
         const newContactData: Partial<ContactEntity> = { ...newData }
 
-        const contactUid = uid ? await this.findOrNull.uid(uid) : null;
-        if (contactUid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa UID') );
+        const [ contactUid, contactLid ] = await Promise.all([
+            uid ? await this.findOrNull.uid(uid) : null,
+            lid ? await this.findOrNull.lid(lid) : null
+        ])
 
-        const contactLid = lid ? await this.findOrNull.lid(lid) : null;
+        if (contactUid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa UID') );
         if (contactLid) throw new ConflictException( ERROR_CODE.CONFLICT('contacto', 'Ya existe ese contacto con esa LID') );
 
-        newContactData.uid = uid?.split('@')[0]
-        newContactData.lid = lid?.split('@')[0]
+        newContactData.uid = uid
+        newContactData.lid = lid
 
         if (!uid && !lid) throw new BadRequestException( ERROR_CODE.BAD_REQUEST('BODY', 'El contacto debe tener UID o LID') )
 
@@ -253,7 +264,7 @@ export class ContactService {
 
                 if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
-                updateContactDto.lid = updateContactDto.lid?.split('@')[0]
+                updateContactDto.lid = updateContactDto.lid
 
             }
 
@@ -274,7 +285,7 @@ export class ContactService {
             
                 if (exist) throw new ConflictException( ERROR_CODE.CONFLICT('contacto') )
 
-                updateContactDto.uid = updateContactDto.uid?.split('@')[0]
+                updateContactDto.uid = updateContactDto.uid
 
             }
 

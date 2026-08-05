@@ -17,6 +17,8 @@ export class AdminMiddleware implements SamMiddleware {
 
         const contact = context.metadata?.contact;
 
+        console.log(contact)
+        console.log(group)
 
         const isAdmin = group.participants?.some( p => 
             (p.id === contact?.uid ||
@@ -55,10 +57,10 @@ export class BotAdminMiddleware implements SamMiddleware {
 
 
         const botAdmin = group.participants?.some( p => 
-            (p.id === botContact.uid + '@s.whatsapp.net' ||
-                p.id === botContact.lid + '@lid' ||
-                p.lid === botContact.lid + '@lid' ||
-                p.phoneNumber === botContact.uid + '@s.whatsapp.net' ||
+            (p.id === botContact.uid ||
+                p.id === botContact.lid ||
+                p.lid === botContact.lid ||
+                p.phoneNumber === botContact.uid ||
                 p.username === botContact.username
             ) && (
                 p.admin === 'admin' ||

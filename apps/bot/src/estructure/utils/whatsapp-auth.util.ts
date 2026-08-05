@@ -1,6 +1,5 @@
 import { Api } from '../../common/utils/api.util.js';
 import { BufferJSON, initAuthCreds, proto } from '@itsliaaa/baileys';
-import Logger from '../../common/utils/logger.util.js';
 
 export const useApiAuthState = async (botUid: string) => {
 

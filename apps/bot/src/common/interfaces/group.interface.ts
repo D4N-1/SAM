@@ -117,6 +117,7 @@ export interface interfaceGroup {
     realmName?: string;
     participants: interfaceGroupParticipant[] | [];
     settings?: GroupSettingsDto;
+    image?: string|null;
     createdAt: '2026-06-01T04:15:18.405Z',
     updatedAt: '2026-07-23T04:11:19.000Z'|null,
     deletedAt: string|null;

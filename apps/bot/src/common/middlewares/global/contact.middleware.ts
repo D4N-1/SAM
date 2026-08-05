@@ -35,11 +35,10 @@ export class ContactMiddleware implements SamMiddleware {
                 if (contactLid && lid) {
 
                     const toUpdate: Record<string, any> = {};
-                    const parsedUid = uid ? uid.split('@')[0] : undefined;
 
                     if ( pushName && contactLid.name !== pushName) toUpdate.name = pushName;
 
-                    if ( parsedUid && contactLid.uid !== parsedUid) toUpdate.uid = parsedUid;
+                    if ( uid && contactLid.uid !== uid) toUpdate.uid = uid;
 
                     if (username && contactLid.username !== username) toUpdate.username = username;
 
@@ -57,12 +56,10 @@ export class ContactMiddleware implements SamMiddleware {
                 if (contactUid && uid) {
 
                     const toUpdate: Record<string, any> = {};
-                    const parsedLid = lid ? lid.split('@')[0] : undefined;
-
 
                     if ( pushName && contactUid.name !== pushName) toUpdate.name = pushName;
                     
-                    if ( parsedLid && contactUid.lid !== parsedLid) toUpdate.lid = parsedLid;
+                    if ( lid && contactUid.lid !== lid) toUpdate.lid = lid;
 
                     if (username && contactUid.username !== username) toUpdate.username = username;
 
@@ -82,8 +79,8 @@ export class ContactMiddleware implements SamMiddleware {
             }
 
             const contact = { 
-                uid: uid?.split('@')[0],
-                lid: lid?.split('@')[0],
+                uid: uid,
+                lid: lid,
                 name: pushName,
                 username
             }
